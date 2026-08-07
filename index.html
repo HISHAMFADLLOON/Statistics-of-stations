@@ -2,8 +2,12 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b1e2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="إحصاء المحطات">
 <title>إحصاء المحطات — مونوريل شرق النيل</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +22,7 @@
   color-scheme:dark;
 }
 *{box-sizing:border-box;margin:0;padding:0}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 body{
   font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--ink);min-height:100vh;
   background:
@@ -28,15 +32,32 @@ body{
 }
 ::selection{background:rgba(56,200,176,.35)}
 a{color:inherit;text-decoration:none}
-button{font-family:inherit}
+button{font-family:inherit;touch-action:manipulation}
+.btn,nav a,.icon-btn,.bottom-nav a{-webkit-user-select:none;user-select:none;touch-action:manipulation}
 ::-webkit-scrollbar{height:9px;width:9px}
 ::-webkit-scrollbar-thumb{background:#1d3c59;border-radius:9px}
 .ic{width:20px;height:20px;flex:none}
+
+/* شاشة البداية */
+#splash{position:fixed;inset:0;z-index:300;background:var(--bg0);display:grid;place-items:center;transition:opacity .5s}
+#splash.off{opacity:0;pointer-events:none}
+.splash-in{text-align:center;display:grid;gap:6px;justify-items:center}
+.splash-badge{width:86px;height:86px;border-radius:22px;background:linear-gradient(160deg,#4adfc8,#189684);display:grid;place-items:center;font-size:46px;box-shadow:0 12px 40px rgba(56,200,176,.4);animation:pop .6s cubic-bezier(.2,1.4,.4,1)}
+.splash-in b{font:800 24px 'Changa'}
+.splash-in small{color:var(--muted);font-weight:600}
+
+/* شريط التنقل السفلي (شكل تطبيق) */
+.bottom-nav{display:none;position:fixed;bottom:0;inset-inline:0;z-index:60;background:rgba(6,18,30,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
+.bottom-nav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:10.5px;font-weight:700;padding:7px 0;border-radius:10px;transition:.2s}
+.bottom-nav a .ic{width:21px;height:21px}
+.bottom-nav a.active{color:var(--acc-lite)}
+@media(max-width:900px){.bottom-nav{display:flex}main{padding-bottom:120px}}
 
 .bg-bridge{position:fixed;inset-inline:0;bottom:0;height:30px;z-index:0;pointer-events:none;opacity:.45;
   background:repeating-linear-gradient(90deg, rgba(148,184,210,.07) 0 8px, transparent 8px 96px)}
 .bg-bridge::before,.bg-bridge::after{content:'';position:absolute;inset-inline:0;height:2px;background:rgba(148,184,210,.13)}
 .bg-bridge::before{top:0}.bg-bridge::after{bottom:6px}
+@media(max-width:900px){.bg-bridge{display:none}}
 
 .topbar{position:sticky;top:0;z-index:50;background:rgba(6,18,30,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .topbar-in{max-width:1160px;margin:auto;display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}
@@ -45,10 +66,10 @@ button{font-family:inherit}
 .brand-badge .ic{width:26px;height:26px;color:#06231e}
 .brand b{font:800 19px/1.1 'Changa';display:block}
 .brand small{color:var(--muted);font-size:11px;font-weight:600;letter-spacing:.4px}
-nav{display:flex;gap:4px;margin-inline-start:auto;flex-wrap:wrap}
-nav a{padding:8px 13px;border-radius:10px;color:var(--muted);font-weight:600;font-size:13.5px;transition:.2s;display:flex;gap:7px;align-items:center}
-nav a .ic{width:16px;height:16px}
-nav a:hover{color:var(--ink);background:#12314a}
+nav.top-nav{display:flex;gap:4px;margin-inline-start:auto;flex-wrap:wrap}
+nav.top-nav a{padding:8px 13px;border-radius:10px;color:var(--muted);font-weight:600;font-size:13.5px;transition:.2s;display:flex;gap:7px;align-items:center}
+nav.top-nav a .ic{width:16px;height:16px}
+nav.top-nav a:hover{color:var(--ink);background:#12314a}
 nav a.active{color:var(--acc-lite);background:rgba(56,200,176,.1)}
 .head-meta{text-align:left;min-width:90px}
 #clockTime{font:700 17px 'Changa';color:var(--acc-lite)}
@@ -56,6 +77,7 @@ nav a.active{color:var(--acc-lite);background:rgba(56,200,176,.1)}
 .chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;display:inline-block}
 .chip.ok{color:#7ee2a8;background:rgba(52,209,123,.12);border:1px solid rgba(52,209,123,.4)}
 .chip.warn{color:#ffd27a;background:rgba(255,181,46,.1);border:1px solid rgba(255,181,46,.35)}
+@media(max-width:900px){nav.top-nav{display:none}}
 
 .track-strip{position:relative;height:66px;overflow:hidden;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(56,200,176,.03),transparent)}
 .track-strip .ground{position:absolute;inset-inline:0;bottom:6px;height:2px;background:#1c3a55}
@@ -71,7 +93,7 @@ nav a.active{color:var(--acc-lite);background:rgba(56,200,176,.1)}
 .mtrain .body::after{content:'';position:absolute;inset-inline:0;bottom:3px;height:3px;background:var(--acc)}
 
 main{position:relative;z-index:1;max-width:1160px;margin:auto;padding:26px 20px 80px}
-footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px 20px;color:#5f7d97;font-size:12.5px;text-align:center}
+footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px 20px 24px;color:#5f7d97;font-size:12.5px;text-align:center}
 .view{animation:fadeUp .45s ease both}
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}}
 .loading{color:var(--muted);padding:40px 0;text-align:center;font-weight:600}
@@ -214,7 +236,6 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 .st-mng-row .s-code{padding:5px 10px;min-width:52px}
 .st-mng-row b{font:700 15px 'Changa';flex:1}
 
-/* الطبقة المنبثقة — مخفية تمامًا لما يكون عليها hidden */
 .overlay{position:fixed;inset:0;background:rgba(4,10,17,.82);backdrop-filter:blur(6px);display:grid;place-items:center;z-index:100;padding:20px;animation:fadeUp .3s}
 .overlay[hidden]{display:none}
 .success-box{text-align:center;max-width:440px;width:100%}
@@ -244,13 +265,19 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
   .station-row{grid-template-columns:48px 1fr;grid-auto-rows:auto;row-gap:8px}
   .s-rev{display:none}
   .s-actions{grid-column:1/-1;justify-content:flex-start}
-  .totals-bar{gap:14px}
+  .totals-bar{gap:14px;bottom:calc(76px + env(safe-area-inset-bottom))}
   .totals-bar .btn{margin-inline-start:0;width:100%}
+  #toast{bottom:calc(88px + env(safe-area-inset-bottom))}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
+<div id="splash"><div class="splash-in">
+  <span class="splash-badge">🚝</span>
+  <b>إحصاء المحطات</b>
+  <small>مونوريل شرق النيل</small>
+</div></div>
 <div class="bg-bridge" aria-hidden="true"></div>
 
 <header class="topbar">
@@ -259,7 +286,7 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
       <span class="brand-badge" id="brandIcon"></span>
       <span><b>إحصاء المحطات</b><small>مونوريل شرق النيل</small></span>
     </a>
-    <nav>
+    <nav class="top-nav">
       <a href="#/" data-nav="home">لوحة المحطات</a>
       <a href="#/dash" data-nav="dash">لوحة التجميع</a>
       <a href="#/setup" data-nav="setup">الإعدادات والربط</a>
@@ -298,7 +325,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۳۴۵۶۷۸۹'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 function store(k){try{const x=JSON.parse(localStorage.getItem(k));return x===null?undefined:x;}catch(e){return undefined;}}
@@ -342,6 +369,7 @@ board:'<path d="M3 4h18v12H3z"/><path d="M8 20h8M12 16v4"/>',
 sheet:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/>',
 sliders:'<path d="M4 7h9m4 0h3M4 17h3m4 0h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
 db:'<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
+phone:'<rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/>',
 spinner:'<path d="M21 12a9 9 0 1 1-6.2-8.56"/>'
 };
 const ic=(n,cls='')=>`<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
@@ -415,6 +443,52 @@ function updateChip(){const c=$('#modeChip');const on=!!supaCfg();
   c.className='chip '+(on?'ok':'warn');c.textContent=on?'متصل — Supabase':'وضع محلي (تجريبي)';}
 function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.dataset.nav===k));}
 function fileWarn(){return location.protocol==='file:'?'<div class="warn-banner">⚠️ التطبيق مفتوح من الملف مباشرة — حتى تعمل لينكات المحطات على أجهزة الموظفين، ارفعه على الإنترنت (مثل GitHub Pages).</div>':'';}
+
+/* =============== شكل التطبيق (PWA) =============== */
+let deferredPrompt=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});
+function makeIcon(size){
+  const c=document.createElement('canvas');c.width=c.height=size;
+  const x=c.getContext('2d');
+  const r=size*0.22;
+  const g=x.createLinearGradient(0,0,size,size);
+  g.addColorStop(0,'#4adfc8');g.addColorStop(1,'#189684');
+  x.beginPath();
+  x.moveTo(r,0);x.arcTo(size,0,size,size,r);x.arcTo(size,size,0,size,r);x.arcTo(0,size,0,0,r);x.arcTo(0,0,size,0,r);x.closePath();
+  x.fillStyle=g;x.fill();
+  x.font=Math.round(size*0.52)+'px serif';x.textAlign='center';x.textBaseline='middle';
+  x.fillText('🚝',size/2,size*0.56);
+  return c.toDataURL('image/png');
+}
+function setupPWA(){
+  try{
+    const icon192=makeIcon(192),icon512=makeIcon(512),icon180=makeIcon(180);
+    const manifest={
+      name:'إحصاء المحطات — مونوريل شرق النيل',
+      short_name:'إحصاء المحطات',
+      start_url:location.pathname,
+      scope:location.pathname.replace(/[^/]*$/,''),
+      display:'standalone',
+      background_color:'#06121e',
+      theme_color:'#0b1e2e',
+      dir:'rtl',lang:'ar',
+      icons:[{src:icon192,sizes:'192x192',type:'image/png'},{src:icon512,sizes:'512x512',type:'image/png'}]
+    };
+    const l=document.createElement('link');l.rel='manifest';
+    l.href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}));
+    document.head.appendChild(l);
+    const a=document.createElement('link');a.rel='apple-touch-icon';a.href=icon180;document.head.appendChild(a);
+    if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
+  }catch(e){}
+}
+function injectBottomNav(){
+  document.body.insertAdjacentHTML('beforeend',`<nav class="bottom-nav">
+    <a href="#/" data-nav="home">${ic('board')}<span>المحطات</span></a>
+    <a href="#/dash" data-nav="dash">${ic('sheet')}<span>التجميع</span></a>
+    <a href="#/setup" data-nav="setup">${ic('sliders')}<span>الإعدادات</span></a>
+  </nav>`);
+}
+function hideSplash(){const sp=$('#splash');if(!sp)return;setTimeout(()=>{sp.classList.add('off');setTimeout(()=>sp.remove(),600);},450);}
 
 /* =============== الموجّه =============== */
 function route(){
@@ -686,7 +760,7 @@ function drawDash(){
           return `<td>${fmt(c)}</td><td>${fmt(v)}</td>`;}).join('')}
         <td>${T.done} محطة</td></tr></tfoot>
     </table></div>
-    <p class="dash-note">ملحوظة: تسجيل نفس المحطة في نفس اليوم مرة ثانية يُحدِّث البيان ولا يُكرره.</p>
+    <p class="dash-note">ملحوظة: كل الأيام بتتحفظ في نفس الجدول — اختار أي تاريخ من فوق وشوف بيانه، و"السجل الكامل" بيصدّر كل الأيام.</p>
   </div>`;
   $('#dashDate').addEventListener('change',e=>{dashDate=e.target.value||todayISO();drawDash();});
   $('#todayBtn').addEventListener('click',()=>{dashDate=todayISO();drawDash();});
@@ -751,7 +825,7 @@ function exportXLSFallback(filename,sheets){
 }
 
 /* =============== صفحة الإعدادات =============== */
-const SUPA_SQL=`-- أنشئ الجدول (بيان يومي واحد لكل محطة)
+const SUPA_SQL=`-- أنشئ الجدول (بيان يومي واحد لكل محطة — كل الأيام في نفس الجدول)
 create table if not exists public.station_reports (
   id bigint generated always as identity primary key,
   station_code text not null,
@@ -794,10 +868,17 @@ function renderSetup(){
     <div><h1 class="page-title">الإعدادات والربط</h1>
       <p class="page-sub">اربط التطبيق بـ Supabase لتستقبل بيانات كل المحطات تلقائيًا في قاعدة بياناتك</p></div>
 
+    <div class="card"><h2>${ic('phone')} تثبيت التطبيق على الموبايل</h2>
+      <p style="color:var(--muted);font-size:13px;line-height:1.8">افتح الموقع من المتصفح وثبّته زي أي تطبيق: هيظهر بأيقونة على الشاشة ويفتح ملء الشاشة من غير شريط المتصفح، ومعاه شريط تنقّل سفلي زي التطبيقات بالظبط.</p>
+      <div style="margin-top:10px">
+        ${deferredPrompt?'<button class="btn" id="installBtn">'+ic('download')+' تثبيت التطبيق الآن</button>':'<p class="dash-note">على Android: من قائمة المتصفح (⋮) اختار "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".<br>على iPhone: زر المشاركة في Safari ثم "إضافة إلى الشاشة الرئيسية".</p>'}
+      </div>
+    </div>
+
     <div class="card"><h2>${ic('db')} خطوات الربط مع Supabase</h2>
       <ol class="steps">
         <li>اعمل حساب مجاني على <b>supabase.com</b> واضغط <b>New project</b> (اختار اسم المشروع وباسورد وأقرب Region ليك).</li>
-        <li>من القائمة الجانبية افتح <b>SQL Editor</b> واضغط <b>New query</b>، الصق كود SQL بالأسفل واضغط <b>Run</b> — هيعمل جدول البيانات مع صلاحيات آمنة.</li>
+        <li>من القائمة الجانبية افتح <b>SQL Editor</b> واضغط <b>New query</b>، الصق كود SQL بالأسفل واضغط <b>Run</b> — هيعمل جدول واحد لكل الأيام مع صلاحيات آمنة.</li>
         <li>من <b>Project Settings</b> (أيقونة الترس) → <b>API</b>: انسخ <b>Project URL</b> و<b>anon public key</b>.</li>
         <li>الصقهم هنا بالأسفل واضغط <b>حفظ واختبار</b>.</li>
         <li>بعد رفع التطبيق على GitHub Pages، أرسل لكل محطة لينكها من زر النسخ في لوحة المحطات — البيانات هتوصلك فورًا.</li>
@@ -831,6 +912,9 @@ function renderSetup(){
     </div>
   </div>`;
 
+  const ib=$('#installBtn');
+  if(ib)ib.onclick=async ()=>{if(!deferredPrompt)return;deferredPrompt.prompt();
+    const ch=await deferredPrompt.userChoice;toast(ch.outcome==='accepted'?'جارٍ تثبيت التطبيق ✓':'تم إلغاء التثبيت');deferredPrompt=null;};
   $('#copySql').onclick=()=>copyText(SUPA_SQL,'تم نسخ كود SQL ✓');
   $('#saveCfg').onclick=async ()=>{
     const url=$('#supaUrl').value.trim(), key=$('#supaKey').value.trim();
@@ -861,8 +945,11 @@ function tickClock(){const n=new Date();
   $('#clockTime').textContent=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
   $('#clockDate').textContent=n.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});}
 setInterval(tickClock,1000);tickClock();
+injectBottomNav();
+setupPWA();
 updateChip();
 route();
+hideSplash();
 </script>
 </body>
 </html>
