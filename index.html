@@ -39,7 +39,7 @@ button{font-family:inherit}
 .bg-bridge::before{top:0}.bg-bridge::after{bottom:6px}
 
 .topbar{position:sticky;top:0;z-index:50;background:rgba(6,18,30,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-.topbar-in{max-width:1160px;margin:auto;display:flex;align-items:center;gap:14px;padding:10px 20px}
+.topbar-in{max-width:1160px;margin:auto;display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:12px}
 .brand-badge{width:44px;height:44px;border-radius:12px;background:linear-gradient(160deg,#4adfc8,#189684);display:grid;place-items:center;box-shadow:0 5px 16px rgba(56,200,176,.35)}
 .brand-badge .ic{width:26px;height:26px;color:#06231e}
@@ -50,10 +50,10 @@ nav a{padding:8px 13px;border-radius:10px;color:var(--muted);font-weight:600;fon
 nav a .ic{width:16px;height:16px}
 nav a:hover{color:var(--ink);background:#12314a}
 nav a.active{color:var(--acc-lite);background:rgba(56,200,176,.1)}
-.head-meta{text-align:left;min-width:110px}
+.head-meta{text-align:left;min-width:90px}
 #clockTime{font:700 17px 'Changa';color:var(--acc-lite)}
 #clockDate{font-size:11px;color:var(--muted)}
-.chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;display:inline-block;margin-top:2px}
+.chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;display:inline-block}
 .chip.ok{color:#7ee2a8;background:rgba(52,209,123,.12);border:1px solid rgba(52,209,123,.4)}
 .chip.warn{color:#ffd27a;background:rgba(255,181,46,.1);border:1px solid rgba(255,181,46,.35)}
 
@@ -214,7 +214,9 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 .st-mng-row .s-code{padding:5px 10px;min-width:52px}
 .st-mng-row b{font:700 15px 'Changa';flex:1}
 
+/* الطبقة المنبثقة — مخفية تمامًا لما يكون عليها hidden */
 .overlay{position:fixed;inset:0;background:rgba(4,10,17,.82);backdrop-filter:blur(6px);display:grid;place-items:center;z-index:100;padding:20px;animation:fadeUp .3s}
+.overlay[hidden]{display:none}
 .success-box{text-align:center;max-width:440px;width:100%}
 .okring{width:76px;height:76px;border-radius:50%;background:rgba(52,209,123,.12);border:2px solid var(--green);display:grid;place-items:center;margin:0 auto 14px;animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
 @keyframes pop{from{transform:scale(.3);opacity:0}}
@@ -224,7 +226,7 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 .receipt{background:var(--cream);color:#15293b;border-radius:14px;padding:18px 22px;text-align:right;box-shadow:0 30px 60px rgba(0,0,0,.5);position:relative;margin-bottom:16px}
 .receipt h4{font:800 17px 'Changa';text-align:center;margin-bottom:4px}
 .receipt .r-sub{text-align:center;font-size:11.5px;color:#6b7c8d;font-weight:700}
-.receipt .perf{border-top:2px dashed #b8a76f;margin:12px 0}
+.receipt .perf{border-top:2px dashed #b9a86f;margin:12px 0}
 .receipt .r-line{display:flex;justify-content:space-between;font-size:13.5px;font-weight:600;padding:3px 0}
 .receipt .r-line b{font-family:'Changa'}
 .receipt .r-total{font-size:15px;color:#a86300}
@@ -237,7 +239,8 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;transition:.3s;background:#13324f;border:1px solid #2a557d;color:var(--ink);padding:12px 22px;border-radius:12px;z-index:200;box-shadow:0 12px 30px rgba(0,0,0,.45);font-weight:600;font-size:14px;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(max-width:760px){
-  .head-meta{display:none}
+  #clockTime,#clockDate{display:none}
+  .head-meta{min-width:0}
   .station-row{grid-template-columns:48px 1fr;grid-auto-rows:auto;row-gap:8px}
   .s-rev{display:none}
   .s-actions{grid-column:1/-1;justify-content:flex-start}
@@ -264,8 +267,8 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
     <div class="head-meta">
       <div id="clockTime">--:--</div>
       <div id="clockDate"></div>
-      <span class="chip warn" id="modeChip">وضع محلي</span>
     </div>
+    <span class="chip warn" id="modeChip">وضع محلي</span>
   </div>
 </header>
 
@@ -442,7 +445,7 @@ async function renderHome(){
       <div><h1 class="page-title">لوحة المحطات</h1>
         <p class="page-sub">بيان اليوم — ${fmtDateAr(today)}</p></div>
       <div class="grow"></div>
-      <input class="search" id="stSearch" placeholder="ابحث عن محطة…">
+      <input class="search" id="stSearch" placeholder="ابحث عن محطة…" autocomplete="off">
       <a class="btn ghost sm" href="#/dash">${ic('board')} لوحة التجميع</a>
     </div>
     <div class="progress-wrap"><span>اكتمال بيانات اليوم: <b>${pct}%</b> (${done} من ${stations.length})</span>
@@ -461,7 +464,7 @@ async function renderHome(){
           </div></li>`;}).join('')}
     </ol>
     <div class="add-station">
-      <input id="newStName" placeholder="اسم محطة جديدة (اختياري)">
+      <input id="newStName" placeholder="اسم محطة جديدة (اختياري)" autocomplete="off">
       <button class="btn ghost" id="addStBtn">${ic('plus')} إضافة محطة</button>
     </div>
   </div>`;
@@ -522,7 +525,7 @@ function renderForm(code,nameParam){
     <div class="card" style="margin-bottom:16px">
       <div class="meta-grid">
         <div class="field"><label>تاريخ البيان</label><div class="in-wrap"><input type="date" id="fDate" value="${todayISO()}"></div></div>
-        <div class="field"><label>اسم المُسجِّل (اختياري)</label><div class="in-wrap"><input type="text" id="fBy" placeholder="موظف المحطة"></div></div>
+        <div class="field"><label>اسم المُسجِّل (اختياري)</label><div class="in-wrap"><input type="text" id="fBy" placeholder="موظف المحطة" autocomplete="off"></div></div>
       </div>
       <div class="hint-exist" id="existHint">ℹ️ يوجد بيان مسجّل لنفس المحطة والتاريخ — عند الإرسال سيتم تحديثه.</div>
     </div>
@@ -556,7 +559,7 @@ function renderForm(code,nameParam){
       const el=form.querySelector(`[data-sec="${s.id}"]`);if(el)el.textContent=money(sum);});
   }
   form.addEventListener('input',recalc);
-  function existCheck(){const d=$('#fDate').value;
+  function existCheck(){const d=$('#fDate').value||todayISO();
     const hit=getLocalRecords().some(r=>String(r.stationCode)===code&&String(r.date)===d);
     $('#existHint').style.display=hit?'block':'none';}
   $('#fDate').addEventListener('change',existCheck);existCheck();
@@ -566,8 +569,10 @@ function renderForm(code,nameParam){
     const v=readForm();
     if(NUM_FIELDS.every(f=>!v[f])&&!confirm('كل القيم صفر أو فارغة. هل تريد المتابعة؟'))return;
     const btn=$('#submitBtn');btn.disabled=true;btn.innerHTML=ic('spinner','spin')+' جارٍ الإرسال…';
+    const dateVal=$('#fDate').value||todayISO();
+    $('#fDate').value=dateVal;
     const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0), tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
-    const rec={stationCode:code,stationName:name,date:$('#fDate').value,...v,
+    const rec={stationCode:code,stationName:name,date:dateVal,...v,
       totalCount:tC,totalRevenue:tR,submittedBy:$('#fBy').value.trim(),submittedAt:new Date().toISOString()};
     const res=await saveRecord(rec);
     btn.disabled=false;btn.innerHTML=ic('send')+' إرسال البيان';
@@ -593,9 +598,10 @@ function showSuccess(rec,res){
     </div>
     <div class="success-actions">
       <button class="btn" id="againBtn">${ic('plus')} بيان جديد</button>
-      <a class="btn ghost" href="#/" onclick="document.getElementById('overlay').hidden=true">${ic('board')} العودة للوحة</a>
+      <a class="btn ghost" href="#/" id="backHomeBtn">${ic('board')} العودة للوحة</a>
     </div></div>`);
   $('#againBtn').onclick=()=>{closeOverlay();const f=$('#entryForm');if(f){f.reset();$('#fDate').value=todayISO();f.dispatchEvent(new Event('input'));window.scrollTo({top:0,behavior:'smooth'});}};
+  $('#backHomeBtn').onclick=closeOverlay;
 }
 
 /* =============== لوحة التجميع =============== */
@@ -614,7 +620,7 @@ const GROUPS=[
 async function renderDash(){
   setActive('dash');
   const app=$('#app');
-  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل البيانات المجمّعة من Supabase…</p></div>';
+  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل البيانات المجمّعة…</p></div>';
   const res=await getAllRecords();DASH.rows=res.rows;DASH.source=res.source;
   drawDash();
   if(res.source==='local-error')toast('تعذر الاتصال بـ Supabase — يتم عرض البيانات المحلية');
@@ -693,7 +699,7 @@ function drawDash(){
 function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
 function setNumFmt(ws){const r=XLSX.utils.decode_range(ws['!ref']);
   for(let R=r.s.r;R<=r.e.r;R++)for(let C=0;C<=r.e.c;C++){const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];
-    if(cell&&typeof cell.v==='number')cell.z='#,##0';}}
+    if(cell&&typeof cell.v==='number')cell.z='#,##0.##';}}
 function exportDayExcel(dayRows){
   const T=totalsOf(dayRows);
   const aoa=[
@@ -832,13 +838,14 @@ function renderSetup(){
     if((url&&!key)||(!url&&key)){r.style.color='#ff9a90';r.textContent='✗ لازم تدخل الرابط والمفتاح معًا';return;}
     if(url&&!url.startsWith('https://')){r.style.color='#ff9a90';r.textContent='✗ الرابط يجب أن يبدأ بـ https://';return;}
     saveSettings({...getSettings(),supabaseUrl:url||undefined,supabaseKey:key||undefined});updateChip();
-    if(!url){r.textContent='';toast('تم الحفظ — التطبيق الآن في الوضع المحلي');renderSetup();return;}
+    if(!url){toast('تم الحفظ — التطبيق الآن في الوضع المحلي');renderSetup();return;}
     r.style.color='#ffd27a';r.textContent='جارٍ اختبار الاتصال…';
     try{
       const c=supaCfg();
       const res=await fetchJson(c.base+'/'+TABLE+'?select=station_code',{headers:supaHeaders()});
       if(res.status===200&&Array.isArray(res.json)){
-        r.style.color='#7ee2a8';r.textContent='✓ تم الاتصال بنجاح — عدد البيانات المجمّعة: '+res.json.length;toast('تم الربط مع Supabase بنجاح ✓');
+        toast('تم الربط مع Supabase بنجاح ✓ ('+res.json.length+' بيان محفوظ)');
+        renderSetup();
       }else{r.style.color='#ff9a90';r.textContent='✗ تعذر الاتصال — راجع الرابط والمفتاح وتأكد إنك عملت Run لكود SQL';}
     }catch(e){r.style.color='#ff9a90';r.textContent='✗ تعذر الاتصال — راجع الرابط والمفتاح';}
   };
