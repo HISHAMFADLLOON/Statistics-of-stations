@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
 <title>إحصاء المحطات — مونوريل شرق النيل</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -1118,8 +1119,8 @@ table.gt{
       <span><b>إحصاء المحطات</b><small>مونوريل شرق النيل</small></span>
     </a>
     <nav class="top-nav" id="topNav">
-      <a href="#/" data-nav="home"> لوحة المحطات</a>
-      <a href="#/dash" data-nav="dash"> لوحة التجميع</a>
+      <a href="#/" data-nav="home">📋 لوحة المحطات</a>
+      <a href="#/dash" data-nav="dash">📊 لوحة التجميع</a>
       <a href="#/stats" data-nav="stats">📈 الإحصائيات</a>
       <a href="#/audit" data-nav="audit">📋 سجل التدقيق</a>
       <a href="#/stations" data-nav="stations">⚙️ إدارة المحطات</a>
@@ -1152,16 +1153,32 @@ const SUPA_KEY='sb_publishable_TQ9SWNIZfgc7ZYt5UdCi4A_g9H-4ied';
 const BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1';
 const HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
 
+// كل المحطات بالترتيب
 const MOCK_STATIONS=[
   {id:1,code:'EST',name:'الاستاد'},
-  {id:2,code:'NOZ',name:'النزهة'},
-  {id:3,code:'SIK',name:'طريق السويس'},
-  {id:4,code:'BAD',name:'البادية'},
-  {id:5,code:'SHR',name:'الشروق'},
-  {id:6,code:'SKH',name:'طريق العين السخنة'},
-  {id:7,code:'NCP',name:'العاصمة الجديدة'},
-  {id:8,code:'CAP',name:'الكابيتال'}
+  {id:2,code:'HSH',name:'هشام بركات'},
+  {id:3,code:'AZH',name:'جامعة الأزهر'},
+  {id:4,code:'SB7',name:'الحي السابع'},
+  {id:5,code:'ASH',name:'المشير أحمد إسماعيل'},
+  {id:6,code:'JSH',name:'جيهان السادات'},
+  {id:7,code:'TNT',name:'المشير طنطاوي'},
+  {id:8,code:'190',name:'وان ناينتي (One Ninety)'},
+  {id:9,code:'AIR',name:'المستشفى الجوي'},
+  {id:10,code:'NRJ',name:'النرجس'},
+  {id:11,code:'MST',name:'المستثمرين'},
+  {id:12,code:'LOT',name:'اللوتس'},
+  {id:13,code:'GSQ',name:'جولدن سكوير'},
+  {id:14,code:'BTN',name:'بيت الوطن'},
+  {id:15,code:'FTH',name:'مسجد الفتاح العليم'},
+  {id:16,code:'R01',name:'حي R1'},
+  {id:17,code:'R02',name:'حي R2'},
+  {id:18,code:'MLB',name:'حي المال والأعمال'},
+  {id:19,code:'ART',name:'مدينة الفنون والثقافة'},
+  {id:20,code:'GOV',name:'الحي الحكومي'},
+  {id:21,code:'MSR',name:'مسجد مصر'},
+  {id:22,code:'JST',name:'مدينة العدالة'}
 ];
+
 const MOCK_USERS=[
   {id:1,username:'admin',password:'admin123',role:'admin'},
   {id:2,username:'hisham',password:'hisham123',role:'admin'}
@@ -1179,7 +1196,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲۳٤٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲۳٤٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
@@ -1250,7 +1267,7 @@ async function getAllReports(){
 async function getAllStations(){
   if(useMock)return MOCK_STATIONS;
   try{
-    const res=await supaFetch('stations?select=*&order=code');
+    const res=await supaFetch('stations?select=*&order=id');
     if(res.status===200&&Array.isArray(res.json))return res.json;
     useMock=true;return MOCK_STATIONS;
   }catch(e){useMock=true;return MOCK_STATIONS;}
@@ -1326,38 +1343,18 @@ function closeOverlay(){const o=$('#overlay');o.hidden=true;o.innerHTML='';}
 function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.dataset.nav===k));}
 function updateModeChip(){const c=$('#modeChip');if(useMock){c.className='chip warn';c.textContent='وضع محاكاة';}else{c.className='chip ok';c.textContent='متصل — Supabase';}}
 
-function makeIcon(size){
-  const c=document.createElement('canvas');c.width=c.height=size;
-  const x=c.getContext('2d');
-  const r=size*0.22;
-  const g=x.createLinearGradient(0,0,size,size);
-  g.addColorStop(0,'#06b6d4');
-  g.addColorStop(1,'#8b5cf6');
-  x.beginPath();x.moveTo(r,0);x.arcTo(size,0,size,size,r);x.arcTo(size,size,0,size,r);x.arcTo(0,size,0,0,r);x.arcTo(0,0,size,0,r);x.closePath();
-  x.fillStyle=g;x.fill();
-  x.font=Math.round(size*0.52)+'px serif';x.textAlign='center';x.textBaseline='middle';
-  x.fillText('🚝',size/2,size*0.56);
-  return c.toDataURL('image/png');
-}
-
 function setupPWA(){
-  try{
-    const icon192=makeIcon(192),icon512=makeIcon(512),icon180=makeIcon(180);
-    const manifest={
-      name:'إحصاء المحطات — مونوريل شرق النيل',
-      short_name:'إحصاء المحطات',
-      start_url:location.pathname,
-      scope:location.pathname.replace(/[^/]*$/,''),
-      display:'standalone',
-      background_color:'#020617',
-      theme_color:'#0f172a',
-      dir:'rtl',
-      lang:'ar',
-      icons:[{src:icon192,sizes:'192x192',type:'image/png'},{src:icon512,sizes:'512x512',type:'image/png'}]
-    };
-    const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}));document.head.appendChild(l);
-    const a=document.createElement('link');a.rel='apple-touch-icon';a.href=icon180;document.head.appendChild(a);
-  }catch(e){}
+  // حل مشكلة favicon.ico 404
+  const favicon = document.createElement('link');
+  favicon.rel = 'icon';
+  favicon.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>";
+  document.head.appendChild(favicon);
+  
+  // theme color
+  const themeMeta = document.createElement('meta');
+  themeMeta.name = 'theme-color';
+  themeMeta.content = '#020617';
+  document.head.appendChild(themeMeta);
 }
 
 function injectBottomNav(){
