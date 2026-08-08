@@ -64,7 +64,6 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
 ::-webkit-scrollbar-thumb:hover{background:var(--primary-dark)}
 .ic{width:20px;height:20px;flex:none}
 
-/* Premium Splash Screen */
 #splash{
   position:fixed;inset:0;z-index:1000;
   background:linear-gradient(135deg,var(--bg-primary) 0%,var(--bg-secondary) 100%);
@@ -125,7 +124,6 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   margin-top:8px;
 }
 
-/* Premium Monorail Animation */
 .track-strip{
   position:fixed;
   bottom:0;left:0;right:0;
@@ -183,7 +181,6 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   border-radius:4px;
 }
 
-/* Premium Navigation */
 .topbar{
   position:sticky;
   top:0;
@@ -279,7 +276,6 @@ nav a.active{
 }
 @media(max-width:900px){nav.top-nav{display:none}}
 
-/* Premium Bottom Nav */
 .bottom-nav{
   display:none;
   position:fixed;
@@ -320,7 +316,6 @@ nav a.active{
 .bottom-nav a.active .ic{transform:scale(1.1)}
 @media(max-width:900px){.bottom-nav{display:flex}main{padding-bottom:100px}}
 
-/* Premium Main Content */
 main{position:relative;z-index:1;max-width:1400px;margin:auto;padding:28px 24px 40px}
 footer{
   position:relative;
@@ -345,7 +340,6 @@ footer{
   font-size:16px;
 }
 
-/* Premium Buttons */
 .btn{
   display:inline-flex;
   align-items:center;
@@ -432,7 +426,6 @@ footer{
 .spin{animation:rot 1s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
 
-/* Premium Cards */
 .card{
   background:linear-gradient(180deg,var(--bg-card),var(--bg-secondary));
   border:1px solid var(--border);
@@ -469,7 +462,6 @@ footer{
 }
 .card h2 .ic{color:var(--primary);width:24px;height:24px}
 
-/* Premium Board */
 .board-head{
   display:flex;
   align-items:flex-end;
@@ -497,7 +489,6 @@ footer{
   box-shadow:0 0 0 4px rgba(6,182,212,.2),var(--shadow-md);
 }
 
-/* Premium Progress */
 .progress-wrap{
   display:flex;
   align-items:center;
@@ -527,7 +518,6 @@ footer{
 }
 .progress-wrap b{color:var(--primary-light);font-family:'Changa';font-size:16px}
 
-/* Premium Stations List */
 .stations{
   list-style:none;
   border:1px solid var(--border);
@@ -608,7 +598,6 @@ footer{
 }
 .s-actions{display:flex;gap:10px;align-items:center}
 
-/* Premium Form Elements */
 .back-link{
   display:inline-flex;
   gap:10px;
@@ -785,7 +774,6 @@ footer{
   45%{transform:scale(1.15)}
 }
 
-/* Premium Dashboard */
 .dash-controls{
   display:flex;
   gap:12px;
@@ -851,7 +839,6 @@ input[type=date]:focus{
   .stat:nth-child(3){border-inline-start:0}
 }
 
-/* Premium Table */
 .table-wrap{
   overflow:auto;
   border:1px solid var(--border);
@@ -923,7 +910,6 @@ table.gt{
   margin-top:16px;
 }
 
-/* Premium Login */
 .login-box{
   max-width:440px;
   margin:80px auto;
@@ -953,7 +939,6 @@ table.gt{
 }
 .login-box .field{margin-bottom:20px}
 
-/* Premium Overlay */
 .overlay{
   position:fixed;
   inset:0;
@@ -990,7 +975,7 @@ table.gt{
 .success-box h2{font:800 28px 'Changa';margin-bottom:6px;color:var(--text-primary)}
 .success-box .sub{color:var(--text-secondary);font-size:14px;margin-bottom:20px}
 .receipt{
-  background:linear-gradient(180deg,var(--cream),#fef3c7);
+  background:linear-gradient(180deg,#fef3c7,#fde68a);
   color:var(--bg-primary);
   border-radius:18px;
   padding:24px 28px;
@@ -1025,7 +1010,7 @@ table.gt{
   flex-wrap:wrap;
 }
 .qr-box{
-  background:var(--cream);
+  background:#fef3c7;
   border-radius:20px;
   padding:28px;
   text-align:center;
@@ -1044,7 +1029,6 @@ table.gt{
 .qr-box h3{font:800 20px 'Changa';margin:14px 0 6px}
 .qr-box p{font-size:12px;color:var(--text-muted);word-break:break-all;direction:ltr}
 
-/* Premium Audit */
 .audit-list{display:flex;flex-direction:column;gap:10px}
 .audit-item{
   background:var(--bg-card);
@@ -1061,7 +1045,6 @@ table.gt{
 .audit-item .action{font-weight:700;color:var(--primary-light)}
 .audit-item .details{color:var(--text-secondary);font-size:13px;margin-top:4px}
 
-/* Premium Station Management */
 .st-mng{display:flex;flex-direction:column;gap:10px}
 .st-mng-row{
   display:flex;
@@ -1077,7 +1060,6 @@ table.gt{
 .st-mng-row .s-code{padding:6px 12px;min-width:56px}
 .st-mng-row b{font:700 16px 'Changa';flex:1}
 
-/* Premium Toast */
 #toast{
   position:fixed;
   bottom:24px;
@@ -1120,7 +1102,6 @@ table.gt{
   </div>
 </div>
 
-<!-- Premium Monorail Animation -->
 <div class="track-strip" aria-hidden="true">
   <div class="track-rail"></div>
   <div class="mtrain">
@@ -1137,11 +1118,11 @@ table.gt{
       <span><b>إحصاء المحطات</b><small>مونوريل شرق النيل</small></span>
     </a>
     <nav class="top-nav" id="topNav">
-      <a href="#/" data-nav="home"><span class="ic">📋</span>لوحة المحطات</a>
-      <a href="#/dash" data-nav="dash"><span class="ic">📊</span>لوحة التجميع</a>
-      <a href="#/stats" data-nav="stats"><span class="ic">📈</span>الإحصائيات</a>
-      <a href="#/audit" data-nav="audit"><span class="ic"></span>سجل التدقيق</a>
-      <a href="#/stations" data-nav="stations"><span class="ic">⚙️</span>إدارة المحطات</a>
+      <a href="#/" data-nav="home"> لوحة المحطات</a>
+      <a href="#/dash" data-nav="dash"> لوحة التجميع</a>
+      <a href="#/stats" data-nav="stats">📈 الإحصائيات</a>
+      <a href="#/audit" data-nav="audit">📋 سجل التدقيق</a>
+      <a href="#/stations" data-nav="stations">⚙️ إدارة المحطات</a>
     </nav>
     <div class="head-meta">
       <div id="clockTime">--:--</div>
@@ -1166,18 +1147,11 @@ table.gt{
 'use strict';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 
-// ==========================================
-// 🔧 Supabase Configuration
-// ==========================================
 const SUPA_URL='https://hdsohnubcqbdwkmtvsvr.supabase.co';
 const SUPA_KEY='sb_publishable_TQ9SWNIZfgc7ZYt5UdCi4A_g9H-4ied';
 const BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1';
 const HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
-// ==========================================
 
-// ==========================================
-// 🎭 Mock Data for Fallback
-// ==========================================
 const MOCK_STATIONS=[
   {id:1,code:'EST',name:'الاستاد'},
   {id:2,code:'NOZ',name:'النزهة'},
@@ -1195,7 +1169,6 @@ const MOCK_USERS=[
 const MOCK_REPORTS=[];
 const MOCK_AUDIT=[];
 let useMock=false;
-// ==========================================
 
 const NUM_FIELDS=['ticketsCount','ticketsRevenue','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue'];
 const COUNT_FIELDS=NUM_FIELDS.filter(f=>f.endsWith('Count'));
@@ -1206,7 +1179,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲۳٤٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
@@ -1252,9 +1225,6 @@ spinner:'<path d="M21 12a9 9 0 1 1-6.2-8.56"/>'
 const ic=(n,cls='')=>`<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 $('#brandIcon').innerHTML=ic('train');
 
-// ==========================================
-// Supabase API with Error Handling
-// ==========================================
 async function supaFetch(path,opts={},ms=10000){
   const url=BASE+'/'+path;
   const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);
@@ -1321,9 +1291,6 @@ async function getAudit(){
   try{const res=await supaFetch('audit_log?select=*&order=created_at.desc&limit=100');return res.status===200?res.json:MOCK_AUDIT;}catch(e){return MOCK_AUDIT;}
 }
 
-// ==========================================
-// Authentication
-// ==========================================
 const AUTH_KEY='monorail_auth_v1';
 function getAuth(){try{return JSON.parse(localStorage.getItem(AUTH_KEY));}catch(e){return null;}}
 function setAuth(u){localStorage.setItem(AUTH_KEY,JSON.stringify(u));}
@@ -1347,9 +1314,6 @@ async function login(username,password){
 
 function logout(){clearAuth();location.hash='#/login';toast('تم تسجيل الخروج');}
 
-// ==========================================
-// Utilities
-// ==========================================
 function stationLink(s){return location.origin+location.pathname+'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name);}
 function copyText(t,msg){
   const done=()=>toast(msg||'تم النسخ ✓');
@@ -1362,29 +1326,40 @@ function closeOverlay(){const o=$('#overlay');o.hidden=true;o.innerHTML='';}
 function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.dataset.nav===k));}
 function updateModeChip(){const c=$('#modeChip');if(useMock){c.className='chip warn';c.textContent='وضع محاكاة';}else{c.className='chip ok';c.textContent='متصل — Supabase';}}
 
-// ==========================================
-// PWA Setup
-// ==========================================
 function makeIcon(size){
   const c=document.createElement('canvas');c.width=c.height=size;
   const x=c.getContext('2d');
   const r=size*0.22;
   const g=x.createLinearGradient(0,0,size,size);
-  g.addColorStop(0,'#06b6d4');g.addColorStop(1,'#8b5cf6');
+  g.addColorStop(0,'#06b6d4');
+  g.addColorStop(1,'#8b5cf6');
   x.beginPath();x.moveTo(r,0);x.arcTo(size,0,size,size,r);x.arcTo(size,size,0,size,r);x.arcTo(0,size,0,0,r);x.arcTo(0,0,size,0,r);x.closePath();
   x.fillStyle=g;x.fill();
   x.font=Math.round(size*0.52)+'px serif';x.textAlign='center';x.textBaseline='middle';
   x.fillText('🚝',size/2,size*0.56);
   return c.toDataURL('image/png');
 }
+
 function setupPWA(){
   try{
     const icon192=makeIcon(192),icon512=makeIcon(512),icon180=makeIcon(180);
-    const manifest={name:'إحصاء المحطات — مونوريل شرق النيل',short_name:'إحصاء المحطات',start_url:location.pathname,scope:location.pathname.replace(/[^/]*$/,''),display:'standalone',background_color:'#020617',theme_color:'#0f172a',dir:'rtl',lang:'ar',icons:[{src:icon192,sizes:'192x192',type:'image/png'},{src:icon512,sizes:'512x512',type:'image/png'}]};
+    const manifest={
+      name:'إحصاء المحطات — مونوريل شرق النيل',
+      short_name:'إحصاء المحطات',
+      start_url:location.pathname,
+      scope:location.pathname.replace(/[^/]*$/,''),
+      display:'standalone',
+      background_color:'#020617',
+      theme_color:'#0f172a',
+      dir:'rtl',
+      lang:'ar',
+      icons:[{src:icon192,sizes:'192x192',type:'image/png'},{src:icon512,sizes:'512x512',type:'image/png'}]
+    };
     const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}));document.head.appendChild(l);
     const a=document.createElement('link');a.rel='apple-touch-icon';a.href=icon180;document.head.appendChild(a);
   }catch(e){}
 }
+
 function injectBottomNav(){
   document.body.insertAdjacentHTML('beforeend',`<nav class="bottom-nav">
     <a href="#/" data-nav="home">${ic('board')}<span>المحطات</span></a>
@@ -1393,18 +1368,15 @@ function injectBottomNav(){
     <a href="#/stations" data-nav="stations">${ic('sliders')}<span>إدارة</span></a>
   </nav>`);
 }
+
 function hideSplash(){const sp=$('#splash');if(!sp)return;setTimeout(()=>{sp.classList.add('off');setTimeout(()=>sp.remove(),600);},800);}
 
-// ==========================================
-// Router with Access Control
-// ==========================================
 function route(){
   const h=location.hash.replace(/^#\/?/,'');
   const seg=h.split('?')[0].split('/').filter(Boolean);
   closeOverlay();window.scrollTo(0,0);
   const auth=getAuth();
   
-  // Prevent dashboard access from station links
   const isStationLink=seg[0]==='s';
   if(isStationLink){
     if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));
@@ -1423,9 +1395,6 @@ function route(){
 }
 window.addEventListener('hashchange',route);
 
-// ==========================================
-// Login Page
-// ==========================================
 function renderLogin(){
   setActive('');
   $('#topNav').style.display='none';
@@ -1464,9 +1433,6 @@ function renderLogin(){
   });
 }
 
-// ==========================================
-// Home - Stations Dashboard
-// ==========================================
 async function renderHome(){
   setActive('home');
   $('#topNav').style.display='';
@@ -1538,9 +1504,6 @@ function openQR(name,link){
   $('#qrClose').onclick=closeOverlay;
 }
 
-// ==========================================
-// Station Form
-// ==========================================
 const SECTIONS=[
  {id:'tickets',ord:'أولاً',title:'التذاكر',icon:'ticket',rows:[{label:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'}]},
  {id:'subs',ord:'ثانيًا',title:'الاشتراكات',icon:'pass',rows:[{label:'اشتراك أسبوعي',c:'weekCount',r:'weekRevenue'},{label:'اشتراك شهري',c:'monthCount',r:'monthRevenue'},{label:'اشتراك ربع سنوي',c:'quarterCount',r:'quarterRevenue'}]},
@@ -1712,9 +1675,6 @@ function showSuccess(rec){
   $('#backHomeBtn').onclick=closeOverlay;
 }
 
-// ==========================================
-// Dashboard
-// ==========================================
 let dashDate=todayISO();
 const GROUPS=[
  {t:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'},
@@ -1844,9 +1804,6 @@ function drawDash(reports,stations){
   $('#exLog').addEventListener('click',()=>exportLogExcel(reports));
 }
 
-// ==========================================
-// Statistics
-// ==========================================
 async function renderStats(){
   setActive('stats');
   $('#topNav').style.display='';
@@ -1934,11 +1891,11 @@ async function renderStats(){
       responsive:true,
       maintainAspectRatio:false,
       plugins:{
-        legend:{labels:{color:var(--text-primary)}}
+        legend:{labels:{color:'#f1f5f9'}}
       },
       scales:{
-        x:{ticks:{color:var(--text-secondary)},grid:{color:'rgba(51,65,85,.3)'}},
-        y:{ticks:{color:var(--text-secondary),callback:v=>fmt(v)+' ج.م'},grid:{color:'rgba(51,65,85,.3)'}}
+        x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}},
+        y:{ticks:{color:'#94a3b8',callback:v=>fmt(v)+' ج.م'},grid:{color:'rgba(51,65,85,.3)'}}
       }
     }
   });
@@ -1962,19 +1919,16 @@ async function renderStats(){
       responsive:true,
       maintainAspectRatio:false,
       plugins:{
-        legend:{labels:{color:var(--text-primary)}}
+        legend:{labels:{color:'#f1f5f9'}}
       },
       scales:{
-        x:{ticks:{color:var(--text-secondary),callback:v=>fmt(v)},grid:{color:'rgba(51,65,85,.3)'}},
-        y:{ticks:{color:var(--text-secondary)},grid:{color:'rgba(51,65,85,.3)'}}
+        x:{ticks:{color:'#94a3b8',callback:v=>fmt(v)},grid:{color:'rgba(51,65,85,.3)'}},
+        y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}}
       }
     }
   });
 }
 
-// ==========================================
-// Audit Log
-// ==========================================
 async function renderAudit(){
   setActive('audit');
   $('#topNav').style.display='';
@@ -2011,9 +1965,6 @@ async function renderAudit(){
   $('#refreshAudit').addEventListener('click',renderAudit);
 }
 
-// ==========================================
-// Station Management
-// ==========================================
 async function renderStations(){
   setActive('stations');
   $('#topNav').style.display='';
@@ -2082,9 +2033,6 @@ async function renderStations(){
   });
 }
 
-// ==========================================
-// Excel Export with Formulas
-// ==========================================
 function exportDayExcel(dayRows){
   const T=totalsOf(dayRows);
   const aoa=[
@@ -2104,11 +2052,10 @@ function exportDayExcel(dayRows){
     r.present?'مسجّل':'لم يُسجّل'
   ]));
   
-  // Total row with formulas
   const totalRow=['الإجمالي العام'];
   GROUPS.forEach((g,idx)=>{
-    const col1=String.fromCharCode(66+idx*2); // B, D, F...
-    const col2=String.fromCharCode(67+idx*2); // C, E, G...
+    const col1=String.fromCharCode(66+idx*2);
+    const col2=String.fromCharCode(67+idx*2);
     const endRow=5+dayRows.length;
     totalRow.push(`=SUM(${col1}5:${col1}${endRow})`);
     totalRow.push(`=SUM(${col2}5:${col2}${endRow})`);
@@ -2119,7 +2066,6 @@ function exportDayExcel(dayRows){
   if(!window.XLSX)return;
   const ws=XLSX.utils.aoa_to_sheet(aoa);
   
-  // Merge cells
   ws['!merges']=[
     {s:{r:0,c:0},e:{r:0,c:17}},
     {s:{r:3,c:0},e:{r:4,c:0}},
@@ -2128,11 +2074,9 @@ function exportDayExcel(dayRows){
     {s:{r:3,c:15},e:{r:3,c:16}},{s:{r:3,c:17},e:{r:4,c:17}}
   ];
   
-  // Column widths
   ws['!cols']=[{wch:22},...Array(16).fill({wch:14}),{wch:12}];
   ws['!rows']=[{hpt:32},{hpt:24},{hpt:10},{hpt:28},{hpt:24}];
   
-  // Styling
   for(let R=0;R<=aoa.length-1;R++){
     for(let C=0;C<=17;C++){
       const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];
@@ -2185,9 +2129,6 @@ function exportLogExcel(records){
   toast('تم تنزيل السجل الكامل ✓');
 }
 
-// ==========================================
-// Initialization
-// ==========================================
 function tickClock(){
   const n=new Date();
   $('#clockTime').textContent=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
@@ -2200,7 +2141,6 @@ setupPWA();
 route();
 hideSplash();
 
-// Auto-refresh every 30 seconds
 setInterval(()=>{
   const auth=getAuth();
   if(auth){
