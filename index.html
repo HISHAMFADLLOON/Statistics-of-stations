@@ -322,7 +322,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳٤٥٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲۳٤٥٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 function store(k){try{const x=JSON.parse(localStorage.getItem(k));return x===null?undefined:x;}catch(e){return undefined;}}
@@ -399,7 +399,10 @@ async function getAllRecords(){
   const local=getLocalRecords(), cfg=supaCfg();
   if(!cfg) return {rows:local,source:'local'};
   try{
-    const res=await fetchJson(cfg.base+'/'+TABLE+'?select=*',{headers:supaHeaders()});
+    const url=cfg.base+'/'+TABLE+'?select=*';
+    console.log('Fetching from:',url);
+    const res=await fetchJson(url,{headers:supaHeaders()});
+    console.log('Response:',res.status,res.json);
     if(res.status!==200||!Array.isArray(res.json)) throw new Error('bad');
     const map=new Map();local.forEach(r=>map.set(recKey(r),r));
     res.json.map(fromSnake).forEach(r=>map.set(recKey(r),r));
@@ -492,6 +495,16 @@ function route(){
   renderHome();
 }
 window.addEventListener('hashchange',route);
+
+// Auto-refresh كل 10 ثواني
+let refreshInterval=null;
+function startAutoRefresh(){
+  if(refreshInterval)clearInterval(refreshInterval);
+  refreshInterval=setInterval(()=>{
+    const hash=location.hash;
+    if(hash==='#/dash'||hash==='#/')route();
+  },10000);
+}
 
 async function renderHome(){
   setActive('home');
@@ -930,6 +943,7 @@ injectBottomNav();
 setupPWA();
 updateChip();
 route();
+startAutoRefresh();
 hideSplash();
 </script>
 </body>
