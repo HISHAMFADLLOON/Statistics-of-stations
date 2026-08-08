@@ -4,12 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0b1e2e">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="إحصاء المحطات">
 <title>إحصاء المحطات — مونوريل شرق النيل</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -33,7 +29,6 @@ body{
 ::selection{background:rgba(56,200,176,.35)}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;touch-action:manipulation}
-.btn,nav a,.icon-btn,.bottom-nav a{-webkit-user-select:none;user-select:none;touch-action:manipulation}
 ::-webkit-scrollbar{height:9px;width:9px}
 ::-webkit-scrollbar-thumb{background:#1d3c59;border-radius:9px}
 .ic{width:20px;height:20px;flex:none}
@@ -50,12 +45,6 @@ button{font-family:inherit;touch-action:manipulation}
 .bottom-nav a .ic{width:21px;height:21px}
 .bottom-nav a.active{color:var(--acc-lite)}
 @media(max-width:900px){.bottom-nav{display:flex}main{padding-bottom:120px}}
-
-.bg-bridge{position:fixed;inset-inline:0;bottom:0;height:30px;z-index:0;pointer-events:none;opacity:.45;
-  background:repeating-linear-gradient(90deg, rgba(148,184,210,.07) 0 8px, transparent 8px 96px)}
-.bg-bridge::before,.bg-bridge::after{content:'';position:absolute;inset-inline:0;height:2px;background:rgba(148,184,210,.13)}
-.bg-bridge::before{top:0}.bg-bridge::after{bottom:6px}
-@media(max-width:900px){.bg-bridge{display:none}}
 
 .topbar{position:sticky;top:0;z-index:50;background:rgba(6,18,30,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .topbar-in{max-width:1160px;margin:auto;display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}
@@ -76,19 +65,6 @@ nav a.active{color:var(--acc-lite);background:rgba(56,200,176,.1)}
 .chip.ok{color:#7ee2a8;background:rgba(52,209,123,.12);border:1px solid rgba(52,209,123,.4)}
 .chip.warn{color:#ffd27a;background:rgba(255,181,46,.1);border:1px solid rgba(255,181,46,.35)}
 @media(max-width:900px){nav.top-nav{display:none}}
-
-.track-strip{position:relative;height:66px;overflow:hidden;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(56,200,176,.03),transparent)}
-.track-strip .ground{position:absolute;inset-inline:0;bottom:6px;height:2px;background:#1c3a55}
-.track-strip .pillars{position:absolute;inset-inline:0;bottom:8px;height:24px;
-  background:repeating-linear-gradient(90deg, transparent 0 96px, #1d3d59 96px 104px)}
-.track-strip .beam{position:absolute;inset-inline:0;bottom:32px;height:7px;
-  background:linear-gradient(180deg,#33587a,#1a3852);box-shadow:0 3px 8px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.12)}
-.mtrain{position:absolute;bottom:37px;left:-280px;animation:ride 24s linear infinite;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
-@keyframes ride{to{left:106%}}
-.mtrain .body{width:132px;height:21px;background:linear-gradient(180deg,#f4f8fb,#c9d7e2);border-radius:11px 16px 6px 6px;position:relative;overflow:hidden}
-.mtrain .body::before{content:'';position:absolute;inset-inline:9px;top:5px;height:7px;
-  background:repeating-linear-gradient(90deg,#12314a 0 11px,#e8eef3 11px 14px);border-radius:2px}
-.mtrain .body::after{content:'';position:absolute;inset-inline:0;bottom:3px;height:3px;background:var(--acc)}
 
 main{position:relative;z-index:1;max-width:1160px;margin:auto;padding:26px 20px 80px}
 footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px 20px 24px;color:#5f7d97;font-size:12.5px;text-align:center}
@@ -136,9 +112,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(52,209,123,.5)}70%{box-shadow:0 0 0 7px rgba(52,209,123,0)}100%{box-shadow:0 0 0 0 rgba(52,209,123,0)}}
 .s-rev{font:700 15px 'Changa';color:#ffd27a;min-width:105px;text-align:left}
 .s-actions{display:flex;gap:8px;align-items:center}
-.add-station{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
-.add-station input{flex:1;min-width:200px;background:#0a1c2d;border:1.5px solid var(--line);border-radius:11px;color:var(--ink);padding:10px 14px;font-family:inherit}
-.add-station input:focus{outline:0;border-color:var(--acc)}
 .warn-banner{background:rgba(255,181,46,.08);border:1px solid rgba(255,181,46,.4);color:#ffd27a;border-radius:12px;padding:10px 16px;font-size:13px;font-weight:600;margin-bottom:16px}
 
 .back-link{display:inline-flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;font-weight:600;margin-bottom:14px;transition:.2s}
@@ -153,7 +126,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px
 .card{background:linear-gradient(180deg,#0f2740,#0c2033);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 12px 30px rgba(2,8,15,.35);transition:transform .25s,border-color .25s}
 .card:hover{border-color:#2b527a}
 .form-sec{margin-bottom:16px}
-.form-sec:hover{transform:translateY(-2px)}
 .sec-head{display:flex;align-items:center;gap:11px;margin-bottom:14px;flex-wrap:wrap}
 .sec-ord{min-width:56px;height:32px;padding:0 10px;border-radius:10px;background:linear-gradient(160deg,#4adfc8,#1fa08d);color:#06231e;font:800 13.5px 'Changa';display:grid;place-items:center;box-shadow:0 4px 10px rgba(31,160,141,.3)}
 .sec-head h3{font:700 19px 'Changa'}
@@ -171,7 +143,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px
 .in-wrap input:focus{outline:0;border-color:var(--acc);box-shadow:0 0 0 3px rgba(56,200,176,.18)}
 .in-wrap input.has-unit{padding-left:52px}
 .unit{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:11px;color:var(--muted);font-weight:700}
-.hint-exist{font-size:12.5px;color:#ffd27a;background:rgba(255,181,46,.08);border:1px dashed rgba(255,181,46,.4);border-radius:10px;padding:8px 13px;margin-top:10px;display:none}
 .totals-bar{position:sticky;bottom:14px;margin-top:22px;background:var(--cream);color:#16324a;border-radius:16px;padding:14px 18px;display:flex;align-items:center;gap:24px;box-shadow:0 16px 40px rgba(0,0,0,.5);border:2px dashed #b8a76f;z-index:30;flex-wrap:wrap}
 .tot-item small{display:block;font-size:10.5px;color:#6b7c8d;font-weight:700}
 .tot-item b{font:800 23px 'Changa';color:#122b42;display:inline-block}
@@ -184,14 +155,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px
 input[type=date]{background:#0a1c2d;border:1.5px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;font-family:inherit;font-size:14px}
 input[type=date]:focus{outline:0;border-color:var(--acc)}
 .src-badge{font-size:11.5px;font-weight:700;color:var(--muted);border:1px solid var(--line);padding:6px 12px;border-radius:99px}
-.ticker{overflow:hidden;border:1px solid var(--line);border-radius:12px;background:#0d2438;margin-bottom:16px;position:relative}
-.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:55px;z-index:2;pointer-events:none}
-.ticker::before{right:0;background:linear-gradient(-90deg,#0d2438,transparent)}
-.ticker::after{left:0;background:linear-gradient(90deg,#0d2438,transparent)}
-.ticker-track{display:flex;width:max-content;animation:marq 30s linear infinite}
-.ticker:hover .ticker-track{animation-play-state:paused}
-.ticker-track span{padding:9px 0 9px 45px;font:600 13.5px 'IBM Plex Sans Arabic';color:var(--acc-lite);white-space:nowrap}
-@keyframes marq{to{transform:translateX(50%)}}
 .stats-strip{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:16px;background:linear-gradient(180deg,#0f2740,#0b1e30);overflow:hidden;margin-bottom:16px}
 .stat{padding:15px 18px;border-inline-start:1px dashed #1e3f5e}
 .stat:first-child{border-inline-start:0}
@@ -217,23 +180,6 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 .st-pill.off{color:#ff9a90;background:rgba(255,107,94,.08)}
 .dash-note{color:var(--muted);font-size:12px;margin-top:12px}
 
-.setup-grid{display:grid;gap:16px}
-.setup-grid h2{font:700 20px 'Changa';margin-bottom:12px;display:flex;gap:9px;align-items:center}
-.setup-grid h2 .ic{color:var(--acc)}
-.steps{counter-reset:st;list-style:none}
-.steps li{counter-increment:st;position:relative;padding:11px 48px 11px 14px;margin-bottom:8px;background:#0d2438;border:1px solid var(--line);border-radius:12px;font-size:13.5px;color:#cfe2f2;line-height:1.7}
-.steps li::before{content:counter(st);position:absolute;right:12px;top:14px;width:25px;height:25px;border-radius:8px;background:linear-gradient(160deg,#4adfc8,#1fa08d);color:#06231e;font:800 13px 'Changa';display:grid;place-items:center}
-.codebox{position:relative;background:#061421;border:1px solid var(--line);border-radius:12px;padding:16px;overflow:auto;direction:ltr;text-align:left;font:12px/1.75 Consolas,Menlo,monospace;color:#9fd0f2;max-height:320px}
-.codebox .copy-code{position:absolute;top:8px;right:8px}
-.url-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
-.url-row input{flex:1;min-width:240px;background:#0a1c2d;border:1.5px solid var(--line);border-radius:11px;color:var(--ink);padding:10px 14px;font-family:inherit;direction:ltr}
-.url-row input:focus{outline:0;border-color:var(--acc)}
-.test-result{font-size:13px;font-weight:700;margin-top:10px}
-.st-mng{display:flex;flex-direction:column;gap:8px}
-.st-mng-row{display:flex;align-items:center;gap:12px;background:#0d2438;border:1px solid var(--line);border-radius:11px;padding:9px 14px}
-.st-mng-row .s-code{padding:5px 10px;min-width:52px}
-.st-mng-row b{font:700 15px 'Changa';flex:1}
-
 .overlay{position:fixed;inset:0;background:rgba(4,10,17,.82);backdrop-filter:blur(6px);display:grid;place-items:center;z-index:100;padding:20px;animation:fadeUp .3s}
 .overlay[hidden]{display:none}
 .success-box{text-align:center;max-width:440px;width:100%}
@@ -251,10 +197,6 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 .receipt .r-total{font-size:15px;color:#a86300}
 .barcode{height:30px;margin-top:12px;background:repeating-linear-gradient(90deg,#15293b 0 2px,transparent 2px 5px,#15293b 5px 7px,transparent 7px 11px)}
 .success-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-.qr-box{background:var(--cream);border-radius:16px;padding:22px;text-align:center;color:#15293b;max-width:330px}
-.qr-box img{width:230px;height:230px;border-radius:10px;background:#fff;padding:8px}
-.qr-box h3{font:800 19px 'Changa';margin:10px 0 4px}
-.qr-box p{font-size:11px;color:#6b7c8d;word-break:break-all;direction:ltr}
 #toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;transition:.3s;background:#13324f;border:1px solid #2a557d;color:var(--ink);padding:12px 22px;border-radius:12px;z-index:200;box-shadow:0 12px 30px rgba(0,0,0,.45);font-weight:600;font-size:14px;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(max-width:760px){
@@ -276,7 +218,6 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
   <b>إحصاء المحطات</b>
   <small>مونوريل شرق النيل</small>
 </div></div>
-<div class="bg-bridge" aria-hidden="true"></div>
 
 <header class="topbar">
   <div class="topbar-in">
@@ -287,7 +228,6 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
     <nav class="top-nav">
       <a href="#/" data-nav="home">لوحة المحطات</a>
       <a href="#/dash" data-nav="dash">لوحة التجميع</a>
-      <a href="#/setup" data-nav="setup">الإعدادات والربط</a>
     </nav>
     <div class="head-meta">
       <div id="clockTime">--:--</div>
@@ -297,13 +237,6 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
   </div>
 </header>
 
-<div class="track-strip" aria-hidden="true">
-  <div class="ground"></div>
-  <div class="pillars"></div>
-  <div class="beam"></div>
-  <div class="mtrain"><div class="body"></div></div>
-</div>
-
 <main id="app"></main>
 <footer>منظومة إحصاء المحطات — مونوريل شرق النيل • البيانات تُجمع على Supabase وتُصدَّر إلى Excel من لوحة التجميع</footer>
 <div id="toast" role="status" aria-live="polite"></div>
@@ -312,8 +245,15 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 <script>
 'use strict';
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const LS={stations:'monorail_stations_v1',records:'monorail_records_v1',settings:'monorail_settings_v2'};
+
+// ==========================================
+// 🔧 بيانات Supabase - مربوطة من الكود مباشرة
+// ==========================================
+const SUPABASE_URL='https://hdsohnub.supabase.co';
+const SUPABASE_KEY='sb_publishable_TQ9SWNIzfgc7ZYt5UdCi4A_g9H-4i';
 const TABLE='station_reports';
+// ==========================================
+
 const NUM_FIELDS=['ticketsCount','ticketsRevenue','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue'];
 const COUNT_FIELDS=NUM_FIELDS.filter(f=>f.endsWith('Count'));
 const REV_FIELDS=NUM_FIELDS.filter(f=>f.endsWith('Revenue'));
@@ -322,19 +262,9 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲۳٥٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-]/g,d=>'۱۲۳٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
-function store(k){try{const x=JSON.parse(localStorage.getItem(k));return x===null?undefined:x;}catch(e){return undefined;}}
-
-// ==========================================
-// 🔧 هُنا هنحط بيانات Supabase بتاعتك
-// ==========================================
-const SUPABASE_CONFIG={
-  url:'https://hdsohnub.supabase.co',
-  key:'sb_publishable_TQ9SWNIzfgc7ZYt5UdCi4A_g9H-4i'
-};
-// ==========================================
 
 const COL_MAP={
  stationCode:'station_code',stationName:'station_name',date:'report_date',
@@ -351,8 +281,8 @@ const COL_MAP={
 const REV_MAP={};Object.entries(COL_MAP).forEach(([k,v])=>REV_MAP[v]=k);
 const toSnake=rec=>{const o={};for(const k in rec){if(COL_MAP[k])o[COL_MAP[k]]=rec[k];}return o;};
 const fromSnake=row=>{const o={};for(const k in row){if(REV_MAP[k])o[REV_MAP[k]]=row[k];}return o;};
-function supaCfg(){return SUPABASE_CONFIG.url&&SUPABASE_CONFIG.key?{base:String(SUPABASE_CONFIG.url).replace(/\/+$/,'')+'/rest/v1',key:SUPABASE_CONFIG.key}:null;}
-function supaHeaders(){const c=supaCfg();return {apikey:c.key,Authorization:'Bearer '+c.key};}
+const SUPA_BASE=String(SUPABASE_URL).replace(/\/+$/,'')+'/rest/v1';
+const SUPA_HEADERS={apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY};
 
 const ICONS={
 train:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14"/><circle cx="9" cy="13.5" r=".7"/><circle cx="15" cy="13.5" r=".7"/><path d="M8 16l-2.5 4M16 16l2.5 4M9.5 20h5"/>',
@@ -365,15 +295,11 @@ copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 
 qr:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3h-3zM20 20h-3M20 14v.01M14 20v.01"/>',
 check:'<path d="M4 12.5 9.5 18 20 6.5"/>',
 plus:'<path d="M12 5v14M5 12h14"/>',
-trash:'<path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0v12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7"/>',
 refresh:'<path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/>',
 link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3A4 4 0 0 0 13 5.3l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1.5-1.5"/>',
 send:'<path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/>',
 board:'<path d="M3 4h18v12H3z"/><path d="M8 20h8M12 16v4"/>',
 sheet:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/>',
-sliders:'<path d="M4 7h9m4 0h3M4 17h3m4 0h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
-db:'<ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/>',
-phone:'<rect x="7" y="2" width="10" height="20" rx="3"/><path d="M11 18h2"/>',
 spinner:'<path d="M21 12a9 9 0 1 1-6.2-8.56"/>'
 };
 const ic=(n,cls='')=>`<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
@@ -390,62 +316,47 @@ const DEFAULT_STATIONS=[
   ['CAP','الكابيتال']
 ].map(([code,name])=>({code,name}));
 
-const getStations=()=>store(LS.stations)||DEFAULT_STATIONS;
-const saveStations=v=>localStorage.setItem(LS.stations,JSON.stringify(v));
-const getLocalRecords=()=>store(LS.records)||[];
-const saveLocalRecords=v=>localStorage.setItem(LS.records,JSON.stringify(v));
-const getSettings=()=>store(LS.settings)||{};
-const saveSettings=v=>localStorage.setItem(LS.settings,JSON.stringify(v));
-const recKey=r=>String(r.stationCode)+'|'+String(r.date);
-function upsertLocal(rec){const arr=getLocalRecords().filter(r=>recKey(r)!==recKey(rec));arr.push(rec);saveLocalRecords(arr);}
+const getStations=()=>{try{return JSON.parse(localStorage.getItem('monorail_stations_v1'))||DEFAULT_STATIONS;}catch(e){return DEFAULT_STATIONS;}};
 
 async function fetchJson(url,opts={},ms=9000){
   const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);
   try{const r=await fetch(url,{...opts,signal:c.signal});return {status:r.status,json:await r.json().catch(()=>null)};}
   finally{clearTimeout(t);}
 }
+
+// جلب كل البيانات من Supabase مباشرة
 async function getAllRecords(){
-  const local=getLocalRecords(), cfg=supaCfg();
-  if(!cfg) return {rows:local,source:'local'};
   try{
-    const url=cfg.base+'/'+TABLE+'?select=*';
-    const res=await fetchJson(url,{headers:supaHeaders()});
+    const url=SUPA_BASE+'/'+TABLE+'?select=*';
+    const res=await fetchJson(url,{headers:SUPA_HEADERS});
     if(res.status!==200||!Array.isArray(res.json)) throw new Error('bad');
-    const map=new Map();local.forEach(r=>map.set(recKey(r),r));
-    res.json.map(fromSnake).forEach(r=>map.set(recKey(r),r));
-    return {rows:[...map.values()],source:'remote'};
-  }catch(e){console.error('Fetch error:',e);return {rows:local,source:'local-error'};}
+    return {rows:res.json.map(fromSnake),source:'remote'};
+  }catch(e){console.error('Fetch error:',e);return {rows:[],source:'error'};}
 }
+
+// حفظ بيان جديد في Supabase
 async function saveRecord(rec){
-  upsertLocal(rec);
-  const cfg=supaCfg();
-  if(cfg){
-    try{
-      const res=await fetchJson(cfg.base+'/'+TABLE,{
-        method:'POST',
-        headers:{...supaHeaders(),'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
-        body:JSON.stringify(toSnake(rec))
-      },15000);
-      if(res.status===200||res.status===201)return{sent:true};
-      return{sent:false,msg:'خطأ من الخادم ('+res.status+')'};
-    }catch(e){return{sent:false,msg:'تعذر الاتصال بـ Supabase'};}
-  }
-  return{sent:false};
+  try{
+    const res=await fetchJson(SUPA_BASE+'/'+TABLE,{
+      method:'POST',
+      headers:{...SUPA_HEADERS,'Content-Type':'application/json','Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify(toSnake(rec))
+    },15000);
+    if(res.status===200||res.status===201)return{sent:true};
+    return{sent:false,msg:'خطأ من الخادم ('+res.status+')'};
+  }catch(e){return{sent:false,msg:'تعذر الاتصال بـ Supabase'};}
 }
+
 function stationLink(s){return location.origin+location.pathname+'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name);}
 function copyText(t,msg){
   const done=()=>toast(msg||'تم النسخ ✓');
-  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(()=>fallbackCopy(t,done));}
-  else fallbackCopy(t,done);
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();});}
+  else{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();}
 }
-function fallbackCopy(t,done){const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();}
 let toastTimer;function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2600);}
 function openOverlay(html){const o=$('#overlay');o.innerHTML=html;o.hidden=false;}
 function closeOverlay(){const o=$('#overlay');o.hidden=true;o.innerHTML='';}
-function updateChip(){const c=$('#modeChip');const on=!!supaCfg();
-  c.className='chip '+(on?'ok':'warn');c.textContent=on?'متصل — Supabase':'وضع محلي (تجريبي)';}
 function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.dataset.nav===k));}
-function fileWarn(){return location.protocol==='file:'?'<div class="warn-banner">⚠️ التطبيق مفتوح من الملف مباشرة — حتى تعمل لينكات المحطات على أجهزة الموظفين، ارفعه على الإنترنت (مثل GitHub Pages).</div>':'';}
 
 let deferredPrompt=null;
 window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;});
@@ -480,14 +391,12 @@ function setupPWA(){
     l.href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}));
     document.head.appendChild(l);
     const a=document.createElement('link');a.rel='apple-touch-icon';a.href=icon180;document.head.appendChild(a);
-    if('serviceWorker' in navigator){window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js').catch(()=>{});});}
   }catch(e){}
 }
 function injectBottomNav(){
   document.body.insertAdjacentHTML('beforeend',`<nav class="bottom-nav">
     <a href="#/" data-nav="home">${ic('board')}<span>المحطات</span></a>
     <a href="#/dash" data-nav="dash">${ic('sheet')}<span>التجميع</span></a>
-    <a href="#/setup" data-nav="setup">${ic('sliders')}<span>الإعدادات</span></a>
   </nav>`);
 }
 function hideSplash(){const sp=$('#splash');if(!sp)return;setTimeout(()=>{sp.classList.add('off');setTimeout(()=>sp.remove(),600);},450);}
@@ -497,25 +406,25 @@ function route(){
   const seg=h.split('?')[0].split('/').filter(Boolean);
   closeOverlay();window.scrollTo(0,0);
   if(seg[0]==='dash')return renderDash();
-  if(seg[0]==='setup')return renderSetup();
   if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));
   renderHome();
 }
 window.addEventListener('hashchange',route);
 
+// Auto-refresh كل 10 ثواني
 let refreshInterval=null;
 function startAutoRefresh(){
   if(refreshInterval)clearInterval(refreshInterval);
   refreshInterval=setInterval(()=>{
     const hash=location.hash;
-    if(hash==='#/dash'||hash==='#/')route();
+    if(hash==='#/dash'||hash==='#/'||hash==='')route();
   },10000);
 }
 
 async function renderHome(){
   setActive('home');
   const app=$('#app');
-  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل لوحة المحطات…</p></div>';
+  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل لوحة المحطات من Supabase…</p></div>';
   const {rows}=await getAllRecords();
   const stations=getStations(), today=todayISO();
   const recToday=new Map(rows.filter(r=>String(r.date)===today).map(r=>[String(r.stationCode),r]));
@@ -523,7 +432,6 @@ async function renderHome(){
   const pct=stations.length?Math.round(done/stations.length*100):0;
 
   app.innerHTML=`<div class="view">
-    ${fileWarn()}
     <div class="board-head">
       <div><h1 class="page-title">لوحة المحطات</h1>
         <p class="page-sub">بيان اليوم — ${fmtDateAr(today)}</p></div>
@@ -543,39 +451,17 @@ async function renderHome(){
           <div class="s-actions">
             <a class="btn sm" href="#/s/${encodeURIComponent(s.code)}/${encodeURIComponent(s.name)}">${ic('ticket')} تسجيل البيان</a>
             <button class="icon-btn" title="نسخ رابط المحطة" data-copy="${esc(stationLink(s))}">${ic('link')}</button>
-            <button class="icon-btn" title="QR للمشاركة" data-qr="${esc(s.name)}" data-qrl="${esc(stationLink(s))}">${ic('qr')}</button>
           </div></li>`;}).join('')}
     </ol>
-    <div class="add-station">
-      <input id="newStName" placeholder="اسم محطة جديدة (اختياري)" autocomplete="off">
-      <button class="btn ghost" id="addStBtn">${ic('plus')} إضافة محطة</button>
-    </div>
   </div>`;
   requestAnimationFrame(()=>{const b=$('#progBar');if(b)b.style.width=pct+'%';});
   $('#stSearch').addEventListener('input',e=>{const q=e.target.value.trim();
     $$('#stList .station-row').forEach(li=>li.style.display=li.dataset.search.includes(q)?'':'none');});
-  $('#addStBtn').addEventListener('click',()=>{
-    const name=$('#newStName').value.trim();if(!name)return toast('اكتب اسم المحطة أولاً');
-    const st=getStations();let code,n=st.length+1;
-    do{code='ST'+String(n).padStart(2,'0');n++;}while(st.some(s=>s.code===code));
-    st.push({code,name});saveStations(st);toast('تمت إضافة محطة '+name+' ✓');renderHome();});
 }
 document.addEventListener('click',e=>{
   const cp=e.target.closest('[data-copy]');
   if(cp){copyText(cp.dataset.copy,'تم نسخ رابط المحطة ✓');return;}
-  const qr=e.target.closest('[data-qr]');
-  if(qr){openQR(qr.dataset.qr,qr.dataset.qrl);return;}
 });
-function openQR(name,link){
-  openOverlay(`<div class="qr-box">
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=230x230&data=${encodeURIComponent(link)}" alt="QR">
-    <h3>محطة ${esc(name)}</h3><p>${esc(link)}</p>
-    <div class="success-actions" style="margin-top:12px">
-      <button class="btn sm" id="qrCopy">${ic('copy')} نسخ الرابط</button>
-      <button class="btn ghost sm" id="qrClose">إغلاق</button></div></div>`);
-  $('#qrCopy').onclick=()=>copyText(link,'تم نسخ الرابط ✓');
-  $('#qrClose').onclick=closeOverlay;
-}
 
 const SECTIONS=[
  {id:'tickets',ord:'أولاً',title:'التذاكر',icon:'ticket',rows:[{label:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'}]},
@@ -609,7 +495,6 @@ function renderForm(code,nameParam){
         <div class="field"><label>تاريخ البيان</label><div class="in-wrap"><input type="date" id="fDate" value="${todayISO()}"></div></div>
         <div class="field"><label>اسم المُسجِّل (اختياري)</label><div class="in-wrap"><input type="text" id="fBy" placeholder="موظف المحطة" autocomplete="off"></div></div>
       </div>
-      <div class="hint-exist" id="existHint">ℹ️ يوجد بيان مسجّل لنفس المحطة والتاريخ — عند الإرسال سيتم تحديثه.</div>
     </div>
     <form id="entryForm" novalidate>
       ${SECTIONS.map(s=>`<section class="card form-sec">
@@ -641,10 +526,6 @@ function renderForm(code,nameParam){
       const el=form.querySelector(`[data-sec="${s.id}"]`);if(el)el.textContent=money(sum);});
   }
   form.addEventListener('input',recalc);
-  function existCheck(){const d=$('#fDate').value||todayISO();
-    const hit=getLocalRecords().some(r=>String(r.stationCode)===code&&String(r.date)===d);
-    $('#existHint').style.display=hit?'block':'none';}
-  $('#fDate').addEventListener('change',existCheck);existCheck();
 
   form.addEventListener('submit',async e=>{
     e.preventDefault();
@@ -662,7 +543,7 @@ function renderForm(code,nameParam){
   });
 }
 function showSuccess(rec,res){
-  const srcNote=res.sent?'✓ تم إرسال البيانات إلى Supabase بنجاح':'تم الحفظ محليًا على هذا الجهاز';
+  const srcNote=res.sent?'✓ تم إرسال البيانات إلى Supabase بنجاح':'✗ فشل الإرسال — '+res.msg;
   openOverlay(`<div class="success-box">
     <div class="okring">${ic('check')}</div>
     <h2>تم تسجيل البيان بنجاح</h2><p class="sub">${esc(srcNote)}</p>
@@ -687,7 +568,6 @@ function showSuccess(rec,res){
 }
 
 let dashDate=todayISO();
-const DASH={rows:[],source:'local'};
 const GROUPS=[
  {t:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'},
  {t:'أسبوعي',c:'weekCount',r:'weekRevenue'},
@@ -701,10 +581,9 @@ const GROUPS=[
 async function renderDash(){
   setActive('dash');
   const app=$('#app');
-  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل البيانات المجمّعة…</p></div>';
-  const res=await getAllRecords();DASH.rows=res.rows;DASH.source=res.source;
-  drawDash();
-  if(res.source==='local-error')toast('تعذر الاتصال بـ Supabase — يتم عرض البيانات المحلية');
+  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل البيانات المجمّعة من Supabase…</p></div>';
+  const res=await getAllRecords();
+  drawDash(res.rows);
 }
 function buildDayRows(records,dateStr){
   const stations=getStations();
@@ -722,13 +601,11 @@ function totalsOf(rows){return {
   count:rows.reduce((a,r)=>a+r.totalCount,0),
   revenue:rows.reduce((a,r)=>a+r.totalRevenue,0),
   done:rows.filter(r=>r.present).length};}
-function drawDash(){
+function drawDash(rows){
   const app=$('#app');
-  const dayRows=buildDayRows(DASH.rows,dashDate);
+  const dayRows=buildDayRows(rows,dashDate);
   const T=totalsOf(dayRows);
   const top=[...dayRows].filter(r=>r.present).sort((a,b)=>b.totalRevenue-a.totalRevenue)[0];
-  const srcLabel=DASH.source==='remote'?'المصدر: Supabase ✓':(DASH.source==='local-error'?'⚠️ عرض محلي (تعذر الاتصال)':'المصدر: البيانات المحلية');
-  const tickerTxt=`مونوريل شرق النيل • بيان يوم ${fmtDateAr(dashDate)} ◆ إجمالي الإيرادات: ${money(T.revenue)} ◆ إجمالي العمليات: ${fmt(T.count)} ◆ المحطات المسجّلة: ${T.done} من ${dayRows.length}${top?(' ◆ أعلى محطة إيرادًا: '+top.name+' ('+money(top.totalRevenue)+')'):''} ◆ `;
   app.innerHTML=`<div class="view">
     <div class="board-head">
       <div><h1 class="page-title">لوحة التجميع</h1>
@@ -741,9 +618,8 @@ function drawDash(){
     <div class="dash-controls">
       <input type="date" id="dashDate" value="${dashDate}">
       <button class="btn ghost sm" id="todayBtn">اليوم</button>
-      <span class="src-badge">${srcLabel}</span>
+      <span class="src-badge">المصدر: Supabase ✓</span>
     </div>
-    <div class="ticker" aria-hidden="true"><div class="ticker-track"><span>${tickerTxt}</span><span>${tickerTxt}</span></div></div>
     <div class="stats-strip">
       <div class="stat"><small>محطات مسجّلة اليوم</small><b>${T.done} / ${dayRows.length}</b></div>
       <div class="stat gold"><small>إجمالي الإيرادات</small><b>${money(T.revenue)}</b></div>
@@ -767,13 +643,13 @@ function drawDash(){
           return `<td>${fmt(c)}</td><td>${fmt(v)}</td>`;}).join('')}
         <td>${T.done} محطة</td></tr></tfoot>
     </table></div>
-    <p class="dash-note">ملحوظة: كل الأيام بتتحفظ في نفس الجدول — اختار أي تاريخ من فوق وشوف بيانه، و"السجل الكامل" بيصدّر كل الأيام.</p>
+    <p class="dash-note">ملحوظة: كل الأيام بتتحفظ في نفس الجدول — اختار أي تاريخ من فوق وشوف بيانه.</p>
   </div>`;
-  $('#dashDate').addEventListener('change',e=>{dashDate=e.target.value||todayISO();drawDash();});
-  $('#todayBtn').addEventListener('click',()=>{dashDate=todayISO();drawDash();});
+  $('#dashDate').addEventListener('change',e=>{dashDate=e.target.value||todayISO();drawDash(rows);});
+  $('#todayBtn').addEventListener('click',()=>{dashDate=todayISO();drawDash(rows);});
   $('#dashRefresh').addEventListener('click',renderDash);
   $('#exDay').addEventListener('click',()=>exportDayExcel(dayRows));
-  $('#exLog').addEventListener('click',()=>exportLogExcel(DASH.rows));
+  $('#exLog').addEventListener('click',()=>exportLogExcel(rows));
 }
 
 function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
@@ -791,7 +667,7 @@ function exportDayExcel(dayRows){
   ];
   dayRows.forEach(r=>aoa.push([r.name,r.ticketsCount,r.ticketsRevenue,r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.totalCount,r.totalRevenue,r.present?'مسجّل':'لم يُسجّل']));
   aoa.push(['الإجمالي العام',...GROUPS.map(g=>[dayRows.reduce((a,r)=>a+r[g.c],0),dayRows.reduce((a,r)=>a+r[g.r],0)]).flat(),T.done+' محطة']);
-  if(!window.XLSX)return exportXLSFallback('إحصاء المحطات '+dashDate,[['إحصاء '+dashDate,aoa]]);
+  if(!window.XLSX)return;
   const ws=XLSX.utils.aoa_to_sheet(aoa);
   ws['!merges']=[
     {s:{r:0,c:0},e:{r:0,c:17}},
@@ -812,7 +688,7 @@ function exportLogExcel(records){
   const AR={stationCode:'كود المحطة',stationName:'المحطة',date:'التاريخ',ticketsCount:'عدد التذاكر',ticketsRevenue:'إيراد التذاكر',weekCount:'اشتراك أسبوعي (عدد)',weekRevenue:'اشتراك أسبوعي (إيراد)',monthCount:'اشتراك شهري (عدد)',monthRevenue:'اشتراك شهري (إيراد)',quarterCount:'اشتراك ربع سنوي (عدد)',quarterRevenue:'اشتراك ربع سنوي (إيراد)',subCardsCount:'كروت اشتراكات (عدد)',subCardsRevenue:'كروت اشتراكات (إيراد)',walletCardsCount:'كروت محفظة (عدد)',walletCardsRevenue:'كروت محفظة (إيراد)',rechargeCount:'شحن محفظة (عدد)',rechargeRevenue:'شحن محفظة (إيراد)',totalCount:'إجمالي العدد',totalRevenue:'إجمالي الإيراد',submittedBy:'المُسجِّل',submittedAt:'وقت التسجيل'};
   const sorted=[...records].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
   const aoa=[FIELDS.map(f=>AR[f]),...sorted.map(r=>FIELDS.map(f=>r[f]??''))];
-  if(!window.XLSX)return exportXLSFallback('سجل البيانات الكامل',[['السجل',aoa]]);
+  if(!window.XLSX)return;
   const ws=XLSX.utils.aoa_to_sheet(aoa);
   ws['!cols']=[{wch:12},{wch:20},{wch:12},...Array(16).fill({wch:15}),{wch:14},{wch:20}];
   ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:aoa.length-1,c:FIELDS.length-1}})};
@@ -822,92 +698,6 @@ function exportLogExcel(records){
   XLSX.writeFile(wb,'سجل بيانات مونوريل شرق النيل.xlsx');
   toast('تم تنزيل السجل الكامل ✓');
 }
-function exportXLSFallback(filename,sheets){
-  let html='<html><head><meta charset="UTF-8"></head><body dir="rtl">';
-  sheets.forEach(([title,aoa])=>{html+='<h3>'+esc(title)+'</h3><table border="1" cellspacing="0">'+
-    aoa.map(r=>'<tr>'+r.map(c=>'<td>'+(typeof c==='number'?c:esc(c??''))+'</td>').join('')+'</tr>').join('')+'</table><br>';});
-  html+='</body></html>';
-  dlBlob(new Blob(['\ufeff'+html],{type:'application/vnd.ms-excel'}),filename+'.xls');
-}
-
-const SUPA_SQL=`create table public.station_reports (
-  id bigint generated always as identity primary key,
-  station_code text not null,
-  station_name text not null,
-  report_date date not null,
-  tickets_count numeric default 0,
-  tickets_revenue numeric default 0,
-  week_count numeric default 0,
-  week_revenue numeric default 0,
-  month_count numeric default 0,
-  month_revenue numeric default 0,
-  quarter_count numeric default 0,
-  quarter_revenue numeric default 0,
-  sub_cards_count numeric default 0,
-  sub_cards_revenue numeric default 0,
-  wallet_cards_count numeric default 0,
-  wallet_cards_revenue numeric default 0,
-  recharge_count numeric default 0,
-  recharge_revenue numeric default 0,
-  total_count numeric default 0,
-  total_revenue numeric default 0,
-  submitted_by text,
-  submitted_at timestamptz default now(),
-  unique (station_code, report_date)
-);
-
-alter table public.station_reports enable row level security;
-
-create policy "allow_anon_read" on public.station_reports for select to anon using (true);
-create policy "allow_anon_insert" on public.station_reports for insert to anon with check (true);
-create policy "allow_anon_update" on public.station_reports for update to anon using (true) with check (true);`;
-
-function renderSetup(){
-  setActive('setup');
-  const app=$('#app'), st=getStations(), cfg=getSettings(), on=!!supaCfg();
-  app.innerHTML=`<div class="view setup-grid">
-    ${fileWarn()}
-    <div><h1 class="page-title">الإعدادات والربط</h1>
-      <p class="page-sub">التطبيق مربوط تلقائيًا بـ Supabase — أي حد يفتح التطبيق هيسجل البيانات مباشرة</p></div>
-
-    <div class="card"><h2>${ic('phone')} تثبيت التطبيق على الموبايل</h2>
-      <p style="color:var(--muted);font-size:13px;line-height:1.8">افتح الموقع من المتصفح وثبّته زي أي تطبيق: هيظهر بأيقونة على الشاشة ويفتح ملء الشاشة من غير شريط المتصفح، ومعاه شريط تنقّل سفلي زي التطبيقات بالظبط.</p>
-      <div style="margin-top:10px">
-        ${deferredPrompt?'<button class="btn" id="installBtn">'+ic('download')+' تثبيت التطبيق الآن</button>':'<p class="dash-note">على Android: من قائمة المتصفح () اختار "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".<br>على iPhone: زر المشاركة في Safari ثم "إضافة إلى الشاشة الرئيسية".</p>'}
-      </div>
-    </div>
-
-    <div class="card"><h2>${ic('db')} معلومات الاتصال</h2>
-      <p style="color:var(--muted);font-size:13px;line-height:1.8">التطبيق مربوط بالفعل بـ Supabase — كل حد يفتح التطبيق من أي مكان هيسجل البيانات مباشرة في قاعدة البيانات المركزية.</p>
-      <div style="margin-top:10px;padding:12px;background:rgba(56,200,176,.1);border-radius:10px;border:1px solid rgba(56,200,176,.3)">
-        <b style="color:var(--acc-lite)">✓ التطبيق مربوط وجاهز للاستخدام</b>
-        <p style="color:var(--muted);font-size:12.5px;margin-top:6px">ابعت اللينك لأي محطة وهتقدر تسجل البيانات مباشرة</p>
-      </div>
-    </div>
-
-    <div class="card"><h2>${ic('train')} إدارة المحطات</h2>
-      <p style="color:var(--muted);font-size:12.5px;margin-bottom:12px">عدّل أسماء المحطات الافتراضية أو أضِف باقي محطات الخط — اللينك الخاص بكل محطة يتولّد تلقائيًا.</p>
-      <div class="st-mng">
-        ${st.map(s=>`<div class="st-mng-row"><span class="s-code">${esc(s.code)}</span><b>${esc(s.name)}</b>
-          <button class="icon-btn" data-copy="${esc(stationLink(s))}" title="نسخ الرابط">${ic('link')}</button>
-          <button class="icon-btn" data-del="${esc(s.code)}" title="حذف المحطة">${ic('trash')}</button></div>`).join('')}
-      </div>
-    </div>
-
-    <div class="card"><h2>${ic('sliders')} البيانات المحلية</h2>
-      <p style="color:var(--muted);font-size:13px;margin-bottom:12px">عدد البيانات المخزّنة على هذا الجهاز: <b style="color:var(--gold)">${getLocalRecords().length}</b> بيان</p>
-      <button class="btn danger" id="wipeLocal">${ic('trash')} مسح البيانات المحلية</button>
-    </div>
-  </div>`;
-
-  const ib=$('#installBtn');
-  if(ib)ib.onclick=async ()=>{if(!deferredPrompt)return;deferredPrompt.prompt();
-    const ch=await deferredPrompt.userChoice;toast(ch.outcome==='accepted'?'جارٍ تثبيت التطبيق ✓':'تم إلغاء التثبيت');deferredPrompt=null;};
-  $$('[data-del]').forEach(b=>b.onclick=()=>{
-    const code=b.dataset.del;const s=st.find(x=>x.code===code);
-    if(confirm('حذف محطة '+(s?s.name:code)+'؟')){saveStations(st.filter(x=>x.code!==code));toast('تم الحذف');renderSetup();}});
-  $('#wipeLocal').onclick=()=>{if(confirm('هل أنت متأكد من مسح كل البيانات المحلية؟')){saveLocalRecords([]);toast('تم المسح');renderSetup();}};
-}
 
 function tickClock(){const n=new Date();
   $('#clockTime').textContent=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
@@ -915,7 +705,6 @@ function tickClock(){const n=new Date();
 setInterval(tickClock,1000);tickClock();
 injectBottomNav();
 setupPWA();
-updateChip();
 route();
 startAutoRefresh();
 hideSplash();
