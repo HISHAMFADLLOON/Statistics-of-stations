@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="إحصاء المحطات">
 <title>إحصاء المحطات — مونوريل شرق النيل</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -293,7 +293,7 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
       <div id="clockTime">--:--</div>
       <div id="clockDate"></div>
     </div>
-    <span class="chip warn" id="modeChip">وضع محلي</span>
+    <span class="chip ok" id="modeChip">متصل — Supabase</span>
   </div>
 </header>
 
@@ -322,10 +322,19 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲۳٤٥٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲۳٥٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 function store(k){try{const x=JSON.parse(localStorage.getItem(k));return x===null?undefined:x;}catch(e){return undefined;}}
+
+// ==========================================
+// 🔧 هُنا هنحط بيانات Supabase بتاعتك
+// ==========================================
+const SUPABASE_CONFIG={
+  url:'https://hdsohnub.supabase.co',
+  key:'sb_publishable_TQ9SWNIzfgc7ZYt5UdCi4A_g9H-4i'
+};
+// ==========================================
 
 const COL_MAP={
  stationCode:'station_code',stationName:'station_name',date:'report_date',
@@ -342,7 +351,7 @@ const COL_MAP={
 const REV_MAP={};Object.entries(COL_MAP).forEach(([k,v])=>REV_MAP[v]=k);
 const toSnake=rec=>{const o={};for(const k in rec){if(COL_MAP[k])o[COL_MAP[k]]=rec[k];}return o;};
 const fromSnake=row=>{const o={};for(const k in row){if(REV_MAP[k])o[REV_MAP[k]]=row[k];}return o;};
-function supaCfg(){const c=getSettings();return (c.supabaseUrl&&c.supabaseKey)?{base:String(c.supabaseUrl).replace(/\/+$/,'')+'/rest/v1',key:c.supabaseKey}:null;}
+function supaCfg(){return SUPABASE_CONFIG.url&&SUPABASE_CONFIG.key?{base:String(SUPABASE_CONFIG.url).replace(/\/+$/,'')+'/rest/v1',key:SUPABASE_CONFIG.key}:null;}
 function supaHeaders(){const c=supaCfg();return {apikey:c.key,Authorization:'Bearer '+c.key};}
 
 const ICONS={
@@ -400,9 +409,7 @@ async function getAllRecords(){
   if(!cfg) return {rows:local,source:'local'};
   try{
     const url=cfg.base+'/'+TABLE+'?select=*';
-    console.log('Fetching from:',url);
     const res=await fetchJson(url,{headers:supaHeaders()});
-    console.log('Response:',res.status,res.json);
     if(res.status!==200||!Array.isArray(res.json)) throw new Error('bad');
     const map=new Map();local.forEach(r=>map.set(recKey(r),r));
     res.json.map(fromSnake).forEach(r=>map.set(recKey(r),r));
@@ -496,7 +503,6 @@ function route(){
 }
 window.addEventListener('hashchange',route);
 
-// Auto-refresh كل 10 ثواني
 let refreshInterval=null;
 function startAutoRefresh(){
   if(refreshInterval)clearInterval(refreshInterval);
@@ -656,7 +662,7 @@ function renderForm(code,nameParam){
   });
 }
 function showSuccess(rec,res){
-  const srcNote=res.sent?'✓ تم إرسال البيانات إلى Supabase بنجاح':'تم الحفظ محليًا على هذا الجهاز — اربط Supabase من صفحة الإعدادات لتجميع بيانات كل المحطات';
+  const srcNote=res.sent?'✓ تم إرسال البيانات إلى Supabase بنجاح':'تم الحفظ محليًا على هذا الجهاز';
   openOverlay(`<div class="success-box">
     <div class="okring">${ic('check')}</div>
     <h2>تم تسجيل البيان بنجاح</h2><p class="sub">${esc(srcNote)}</p>
@@ -855,41 +861,28 @@ alter table public.station_reports enable row level security;
 create policy "allow_anon_read" on public.station_reports for select to anon using (true);
 create policy "allow_anon_insert" on public.station_reports for insert to anon with check (true);
 create policy "allow_anon_update" on public.station_reports for update to anon using (true) with check (true);`;
+
 function renderSetup(){
   setActive('setup');
   const app=$('#app'), st=getStations(), cfg=getSettings(), on=!!supaCfg();
   app.innerHTML=`<div class="view setup-grid">
     ${fileWarn()}
     <div><h1 class="page-title">الإعدادات والربط</h1>
-      <p class="page-sub">اربط التطبيق بـ Supabase لتستقبل بيانات كل المحطات تلقائيًا في قاعدة بياناتك</p></div>
+      <p class="page-sub">التطبيق مربوط تلقائيًا بـ Supabase — أي حد يفتح التطبيق هيسجل البيانات مباشرة</p></div>
 
     <div class="card"><h2>${ic('phone')} تثبيت التطبيق على الموبايل</h2>
       <p style="color:var(--muted);font-size:13px;line-height:1.8">افتح الموقع من المتصفح وثبّته زي أي تطبيق: هيظهر بأيقونة على الشاشة ويفتح ملء الشاشة من غير شريط المتصفح، ومعاه شريط تنقّل سفلي زي التطبيقات بالظبط.</p>
       <div style="margin-top:10px">
-        ${deferredPrompt?'<button class="btn" id="installBtn">'+ic('download')+' تثبيت التطبيق الآن</button>':'<p class="dash-note">على Android: من قائمة المتصفح (⋮) اختار "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".<br>على iPhone: زر المشاركة في Safari ثم "إضافة إلى الشاشة الرئيسية".</p>'}
+        ${deferredPrompt?'<button class="btn" id="installBtn">'+ic('download')+' تثبيت التطبيق الآن</button>':'<p class="dash-note">على Android: من قائمة المتصفح () اختار "تثبيت التطبيق" أو "إضافة إلى الشاشة الرئيسية".<br>على iPhone: زر المشاركة في Safari ثم "إضافة إلى الشاشة الرئيسية".</p>'}
       </div>
     </div>
 
-    <div class="card"><h2>${ic('db')} خطوات الربط مع Supabase</h2>
-      <ol class="steps">
-        <li>اعمل حساب مجاني على <b>supabase.com</b> واضغط <b>New project</b> (اختار اسم المشروع وباسورد وأقرب Region ليك).</li>
-        <li>من القائمة الجانبية افتح <b>SQL Editor</b> واضغط <b>New query</b>، الصق كود SQL بالأسفل واضغط <b>Run</b> — هيعمل جدول واحد لكل الأيام مع صلاحيات آمنة.</li>
-        <li>من <b>Project Settings</b> (أيقونة الترس) → <b>API</b>: انسخ <b>Project URL</b> و<b>anon public key</b>.</li>
-        <li>الصقهم هنا بالأسفل واضغط <b>حفظ واختبار</b>.</li>
-        <li>بعد رفع التطبيق على GitHub Pages، أرسل لكل محطة لينكها من زر النسخ في لوحة المحطات — البيانات هتوصلك فورًا.</li>
-      </ol>
-      <div class="codebox"><button class="icon-btn copy-code" id="copySql" title="نسخ SQL">${ic('copy')}</button><pre dir="ltr">${esc(SUPA_SQL)}</pre></div>
-    </div>
-
-    <div class="card"><h2>${ic('link')} بيانات الاتصال بـ Supabase</h2>
-      <div class="url-row">
-        <input id="supaUrl" placeholder="https://xxxxxxxx.supabase.co" value="${esc(cfg.supabaseUrl||'')}">
-        <input id="supaKey" placeholder="anon public key (يبدأ بـ eyJ…)" value="${esc(cfg.supabaseKey||'')}">
-        <button class="btn" id="saveCfg">${ic('check')} حفظ واختبار</button>
-        ${on?'<button class="btn danger" id="removeCfg">إلغاء الربط</button>':''}
+    <div class="card"><h2>${ic('db')} معلومات الاتصال</h2>
+      <p style="color:var(--muted);font-size:13px;line-height:1.8">التطبيق مربوط بالفعل بـ Supabase — كل حد يفتح التطبيق من أي مكان هيسجل البيانات مباشرة في قاعدة البيانات المركزية.</p>
+      <div style="margin-top:10px;padding:12px;background:rgba(56,200,176,.1);border-radius:10px;border:1px solid rgba(56,200,176,.3)">
+        <b style="color:var(--acc-lite)">✓ التطبيق مربوط وجاهز للاستخدام</b>
+        <p style="color:var(--muted);font-size:12.5px;margin-top:6px">ابعت اللينك لأي محطة وهتقدر تسجل البيانات مباشرة</p>
       </div>
-      <div class="test-result" id="testResult"></div>
-      <p style="color:var(--muted);font-size:12px;margin-top:10px">ملاحظة: مفتاح anon آمن للاستخدام هنا، لأنه مقيّد بصلاحيات (RLS) تسمح فقط بالقراءة والكتابة في جدول البيانات — لا يسمح بأي شيء آخر في قاعدة البيانات.</p>
     </div>
 
     <div class="card"><h2>${ic('train')} إدارة المحطات</h2>
@@ -910,25 +903,6 @@ function renderSetup(){
   const ib=$('#installBtn');
   if(ib)ib.onclick=async ()=>{if(!deferredPrompt)return;deferredPrompt.prompt();
     const ch=await deferredPrompt.userChoice;toast(ch.outcome==='accepted'?'جارٍ تثبيت التطبيق ✓':'تم إلغاء التثبيت');deferredPrompt=null;};
-  $('#copySql').onclick=()=>copyText(SUPA_SQL,'تم نسخ كود SQL ✓');
-  $('#saveCfg').onclick=async ()=>{
-    const url=$('#supaUrl').value.trim(), key=$('#supaKey').value.trim();
-    const r=$('#testResult');
-    if((url&&!key)||(!url&&key)){r.style.color='#ff9a90';r.textContent='✗ لازم تدخل الرابط والمفتاح معًا';return;}
-    if(url&&!url.startsWith('https://')){r.style.color='#ff9a90';r.textContent='✗ الرابط يجب أن يبدأ بـ https://';return;}
-    saveSettings({...getSettings(),supabaseUrl:url||undefined,supabaseKey:key||undefined});updateChip();
-    if(!url){toast('تم الحفظ — التطبيق الآن في الوضع المحلي');renderSetup();return;}
-    r.style.color='#ffd27a';r.textContent='جارٍ اختبار الاتصال…';
-    try{
-      const c=supaCfg();
-      const res=await fetchJson(c.base+'/'+TABLE+'?select=station_code',{headers:supaHeaders()});
-      if(res.status===200&&Array.isArray(res.json)){
-        toast('تم الربط مع Supabase بنجاح ✓ ('+res.json.length+' بيان محفوظ)');
-        renderSetup();
-      }else{r.style.color='#ff9a90';r.textContent='✗ تعذر الاتصال — راجع الرابط والمفتاح وتأكد إنك عملت Run لكود SQL';}
-    }catch(e){r.style.color='#ff9a90';r.textContent='✗ تعذر الاتصال — راجع الرابط والمفتاح';}
-  };
-  const rm=$('#removeCfg');if(rm)rm.onclick=()=>{saveSettings({...getSettings(),supabaseUrl:undefined,supabaseKey:undefined});updateChip();toast('تم إلغاء الربط');renderSetup();};
   $$('[data-del]').forEach(b=>b.onclick=()=>{
     const code=b.dataset.del;const s=st.find(x=>x.code===code);
     if(confirm('حذف محطة '+(s?s.name:code)+'؟')){saveStations(st.filter(x=>x.code!==code));toast('تم الحذف');renderSetup();}});
