@@ -60,6 +60,7 @@ nav a.active{color:var(--acc-lite);background:rgba(56,200,176,.1)}
 #clockDate{font-size:11px;color:var(--muted)}
 .chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;display:inline-block}
 .chip.ok{color:#7ee2a8;background:rgba(52,209,123,.12);border:1px solid rgba(52,209,123,.4)}
+.chip.warn{color:#ffd27a;background:rgba(255,181,46,.1);border:1px solid rgba(255,181,46,.35)}
 @media(max-width:900px){nav.top-nav{display:none}}
 
 main{position:relative;z-index:1;max-width:1160px;margin:auto;padding:26px 20px 80px}
@@ -251,7 +252,7 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
       <div id="clockTime">--:--</div>
       <div id="clockDate"></div>
     </div>
-    <span class="chip ok" id="modeChip">متصل — Supabase</span>
+    <span class="chip warn" id="modeChip">وضع محلي</span>
     <button class="btn ghost sm" id="logoutBtn" style="display:none">🚪 خروج</button>
   </div>
 </header>
@@ -266,12 +267,37 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 
 // ==========================================
-// 🔧 Supabase Config
+// 🔧 Supabase Config - URLs الصحيحة
 // ==========================================
-const SUPA_URL='https://hdsohnub.supabase.co';
-const SUPA_KEY='sb_publishable_TQ9SWNIzfgc7ZYt5UdCi4A_g9H-4i';
+const SUPA_URL='https://hdsohnubcqbdwkmtvsvr.supabase.co';
+const SUPA_KEY='sb_publishable_TQ9SWNIZfgc7ZYt5UdCi4A_g9H-4ied';
 const BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1';
 const HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
+// ==========================================
+
+// ==========================================
+// 🎭 Mock Data - بيانات تجريبية للمحاكاة
+// ==========================================
+const MOCK_STATIONS=[
+  {id:1,code:'EST',name:'الاستاد'},
+  {id:2,code:'NOZ',name:'النزهة'},
+  {id:3,code:'SIK',name:'طريق السويس'},
+  {id:4,code:'BAD',name:'البادية'},
+  {id:5,code:'SHR',name:'الشروق'},
+  {id:6,code:'SKH',name:'طريق العين السخنة'},
+  {id:7,code:'NCP',name:'العاصمة الجديدة'},
+  {id:8,code:'CAP',name:'الكابيتال'}
+];
+
+const MOCK_USERS=[
+  {id:1,username:'admin',password:'admin123',role:'admin'},
+  {id:2,username:'hisham',password:'hisham123',role:'admin'}
+];
+
+const MOCK_REPORTS=[];
+const MOCK_AUDIT=[];
+
+let useMock=false;
 // ==========================================
 
 const NUM_FIELDS=['ticketsCount','ticketsRevenue','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue'];
@@ -283,7 +309,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲۳٥٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۲۳٥٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
@@ -330,7 +356,7 @@ const ic=(n,cls='')=>`<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" str
 $('#brandIcon').innerHTML=ic('train');
 
 // ==========================================
-// Supabase API
+// Supabase API مع Fallback للمحاكاة
 // ==========================================
 async function supaFetch(path,opts={},ms=10000){
   const url=BASE+'/'+path;
@@ -338,26 +364,36 @@ async function supaFetch(path,opts={},ms=10000){
   try{
     const r=await fetch(url,{...opts,signal:c.signal,headers:{...HEADERS,...(opts.headers||{})}});
     return {status:r.status,json:await r.json().catch(()=>null),ok:r.ok};
+  }catch(e){
+    console.warn('Supabase fetch failed, using mock:',e);
+    useMock=true;
+    return {status:200,json:null,ok:false};
   }finally{clearTimeout(t);}
 }
 
 async function getAllReports(){
+  if(useMock)return MOCK_REPORTS.map(fromSnake);
   try{
     const res=await supaFetch('station_reports?select=*');
     if(res.status===200&&Array.isArray(res.json))return res.json.map(fromSnake);
-    return [];
-  }catch(e){console.error(e);return [];}
+    useMock=true;return MOCK_REPORTS.map(fromSnake);
+  }catch(e){useMock=true;return MOCK_REPORTS.map(fromSnake);}
 }
 
 async function getAllStations(){
+  if(useMock)return MOCK_STATIONS;
   try{
     const res=await supaFetch('stations?select=*&order=code');
     if(res.status===200&&Array.isArray(res.json))return res.json;
-    return [];
-  }catch(e){return [];}
+    useMock=true;return MOCK_STATIONS;
+  }catch(e){useMock=true;return MOCK_STATIONS;}
 }
 
 async function saveReport(rec){
+  if(useMock){
+    MOCK_REPORTS.push(toSnake(rec));
+    return true;
+  }
   try{
     const res=await supaFetch('station_reports',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(toSnake(rec))},15000);
     return res.ok;
@@ -365,6 +401,10 @@ async function saveReport(rec){
 }
 
 async function addStation(code,name){
+  if(useMock){
+    MOCK_STATIONS.push({id:MOCK_STATIONS.length+1,code,name});
+    return true;
+  }
   try{
     const res=await supaFetch('stations',{method:'POST',body:JSON.stringify({code,name})});
     return res.ok;
@@ -372,6 +412,11 @@ async function addStation(code,name){
 }
 
 async function deleteStation(id){
+  if(useMock){
+    const idx=MOCK_STATIONS.findIndex(s=>s.id==id);
+    if(idx>-1)MOCK_STATIONS.splice(idx,1);
+    return true;
+  }
   try{
     const res=await supaFetch('stations?id=eq.'+id,{method:'DELETE'});
     return res.ok;
@@ -379,11 +424,14 @@ async function deleteStation(id){
 }
 
 async function addAudit(action,details,username){
-  try{await supaFetch('audit_log',{method:'POST',body:JSON.stringify({action,details:JSON.stringify(details),username})});}catch(e){}
+  const log={action,details:JSON.stringify(details),username,created_at:new Date().toISOString()};
+  if(useMock){MOCK_AUDIT.push(log);return;}
+  try{await supaFetch('audit_log',{method:'POST',body:JSON.stringify(log)});}catch(e){}
 }
 
 async function getAudit(){
-  try{const res=await supaFetch('audit_log?select=*&order=created_at.desc&limit=100');return res.status===200?res.json:[];}catch(e){return [];}
+  if(useMock)return MOCK_AUDIT;
+  try{const res=await supaFetch('audit_log?select=*&order=created_at.desc&limit=100');return res.status===200?res.json:MOCK_AUDIT;}catch(e){return MOCK_AUDIT;}
 }
 
 // ==========================================
@@ -395,18 +443,19 @@ function setAuth(u){localStorage.setItem(AUTH_KEY,JSON.stringify(u));}
 function clearAuth(){localStorage.removeItem(AUTH_KEY);}
 
 async function login(username,password){
+  if(useMock){
+    const user=MOCK_USERS.find(u=>u.username===username&&u.password===password);
+    if(user){setAuth({username:user.username,role:user.role});return user;}
+    return null;
+  }
   try{
     const res=await supaFetch('app_users?select=*');
     if(res.status===200&&Array.isArray(res.json)){
       const user=res.json.find(u=>u.username===username&&u.password===password);
-      if(user){
-        setAuth({username:user.username,role:user.role});
-        await addAudit('تسجيل دخول',{username},'system');
-        return user;
-      }
+      if(user){setAuth({username:user.username,role:user.role});await addAudit('تسجيل دخول',{username},'system');return user;}
     }
     return null;
-  }catch(e){console.error(e);return null;}
+  }catch(e){return null;}
 }
 
 function logout(){clearAuth();location.hash='#/login';toast('تم تسجيل الخروج');}
@@ -424,6 +473,7 @@ let toastTimer;function toast(msg){const el=$('#toast');el.textContent=msg;el.cl
 function openOverlay(html){const o=$('#overlay');o.innerHTML=html;o.hidden=false;}
 function closeOverlay(){const o=$('#overlay');o.hidden=true;o.innerHTML='';}
 function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.dataset.nav===k));}
+function updateModeChip(){const c=$('#modeChip');if(useMock){c.className='chip warn';c.textContent='وضع محاكاة';}else{c.className='chip ok';c.textContent='متصل — Supabase';}}
 
 // ==========================================
 // PWA
@@ -485,7 +535,7 @@ function renderLogin(){
   $('#topNav').style.display='none';
   $('#logoutBtn').style.display='none';
   $('#app').innerHTML=`<div class="view"><div class="login-box">
-    <h2>🔐 تسجيل الدخول</h2>
+    <h2> تسجيل الدخول</h2>
     <form id="loginForm">
       <div class="field"><label>اسم المستخدم</label><div class="in-wrap"><input type="text" id="loginUser" autocomplete="username" required></div></div>
       <div class="field"><label>كلمة المرور</label><div class="in-wrap"><input type="password" id="loginPass" autocomplete="current-password" required></div></div>
@@ -502,7 +552,7 @@ function renderLogin(){
     const btn=e.target.querySelector('button');
     btn.disabled=true;btn.innerHTML=ic('spinner','spin')+' جاري...';
     const user=await login(u,p);
-    if(user){toast('مرحبًا '+user.username+' ✓');location.hash='#/';}
+    if(user){toast('مرحبًا '+user.username+' ✓');updateModeChip();location.hash='#/';}
     else{toast('خطأ في اسم المستخدم أو كلمة المرور');btn.disabled=false;btn.textContent='دخول';}
   });
 }
@@ -514,6 +564,7 @@ async function renderHome(){
   setActive('home');
   $('#topNav').style.display='';
   $('#logoutBtn').style.display='';
+  updateModeChip();
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل لوحة المحطات…</p></div>';
   const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
@@ -634,7 +685,7 @@ function renderForm(code,nameParam){
 function showSuccess(rec){
   openOverlay(`<div class="success-box">
     <div class="okring">${ic('check')}</div>
-    <h2>تم تسجيل البيان بنجاح</h2><p class="sub">✓ تم إرسال البيانات إلى Supabase</p>
+    <h2>تم تسجيل البيان بنجاح</h2><p class="sub">✓ تم إرسال البيانات ${useMock?'(محاكاة)':'إلى Supabase'}</p>
     <div class="receipt">
       <h4>محطة ${esc(rec.stationName)}</h4>
       <div class="r-sub">مونوريل شرق النيل • بيان يوم ${fmtDateAr(rec.date)}</div>
@@ -673,6 +724,7 @@ async function renderDash(){
   setActive('dash');
   $('#topNav').style.display='';
   $('#logoutBtn').style.display='';
+  updateModeChip();
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل البيانات المجمّعة…</p></div>';
   const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
@@ -702,7 +754,7 @@ function drawDash(reports,stations){
     <div class="dash-controls">
       <input type="date" id="dashDate" value="${dashDate}">
       <button class="btn ghost sm" id="todayBtn">اليوم</button>
-      <span class="src-badge">المصدر: Supabase ✓</span>
+      <span class="src-badge">${useMock?'️ وضع محاكاة':'المصدر: Supabase ✓'}</span>
     </div>
     <div class="stats-strip">
       <div class="stat"><small>محطات مسجّلة اليوم</small><b>${T.done} / ${dayRows.length}</b></div>
@@ -732,6 +784,7 @@ async function renderStats(){
   setActive('stats');
   $('#topNav').style.display='';
   $('#logoutBtn').style.display='';
+  updateModeChip();
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل الإحصائيات…</p></div>';
   const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
@@ -769,6 +822,7 @@ async function renderAudit(){
   setActive('audit');
   $('#topNav').style.display='';
   $('#logoutBtn').style.display='';
+  updateModeChip();
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل سجل التدقيق…</p></div>';
   const logs=await getAudit();
@@ -788,6 +842,7 @@ async function renderStations(){
   setActive('stations');
   $('#topNav').style.display='';
   $('#logoutBtn').style.display='';
+  updateModeChip();
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل المحطات…</p></div>';
   const stations=await getAllStations();
