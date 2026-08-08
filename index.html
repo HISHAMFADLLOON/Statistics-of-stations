@@ -423,6 +423,11 @@ footer{
   transform:translateY(-3px);
   box-shadow:var(--shadow-md);
 }
+.icon-btn.danger-icon:hover{
+  color:var(--danger);
+  border-color:var(--danger);
+  background:rgba(239,68,68,.1);
+}
 .icon-btn .ic{width:18px;height:18px}
 .spin{animation:rot 1s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
@@ -1061,6 +1066,21 @@ table.gt{
 .st-mng-row .s-code{padding:6px 12px;min-width:56px}
 .st-mng-row b{font:700 16px 'Changa';flex:1}
 
+.danger-zone{
+  background:linear-gradient(180deg,rgba(239,68,68,.05),rgba(239,68,68,.02));
+  border:2px solid rgba(239,68,68,.3);
+  border-radius:20px;
+  padding:24px;
+  margin-top:24px;
+}
+.danger-zone h2{
+  color:var(--danger);
+  margin-bottom:16px;
+}
+.danger-zone .btn.danger{
+  margin:8px;
+}
+
 #toast{
   position:fixed;
   bottom:24px;
@@ -1153,13 +1173,11 @@ const SUPA_KEY='sb_publishable_TQ9SWNIZfgc7ZYt5UdCi4A_g9H-4ied';
 const BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1';
 const HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
 
-// كل المحطات بالترتيب (23 محطة - تمت إضافة البادية)
 const MOCK_STATIONS=[
   {id:1,code:'EST',name:'الاستاد'},
   {id:2,code:'HSH',name:'هشام بركات'},
   {id:3,code:'AZH',name:'جامعة الأزهر'},
   {id:4,code:'SB7',name:'الحي السابع'},
-  {id:5,code:'BAD',name:'البادية'},
   {id:6,code:'ASH',name:'المشير أحمد إسماعيل'},
   {id:7,code:'JSH',name:'جيهان السادات'},
   {id:8,code:'TNT',name:'المشير طنطاوي'},
@@ -1197,7 +1215,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-]/g,d=>'۱۲۳٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-]/g,d=>'١٢٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-]/g,d=>'۱۲۳٥٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
@@ -1294,6 +1312,31 @@ async function deleteStation(id){
   if(useMock){const idx=MOCK_STATIONS.findIndex(s=>s.id==id);if(idx>-1)MOCK_STATIONS.splice(idx,1);return true;}
   try{
     const res=await supaFetch('stations?id=eq.'+id,{method:'DELETE'});
+    return res.ok;
+  }catch(e){return false;}
+}
+
+// 🆕 دالة مسح بيانات محطة معينة
+async function deleteStationReports(stationCode){
+  if(useMock){
+    const idx=MOCK_REPORTS.findIndex(r=>r.station_code===stationCode);
+    if(idx>-1)MOCK_REPORTS.splice(idx,1);
+    return true;
+  }
+  try{
+    const res=await supaFetch('station_reports?station_code=eq.'+encodeURIComponent(stationCode),{method:'DELETE'});
+    return res.ok;
+  }catch(e){return false;}
+}
+
+// 🆕 دالة مسح كل البيانات
+async function deleteAllReports(){
+  if(useMock){
+    MOCK_REPORTS.length=0;
+    return true;
+  }
+  try{
+    const res=await supaFetch('station_reports',{method:'DELETE'});
     return res.ok;
   }catch(e){return false;}
 }
@@ -1935,12 +1978,13 @@ async function renderStations(){
   updateModeChip();
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل المحطات…</p></div>';
-  const stations=await getAllStations();
+  const [stations,reports]=await Promise.all([getAllStations(),getAllReports()]);
+  
   app.innerHTML=`<div class="view">
     <div class="board-head">
       <div>
         <h1 class="page-title">إدارة المحطات</h1>
-        <p class="page-sub">إضافة وحذف المحطات</p>
+        <p class="page-sub">إضافة وحذف المحطات وإدارة البيانات</p>
       </div>
     </div>
     <div class="card">
@@ -1954,15 +1998,33 @@ async function renderStations(){
     <div class="card">
       <h2>${ic('board')} المحطات الحالية (${stations.length})</h2>
       <div class="st-mng">
-        ${stations.map(s=>`<div class="st-mng-row">
-          <span class="s-code">${esc(s.code)}</span>
-          <b>${esc(s.name)}</b>
-          <button class="icon-btn" data-copy="${esc(stationLink(s))}" title="نسخ الرابط">${ic('link')}</button>
-          <button class="icon-btn" data-del="${s.id}" title="حذف المحطة">${ic('trash')}</button>
-        </div>`).join('')}
+        ${stations.map(s=>{
+          const reportCount=reports.filter(r=>r.stationCode===s.code).length;
+          return `<div class="st-mng-row">
+            <span class="s-code">${esc(s.code)}</span>
+            <b>${esc(s.name)}</b>
+            <span style="color:var(--text-muted);font-size:12px">${reportCount} تقرير</span>
+            <button class="icon-btn" data-copy="${esc(stationLink(s))}" title="نسخ الرابط">${ic('link')}</button>
+            <button class="icon-btn danger-icon" data-del-reports="${esc(s.code)}" title="مسح بيانات هذه المحطة">${ic('trash')}</button>
+            <button class="icon-btn danger-icon" data-del="${s.id}" title="حذف المحطة بالكامل">${ic('trash')}</button>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    
+    <div class="danger-zone">
+      <h2>⚠️ منطقة الخطر — مسح البيانات</h2>
+      <p style="color:var(--text-secondary);margin-bottom:16px">
+        استخدم هذه الأزرار بحذر! مسح البيانات لا يمكن التراجع عنه.
+      </p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn danger" id="deleteAllData">
+          ${ic('trash')} مسح كل البيانات (${reports.length} تقرير)
+        </button>
       </div>
     </div>
   </div>`;
+  
   $('#addStForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const code=$('#newCode').value.trim().toUpperCase();
@@ -1978,10 +2040,11 @@ async function renderStations(){
       toast('فشل الإضافة — الكود موجود بالفعل؟');
     }
   });
+  
   $$('[data-del]').forEach(b=>b.onclick=async ()=>{
     const id=b.dataset.del;
     const s=stations.find(x=>x.id==id);
-    if(confirm('حذف محطة '+(s?s.name:'')+'؟')){
+    if(confirm('حذف محطة '+(s?s.name:'')+' وكل بياناتها؟')){
       const ok=await deleteStation(id);
       if(ok){
         const auth=getAuth();
@@ -1991,6 +2054,41 @@ async function renderStations(){
       }
     }
   });
+  
+  // 🆕 مسح بيانات محطة معينة
+  $$('[data-del-reports]').forEach(b=>b.onclick=async ()=>{
+    const code=b.dataset.delReports;
+    const s=stations.find(x=>x.code===code);
+    const count=reports.filter(r=>r.stationCode===code).length;
+    if(confirm(`مسح كل بيانات محطة "${s?s.name:code}" (${count} تقرير)؟\n\n⚠️ هذا الإجراء لا يمكن التراجع عنه!`)){
+      const ok=await deleteStationReports(code);
+      if(ok){
+        const auth=getAuth();
+        await addAudit('مسح بيانات محطة',{code,name:s?.name,count},auth?.username);
+        toast(`تم مسح بيانات محطة ${s?s.name:code} ✓`);
+        renderStations();
+      }else{
+        toast('فشل مسح البيانات');
+      }
+    }
+  });
+  
+  //  مسح كل البيانات
+  $('#deleteAllData').onclick=async ()=>{
+    if(confirm(`⚠️ تحذير: سيتم مسح كل البيانات (${reports.length} تقرير) من كل المحطات!\n\nهذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد؟`)){
+      if(confirm('تأكيد أخير: هل تريد فعلاً مسح كل البيانات؟')){
+        const ok=await deleteAllReports();
+        if(ok){
+          const auth=getAuth();
+          await addAudit('مسح كل البيانات',{count:reports.length},auth?.username);
+          toast('تم مسح كل البيانات ✓');
+          renderStations();
+        }else{
+          toast('فشل مسح البيانات');
+        }
+      }
+    }
+  };
 }
 
 function exportDayExcel(dayRows){
