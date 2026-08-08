@@ -1153,30 +1153,31 @@ const SUPA_KEY='sb_publishable_TQ9SWNIZfgc7ZYt5UdCi4A_g9H-4ied';
 const BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1';
 const HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
 
-// كل المحطات بالترتيب
+// كل المحطات بالترتيب (23 محطة - تمت إضافة البادية)
 const MOCK_STATIONS=[
   {id:1,code:'EST',name:'الاستاد'},
   {id:2,code:'HSH',name:'هشام بركات'},
   {id:3,code:'AZH',name:'جامعة الأزهر'},
   {id:4,code:'SB7',name:'الحي السابع'},
-  {id:5,code:'ASH',name:'المشير أحمد إسماعيل'},
-  {id:6,code:'JSH',name:'جيهان السادات'},
-  {id:7,code:'TNT',name:'المشير طنطاوي'},
-  {id:8,code:'190',name:'وان ناينتي (One Ninety)'},
-  {id:9,code:'AIR',name:'المستشفى الجوي'},
-  {id:10,code:'NRJ',name:'النرجس'},
-  {id:11,code:'MST',name:'المستثمرين'},
-  {id:12,code:'LOT',name:'اللوتس'},
-  {id:13,code:'GSQ',name:'جولدن سكوير'},
-  {id:14,code:'BTN',name:'بيت الوطن'},
-  {id:15,code:'FTH',name:'مسجد الفتاح العليم'},
-  {id:16,code:'R01',name:'حي R1'},
-  {id:17,code:'R02',name:'حي R2'},
-  {id:18,code:'MLB',name:'حي المال والأعمال'},
-  {id:19,code:'ART',name:'مدينة الفنون والثقافة'},
-  {id:20,code:'GOV',name:'الحي الحكومي'},
-  {id:21,code:'MSR',name:'مسجد مصر'},
-  {id:22,code:'JST',name:'مدينة العدالة'}
+  {id:5,code:'BAD',name:'البادية'},
+  {id:6,code:'ASH',name:'المشير أحمد إسماعيل'},
+  {id:7,code:'JSH',name:'جيهان السادات'},
+  {id:8,code:'TNT',name:'المشير طنطاوي'},
+  {id:9,code:'190',name:'وان ناينتي (One Ninety)'},
+  {id:10,code:'AIR',name:'المستشفى الجوي'},
+  {id:11,code:'NRJ',name:'النرجس'},
+  {id:12,code:'MST',name:'المستثمرين'},
+  {id:13,code:'LOT',name:'اللوتس'},
+  {id:14,code:'GSQ',name:'جولدن سكوير'},
+  {id:15,code:'BTN',name:'بيت الوطن'},
+  {id:16,code:'FTH',name:'مسجد الفتاح العليم'},
+  {id:17,code:'R01',name:'حي R1'},
+  {id:18,code:'R02',name:'حي R2'},
+  {id:19,code:'MLB',name:'حي المال والأعمال'},
+  {id:20,code:'ART',name:'مدينة الفنون والثقافة'},
+  {id:21,code:'GOV',name:'الحي الحكومي'},
+  {id:22,code:'MSR',name:'مسجد مصر'},
+  {id:23,code:'JST',name:'مدينة العدالة'}
 ];
 
 const MOCK_USERS=[
@@ -1196,7 +1197,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲۳٤٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-]/g,d=>'۱۲۳٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
@@ -1344,13 +1345,10 @@ function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.datas
 function updateModeChip(){const c=$('#modeChip');if(useMock){c.className='chip warn';c.textContent='وضع محاكاة';}else{c.className='chip ok';c.textContent='متصل — Supabase';}}
 
 function setupPWA(){
-  // حل مشكلة favicon.ico 404
   const favicon = document.createElement('link');
   favicon.rel = 'icon';
-  favicon.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>";
+  favicon.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>";
   document.head.appendChild(favicon);
-  
-  // theme color
   const themeMeta = document.createElement('meta');
   themeMeta.name = 'theme-color';
   themeMeta.content = '#020617';
@@ -1373,14 +1371,12 @@ function route(){
   const seg=h.split('?')[0].split('/').filter(Boolean);
   closeOverlay();window.scrollTo(0,0);
   const auth=getAuth();
-  
   const isStationLink=seg[0]==='s';
   if(isStationLink){
     if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));
     location.hash='#/';
     return;
   }
-  
   if(!auth&&seg[0]!=='login'&&seg[0]!=='s'){location.hash='#/login';return;}
   if(seg[0]==='login')return renderLogin();
   if(seg[0]==='dash')return renderDash();
@@ -1417,7 +1413,6 @@ function renderLogin(){
       </p>
     </form>
   </div></div>`;
-  
   $('#loginForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const u=$('#loginUser').value.trim();
@@ -1442,7 +1437,6 @@ async function renderHome(){
   const recToday=new Map(reports.filter(r=>String(r.date)===today).map(r=>[String(r.stationCode),r]));
   const done=stations.filter(s=>recToday.has(s.code)).length;
   const pct=stations.length?Math.round(done/stations.length*100):0;
-
   app.innerHTML=`<div class="view">
     <div class="board-head">
       <div>
@@ -1477,7 +1471,6 @@ async function renderHome(){
         </li>`;}).join('')}
     </ol>
   </div>`;
-  
   requestAnimationFrame(()=>{const b=$('#progBar');if(b)b.style.width=pct+'%';});
   $('#stSearch').addEventListener('input',e=>{const q=e.target.value.trim();$$('#stList .station-row').forEach(li=>li.style.display=li.dataset.search.includes(q)?'':'none');});
 }
@@ -1575,12 +1568,9 @@ function renderForm(code,nameParam){
       </div>
     </form>
   </div>`;
-
   const form=$('#entryForm');
   const readForm=()=>{const v={};form.querySelectorAll('[data-field]').forEach(i=>v[i.dataset.field]=num(norm(i.value)));return v;};
-  
   function bump(el){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');}
-  
   function recalc(){
     const v=readForm();
     const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0), tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
@@ -1593,24 +1583,18 @@ function renderForm(code,nameParam){
       if(el)el.textContent=money(sum);
     });
   }
-  
   form.addEventListener('input',recalc);
-
   form.addEventListener('submit',async e=>{
     e.preventDefault();
     const v=readForm();
     if(NUM_FIELDS.every(f=>!v[f])&&!confirm('كل القيم صفر أو فارغة. هل تريد المتابعة؟'))return;
-    
     const btn=$('#submitBtn');
     btn.disabled=true;
     btn.innerHTML=ic('spinner','spin')+' جارٍ الإرسال…';
-    
     const dateVal=$('#fDate').value||todayISO();
     $('#fDate').value=dateVal;
-    
     const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0), tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
     const auth=getAuth();
-    
     const rec={
       stationCode:code,
       stationName:nameParam,
@@ -1621,11 +1605,9 @@ function renderForm(code,nameParam){
       submittedBy:$('#fBy').value.trim()||auth?.username||'unknown',
       submittedAt:new Date().toISOString()
     };
-    
     const ok=await saveReport(rec);
     btn.disabled=false;
     btn.innerHTML=ic('send')+' إرسال البيان';
-    
     if(ok){
       await addAudit('تسجيل بيان',{station:code,date:dateVal,total:tR},auth?.username);
       showSuccess(rec);
@@ -1658,7 +1640,6 @@ function showSuccess(rec){
       <a class="btn ghost" href="#/" id="backHomeBtn">${ic('board')} العودة للوحة</a>
     </div>
   </div>`);
-  
   $('#againBtn').onclick=()=>{
     closeOverlay();
     const f=$('#entryForm');
@@ -1727,7 +1708,6 @@ function drawDash(reports,stations){
   const dayRows=buildDayRows(reports,dashDate,stations);
   const T=totalsOf(dayRows);
   const top=[...dayRows].filter(r=>r.present).sort((a,b)=>b.totalRevenue-a.totalRevenue)[0];
-  
   app.innerHTML=`<div class="view">
     <div class="board-head">
       <div>
@@ -1793,7 +1773,6 @@ function drawDash(reports,stations){
     </div>
     <p class="dash-note">ملحوظة: كل الأيام بتتحفظ في نفس الجدول — اختار أي تاريخ من فوق وشوف بيانه.</p>
   </div>`;
-  
   $('#dashDate').addEventListener('change',e=>{dashDate=e.target.value||todayISO();drawDash(reports,stations);});
   $('#todayBtn').addEventListener('click',()=>{dashDate=todayISO();drawDash(reports,stations);});
   $('#dashRefresh').addEventListener('click',renderDash);
@@ -1809,20 +1788,16 @@ async function renderStats(){
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل الإحصائيات…</p></div>';
   const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
-  
   const totalRevenue=reports.reduce((a,r)=>a+num(r.totalRevenue),0);
   const totalTickets=reports.reduce((a,r)=>a+num(r.ticketsCount),0);
   const uniqueDays=new Set(reports.map(r=>r.date)).size;
-  
   const byStation={};
   reports.forEach(r=>{
     if(!byStation[r.stationCode])byStation[r.stationCode]={name:r.stationName,revenue:0,count:0};
     byStation[r.stationCode].revenue+=num(r.totalRevenue);
     byStation[r.stationCode].count+=num(r.totalCount);
   });
-  
   const topStation=Object.entries(byStation).sort((a,b)=>b[1].revenue-a[1].revenue)[0];
-  
   const last7=[];
   for(let i=6;i>=0;i--){
     const d=new Date();d.setDate(d.getDate()-i);
@@ -1830,7 +1805,6 @@ async function renderStats(){
     const dayRev=reports.filter(r=>r.date===iso).reduce((a,r)=>a+num(r.totalRevenue),0);
     last7.push({date:iso,day:d.toLocaleDateString('ar-EG',{weekday:'short'}),revenue:dayRev});
   }
-
   app.innerHTML=`<div class="view">
     <div class="board-head">
       <div>
@@ -1870,7 +1844,6 @@ async function renderStats(){
       <div class="chart-container"><canvas id="chartStations"></canvas></div>
     </div>
   </div>`;
-
   new Chart($('#chart7'),{
     type:'bar',
     data:{
@@ -1887,16 +1860,13 @@ async function renderStats(){
     options:{
       responsive:true,
       maintainAspectRatio:false,
-      plugins:{
-        legend:{labels:{color:'#f1f5f9'}}
-      },
+      plugins:{legend:{labels:{color:'#f1f5f9'}}},
       scales:{
         x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}},
         y:{ticks:{color:'#94a3b8',callback:v=>fmt(v)+' ج.م'},grid:{color:'rgba(51,65,85,.3)'}}
       }
     }
   });
-  
   const sorted=Object.entries(byStation).sort((a,b)=>b[1].revenue-a[1].revenue);
   new Chart($('#chartStations'),{
     type:'bar',
@@ -1915,9 +1885,7 @@ async function renderStats(){
       indexAxis:'y',
       responsive:true,
       maintainAspectRatio:false,
-      plugins:{
-        legend:{labels:{color:'#f1f5f9'}}
-      },
+      plugins:{legend:{labels:{color:'#f1f5f9'}}},
       scales:{
         x:{ticks:{color:'#94a3b8',callback:v=>fmt(v)},grid:{color:'rgba(51,65,85,.3)'}},
         y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}}
@@ -1934,7 +1902,6 @@ async function renderAudit(){
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل سجل التدقيق…</p></div>';
   const logs=await getAudit();
-  
   app.innerHTML=`<div class="view">
     <div class="board-head">
       <div>
@@ -1958,7 +1925,6 @@ async function renderAudit(){
       </div>
     </div>
   </div>`;
-  
   $('#refreshAudit').addEventListener('click',renderAudit);
 }
 
@@ -1970,7 +1936,6 @@ async function renderStations(){
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل المحطات…</p></div>';
   const stations=await getAllStations();
-  
   app.innerHTML=`<div class="view">
     <div class="board-head">
       <div>
@@ -1998,7 +1963,6 @@ async function renderStations(){
       </div>
     </div>
   </div>`;
-  
   $('#addStForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const code=$('#newCode').value.trim().toUpperCase();
@@ -2014,7 +1978,6 @@ async function renderStations(){
       toast('فشل الإضافة — الكود موجود بالفعل؟');
     }
   });
-  
   $$('[data-del]').forEach(b=>b.onclick=async ()=>{
     const id=b.dataset.del;
     const s=stations.find(x=>x.id==id);
@@ -2039,7 +2002,6 @@ function exportDayExcel(dayRows){
     ['المحطة','التذاكر','','الاشتراكات','','','','','','كروت الاشتراكات','','كروت المحفظة','','شحن المحفظة','','الإجمالي','','الحالة'],
     ['','عدد','إيراد','أسبوعي (عدد)','أسبوعي (إيراد)','شهري (عدد)','شهري (إيراد)','ربع سنوي (عدد)','ربع سنوي (إيراد)','عدد','إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','']
   ];
-  
   dayRows.forEach(r=>aoa.push([
     r.name,r.ticketsCount,r.ticketsRevenue,
     r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,
@@ -2048,7 +2010,6 @@ function exportDayExcel(dayRows){
     r.totalCount,r.totalRevenue,
     r.present?'مسجّل':'لم يُسجّل'
   ]));
-  
   const totalRow=['الإجمالي العام'];
   GROUPS.forEach((g,idx)=>{
     const col1=String.fromCharCode(66+idx*2);
@@ -2059,10 +2020,8 @@ function exportDayExcel(dayRows){
   });
   totalRow.push(T.done+' محطة');
   aoa.push(totalRow);
-  
   if(!window.XLSX)return;
   const ws=XLSX.utils.aoa_to_sheet(aoa);
-  
   ws['!merges']=[
     {s:{r:0,c:0},e:{r:0,c:17}},
     {s:{r:3,c:0},e:{r:4,c:0}},
@@ -2070,10 +2029,8 @@ function exportDayExcel(dayRows){
     {s:{r:3,c:9},e:{r:3,c:10}},{s:{r:3,c:11},e:{r:3,c:12}},{s:{r:3,c:13},e:{r:3,c:14}},
     {s:{r:3,c:15},e:{r:3,c:16}},{s:{r:3,c:17},e:{r:4,c:17}}
   ];
-  
   ws['!cols']=[{wch:22},...Array(16).fill({wch:14}),{wch:12}];
   ws['!rows']=[{hpt:32},{hpt:24},{hpt:10},{hpt:28},{hpt:24}];
-  
   for(let R=0;R<=aoa.length-1;R++){
     for(let C=0;C<=17;C++){
       const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];
@@ -2090,7 +2047,6 @@ function exportDayExcel(dayRows){
       }
     }
   }
-  
   const wb=XLSX.utils.book_new();
   wb.Workbook={Views:[{RTL:true}]};
   XLSX.utils.book_append_sheet(wb,ws,'إحصاء '+dashDate);
@@ -2113,12 +2069,10 @@ function exportLogExcel(records){
   };
   const sorted=[...records].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
   const aoa=[FIELDS.map(f=>AR[f]),...sorted.map(r=>FIELDS.map(f=>r[f]??''))];
-  
   if(!window.XLSX)return;
   const ws=XLSX.utils.aoa_to_sheet(aoa);
   ws['!cols']=[{wch:12},{wch:22},{wch:12},...Array(16).fill({wch:15}),{wch:14},{wch:22}];
   ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:aoa.length-1,c:FIELDS.length-1}})};
-  
   const wb=XLSX.utils.book_new();
   wb.Workbook={Views:[{RTL:true}]};
   XLSX.utils.book_append_sheet(wb,ws,'السجل الكامل');
@@ -2137,7 +2091,6 @@ injectBottomNav();
 setupPWA();
 route();
 hideSplash();
-
 setInterval(()=>{
   const auth=getAuth();
   if(auth){
