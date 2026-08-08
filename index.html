@@ -11,22 +11,17 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root{
-  --bg0:#06121e; --bg1:#0b1e2e; --bg2:#10283c; --line:#1d3a54;
-  --acc:#38c8b0; --acc-d:#1fa08d; --acc-lite:#8fe9da;
-  --gold:#ffb52e; --cream:#f5edd8;
-  --ink:#eaf2f8; --muted:#8fa9bf; --green:#34d17b; --red:#ff6b5e;
-  --orange:#ff9f43; --purple:#a55eea;
+  --bg0:#06121e;--bg1:#0b1e2e;--bg2:#10283c;--line:#1d3a54;
+  --acc:#38c8b0;--acc-d:#1fa08d;--acc-lite:#8fe9da;
+  --gold:#ffb52e;--cream:#f5edd8;
+  --ink:#eaf2f8;--muted:#8fa9bf;--green:#34d17b;--red:#ff6b5e;
   color-scheme:dark;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
-body{
-  font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--ink);min-height:100vh;
-  background:
-    radial-gradient(1100px 560px at 88% -10%, rgba(56,200,176,.08), transparent 60%),
-    radial-gradient(900px 520px at 8% 112%, rgba(40,125,195,.13), transparent 60%),
-    var(--bg0);
-}
+body{font-family:'IBM Plex Sans Arabic',system-ui,sans-serif;color:var(--ink);min-height:100vh;
+  background:radial-gradient(1100px 560px at 88% -10%,rgba(56,200,176,.08),transparent 60%),
+  radial-gradient(900px 520px at 8% 112%,rgba(40,125,195,.13),transparent 60%),var(--bg0);}
 ::selection{background:rgba(56,200,176,.35)}
 a{color:inherit;text-decoration:none}
 button{font-family:inherit;touch-action:manipulation}
@@ -34,7 +29,6 @@ button{font-family:inherit;touch-action:manipulation}
 ::-webkit-scrollbar-thumb{background:#1d3c59;border-radius:9px}
 .ic{width:20px;height:20px;flex:none}
 
-/* شاشة البداية */
 #splash{position:fixed;inset:0;z-index:300;background:var(--bg0);display:grid;place-items:center;transition:opacity .5s}
 #splash.off{opacity:0;pointer-events:none}
 .splash-in{text-align:center;display:grid;gap:6px;justify-items:center}
@@ -43,14 +37,12 @@ button{font-family:inherit;touch-action:manipulation}
 .splash-in b{font:800 24px 'Changa'}
 .splash-in small{color:var(--muted);font-weight:600}
 
-/* شريط التنقل السفلي */
 .bottom-nav{display:none;position:fixed;bottom:0;inset-inline:0;z-index:60;background:rgba(6,18,30,.96);backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom))}
 .bottom-nav a{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;color:var(--muted);font-size:10.5px;font-weight:700;padding:7px 0;border-radius:10px;transition:.2s}
 .bottom-nav a .ic{width:21px;height:21px}
 .bottom-nav a.active{color:var(--acc-lite)}
 @media(max-width:900px){.bottom-nav{display:flex}main{padding-bottom:120px}}
 
-/* الشريط العلوي */
 .topbar{position:sticky;top:0;z-index:50;background:rgba(6,18,30,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .topbar-in{max-width:1160px;margin:auto;display:flex;align-items:center;gap:14px;padding:10px 20px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:12px}
@@ -63,12 +55,11 @@ nav.top-nav a{padding:8px 13px;border-radius:10px;color:var(--muted);font-weight
 nav.top-nav a .ic{width:16px;height:16px}
 nav.top-nav a:hover{color:var(--ink);background:#12314a}
 nav a.active{color:var(--acc-lite);background:rgba(56,200,176,.1)}
-.head-meta{text-align:left;min-width:90px;display:flex;align-items:center;gap:8px}
+.head-meta{display:flex;align-items:center;gap:8px}
 #clockTime{font:700 17px 'Changa';color:var(--acc-lite)}
 #clockDate{font-size:11px;color:var(--muted)}
 .chip{font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;display:inline-block}
 .chip.ok{color:#7ee2a8;background:rgba(52,209,123,.12);border:1px solid rgba(52,209,123,.4)}
-.chip.warn{color:#ffd27a;background:rgba(255,181,46,.1);border:1px solid rgba(255,181,46,.35)}
 @media(max-width:900px){nav.top-nav{display:none}}
 
 main{position:relative;z-index:1;max-width:1160px;margin:auto;padding:26px 20px 80px}
@@ -77,15 +68,12 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px
 @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}}
 .loading{color:var(--muted);padding:40px 0;text-align:center;font-weight:600}
 
-/* الأزرار */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:linear-gradient(180deg,#4adfc8,#21a893);color:#06231e;font:700 14px 'IBM Plex Sans Arabic';padding:10px 18px;border-radius:11px;border:0;cursor:pointer;transition:.2s;box-shadow:0 6px 16px rgba(31,160,141,.3)}
 .btn:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(31,160,141,.45)}
-.btn:active{transform:translateY(0)}
-.btn:disabled{opacity:.6;cursor:wait;transform:none}
+.btn:disabled{opacity:.6;cursor:wait}
 .btn.ghost{background:transparent;border:1.5px solid var(--line);color:var(--ink);box-shadow:none}
 .btn.ghost:hover{border-color:var(--acc);color:var(--acc-lite)}
 .btn.navy{background:#132c44;color:var(--acc-lite);border:1.5px solid #2a557d;box-shadow:none}
-.btn.navy:hover{background:#1a3a58}
 .btn.danger{background:transparent;border:1.5px solid rgba(255,107,94,.5);color:var(--red);box-shadow:none}
 .btn.sm{padding:7px 13px;font-size:13px;border-radius:9px}
 .btn.big{padding:12px 26px;font-size:15px}
@@ -95,12 +83,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px
 .spin{animation:rot 1s linear infinite}
 @keyframes rot{to{transform:rotate(360deg)}}
 
-/* البطاقات */
-.card{background:linear-gradient(180deg,#0f2740,#0c2033);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 12px 30px rgba(2,8,15,.35);margin-bottom:16px}
-.card h2{font:700 20px 'Changa';margin-bottom:12px;display:flex;gap:9px;align-items:center}
-.card h2 .ic{color:var(--acc)}
-
-/* لوحة المحطات */
 .board-head{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap;margin-bottom:14px}
 .page-title{font:800 30px 'Changa'}
 .page-sub{color:var(--muted);font-size:13.5px;margin-top:2px}
@@ -125,7 +107,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px
 .s-rev{font:700 15px 'Changa';color:#ffd27a;min-width:105px;text-align:left}
 .s-actions{display:flex;gap:8px;align-items:center}
 
-/* نموذج المحطة */
 .back-link{display:inline-flex;gap:8px;align-items:center;color:var(--muted);font-size:13px;font-weight:600;margin-bottom:14px;transition:.2s}
 .back-link:hover{color:var(--acc-lite)}
 .station-sign{position:relative;background:linear-gradient(180deg,#0e2a45,#0a1f35);border:2px solid #2a557d;border-radius:18px;padding:20px 26px;display:flex;align-items:center;gap:18px;overflow:hidden;margin-bottom:16px}
@@ -135,6 +116,9 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px
 .sign-meta{color:var(--muted);font-size:12.5px;margin-top:3px;font-weight:600}
 .meta-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
 @media(max-width:560px){.meta-grid{grid-template-columns:1fr}}
+.card{background:linear-gradient(180deg,#0f2740,#0c2033);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:0 12px 30px rgba(2,8,15,.35);margin-bottom:16px}
+.card h2{font:700 20px 'Changa';margin-bottom:12px;display:flex;gap:9px;align-items:center}
+.card h2 .ic{color:var(--acc)}
 .form-sec{margin-bottom:16px}
 .sec-head{display:flex;align-items:center;gap:11px;margin-bottom:14px;flex-wrap:wrap}
 .sec-ord{min-width:56px;height:32px;padding:0 10px;border-radius:10px;background:linear-gradient(160deg,#4adfc8,#1fa08d);color:#06231e;font:800 13.5px 'Changa';display:grid;place-items:center;box-shadow:0 4px 10px rgba(31,160,141,.3)}
@@ -161,7 +145,6 @@ footer{position:relative;z-index:1;border-top:1px solid var(--line);padding:16px
 .bump{animation:bump .35s}
 @keyframes bump{45%{transform:scale(1.14)}}
 
-/* لوحة التجميع */
 .dash-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:16px 0}
 input[type=date]{background:#0a1c2d;border:1.5px solid var(--line);color:var(--ink);border-radius:10px;padding:9px 12px;font-family:inherit;font-size:14px}
 input[type=date]:focus{outline:0;border-color:var(--acc)}
@@ -190,15 +173,12 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 .st-pill.off{color:#ff9a90;background:rgba(255,107,94,.08)}
 .dash-note{color:var(--muted);font-size:12px;margin-top:12px}
 
-/* الرسوم البيانية */
 .chart-container{position:relative;height:300px;margin:16px 0}
 
-/* تسجيل الدخول */
 .login-box{max-width:400px;margin:60px auto;padding:30px;background:linear-gradient(180deg,#0f2740,#0c2033);border:1px solid var(--line);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.5)}
 .login-box h2{font:800 24px 'Changa';text-align:center;margin-bottom:20px;color:var(--acc-lite)}
 .login-box .field{margin-bottom:16px}
 
-/* Overlay */
 .overlay{position:fixed;inset:0;background:rgba(4,10,17,.82);backdrop-filter:blur(6px);display:grid;place-items:center;z-index:100;padding:20px;animation:fadeUp .3s}
 .overlay[hidden]{display:none}
 .success-box{text-align:center;max-width:440px;width:100%}
@@ -220,22 +200,19 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 .qr-box h3{font:800 19px 'Changa';margin:10px 0 4px}
 .qr-box p{font-size:11px;color:#6b7c8d;word-break:break-all;direction:ltr}
 
-/* Toast */
-#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;transition:.3s;background:#13324f;border:1px solid #2a557d;color:var(--ink);padding:12px 22px;border-radius:12px;z-index:200;box-shadow:0 12px 30px rgba(0,0,0,.45);font-weight:600;font-size:14px;max-width:90vw;text-align:center}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* إدارة المحطات */
-.st-mng{display:flex;flex-direction:column;gap:8px}
-.st-mng-row{display:flex;align-items:center;gap:12px;background:#0d2438;border:1px solid var(--line);border-radius:11px;padding:9px 14px}
-.st-mng-row .s-code{padding:5px 10px;min-width:52px}
-.st-mng-row b{font:700 15px 'Changa';flex:1}
-
-/* سجل التدقيق */
 .audit-list{display:flex;flex-direction:column;gap:8px}
 .audit-item{background:#0d2438;border:1px solid var(--line);border-radius:11px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
 .audit-item .time{color:var(--muted);font-size:11px;white-space:nowrap}
 .audit-item .action{font-weight:700;color:var(--acc-lite)}
 .audit-item .details{color:var(--muted);font-size:12.5px;margin-top:4px}
+
+.st-mng{display:flex;flex-direction:column;gap:8px}
+.st-mng-row{display:flex;align-items:center;gap:12px;background:#0d2438;border:1px solid var(--line);border-radius:11px;padding:9px 14px}
+.st-mng-row .s-code{padding:5px 10px;min-width:52px}
+.st-mng-row b{font:700 15px 'Changa';flex:1}
+
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;transition:.3s;background:#13324f;border:1px solid #2a557d;color:var(--ink);padding:12px 22px;border-radius:12px;z-index:200;box-shadow:0 12px 30px rgba(0,0,0,.45);font-weight:600;font-size:14px;max-width:90vw;text-align:center}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
 @media(max-width:760px){
   #clockTime,#clockDate{display:none}
@@ -257,7 +234,7 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
   <small>مونوريل شرق النيل</small>
 </div></div>
 
-<header class="topbar" id="topbar">
+<header class="topbar">
   <div class="topbar-in">
     <a class="brand" href="#/">
       <span class="brand-badge" id="brandIcon"></span>
@@ -280,7 +257,7 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 </header>
 
 <main id="app"></main>
-<footer>منظومة إحصاء المحطات — مونوريل شرق النيل • البيانات تُجمع على Supabase وتُصدَّر إلى Excel من لوحة التجميع</footer>
+<footer>منظومة إحصاء المحطات — مونوريل شرق النيل • البيانات تُجمع على Supabase وتُصدَّر إلى Excel</footer>
 <div id="toast" role="status" aria-live="polite"></div>
 <div id="overlay" class="overlay" hidden></div>
 
@@ -289,12 +266,12 @@ table.gt{border-collapse:collapse;min-width:1250px;width:100%}
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 
 // ==========================================
-// 🔧 بيانات Supabase
+// 🔧 Supabase Config
 // ==========================================
-const SUPABASE_URL='https://hdsohnub.supabase.co';
-const SUPABASE_KEY='sb_publishable_TQ9SWNIzfgc7ZYt5UdCi4A_g9H-4i';
-const BASE=SUPABASE_URL.replace(/\/+$/,'')+'/rest/v1';
-const HEADERS={apikey:SUPABASE_KEY,Authorization:'Bearer '+SUPABASE_KEY,'Content-Type':'application/json'};
+const SUPA_URL='https://hdsohnub.supabase.co';
+const SUPA_KEY='sb_publishable_TQ9SWNIzfgc7ZYt5UdCi4A_g9H-4i';
+const BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1';
+const HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
 // ==========================================
 
 const NUM_FIELDS=['ticketsCount','ticketsRevenue','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue'];
@@ -310,7 +287,6 @@ const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).r
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
-// Mapping بين أسماء الحقول
 const COL_MAP={
  stationCode:'station_code',stationName:'station_name',date:'report_date',
  ticketsCount:'tickets_count',ticketsRevenue:'tickets_revenue',
@@ -327,7 +303,6 @@ const REV_MAP={};Object.entries(COL_MAP).forEach(([k,v])=>REV_MAP[v]=k);
 const toSnake=rec=>{const o={};for(const k in rec){if(COL_MAP[k])o[COL_MAP[k]]=rec[k];}return o;};
 const fromSnake=row=>{const o={};for(const k in row){if(REV_MAP[k])o[REV_MAP[k]]=row[k];}return o;};
 
-// الأيقونات
 const ICONS={
 train:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14"/><circle cx="9" cy="13.5" r=".7"/><circle cx="15" cy="13.5" r=".7"/><path d="M8 16l-2.5 4M16 16l2.5 4M9.5 20h5"/>',
 ticket:'<path d="M4 7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2.5a2.5 2.5 0 0 0 0 5V17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2.5a2.5 2.5 0 0 0 0-5z"/><path d="M14 6v2.2m0 3.6v2.2m0 3.6V18" stroke-dasharray="2 2.6"/>',
@@ -348,7 +323,6 @@ sheet:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16
 sliders:'<path d="M4 7h9m4 0h3M4 17h3m4 0h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
 chart:'<path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/>',
 audit:'<path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.9.37 4.13 1.02"/>',
-users:'<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>',
 logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
 spinner:'<path d="M21 12a9 9 0 1 1-6.2-8.56"/>'
 };
@@ -358,8 +332,8 @@ $('#brandIcon').innerHTML=ic('train');
 // ==========================================
 // Supabase API
 // ==========================================
-async function supaFetch(table,opts={},ms=10000){
-  const url=BASE+'/'+table;
+async function supaFetch(path,opts={},ms=10000){
+  const url=BASE+'/'+path;
   const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);
   try{
     const r=await fetch(url,{...opts,signal:c.signal,headers:{...HEADERS,...(opts.headers||{})}});
@@ -385,11 +359,7 @@ async function getAllStations(){
 
 async function saveReport(rec){
   try{
-    const res=await supaFetch('station_reports',{
-      method:'POST',
-      headers:{'Prefer':'resolution=merge-duplicates'},
-      body:JSON.stringify(toSnake(rec))
-    },15000);
+    const res=await supaFetch('station_reports',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(toSnake(rec))},15000);
     return res.ok;
   }catch(e){return false;}
 }
@@ -409,16 +379,11 @@ async function deleteStation(id){
 }
 
 async function addAudit(action,details,username){
-  try{
-    await supaFetch('audit_log',{method:'POST',body:JSON.stringify({action,details:JSON.stringify(details),username})});
-  }catch(e){}
+  try{await supaFetch('audit_log',{method:'POST',body:JSON.stringify({action,details:JSON.stringify(details),username})});}catch(e){}
 }
 
 async function getAudit(){
-  try{
-    const res=await supaFetch('audit_log?select=*&order=created_at.desc&limit=100');
-    return res.status===200?res.json:[];
-  }catch(e){return [];}
+  try{const res=await supaFetch('audit_log?select=*&order=created_at.desc&limit=100');return res.status===200?res.json:[];}catch(e){return [];}
 }
 
 // ==========================================
@@ -431,25 +396,23 @@ function clearAuth(){localStorage.removeItem(AUTH_KEY);}
 
 async function login(username,password){
   try{
-    const res=await supaFetch('app_users?username=eq.'+encodeURIComponent(username)+'&password_hash=eq.'+encodeURIComponent(password)+'&select=*');
-    if(res.status===200&&Array.isArray(res.json)&&res.json.length>0){
-      const user=res.json[0];
-      setAuth({username:user.username,role:user.role});
-      await addAudit('تسجيل دخول',{username},'system');
-      return user;
+    const res=await supaFetch('app_users?select=*');
+    if(res.status===200&&Array.isArray(res.json)){
+      const user=res.json.find(u=>u.username===username&&u.password===password);
+      if(user){
+        setAuth({username:user.username,role:user.role});
+        await addAudit('تسجيل دخول',{username},'system');
+        return user;
+      }
     }
     return null;
-  }catch(e){return null;}
+  }catch(e){console.error(e);return null;}
 }
 
-function logout(){
-  clearAuth();
-  location.hash='#/login';
-  toast('تم تسجيل الخروج');
-}
+function logout(){clearAuth();location.hash='#/login';toast('تم تسجيل الخروج');}
 
 // ==========================================
-// أدوات
+// Tools
 // ==========================================
 function stationLink(s){return location.origin+location.pathname+'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name);}
 function copyText(t,msg){
@@ -471,8 +434,7 @@ function makeIcon(size){
   const r=size*0.22;
   const g=x.createLinearGradient(0,0,size,size);
   g.addColorStop(0,'#4adfc8');g.addColorStop(1,'#189684');
-  x.beginPath();
-  x.moveTo(r,0);x.arcTo(size,0,size,size,r);x.arcTo(size,size,0,size,r);x.arcTo(0,size,0,0,r);x.arcTo(0,0,size,0,r);x.closePath();
+  x.beginPath();x.moveTo(r,0);x.arcTo(size,0,size,size,r);x.arcTo(size,size,0,size,r);x.arcTo(0,size,0,0,r);x.arcTo(0,0,size,0,r);x.closePath();
   x.fillStyle=g;x.fill();
   x.font=Math.round(size*0.52)+'px serif';x.textAlign='center';x.textBaseline='middle';
   x.fillText('🚝',size/2,size*0.56);
@@ -481,20 +443,8 @@ function makeIcon(size){
 function setupPWA(){
   try{
     const icon192=makeIcon(192),icon512=makeIcon(512),icon180=makeIcon(180);
-    const manifest={
-      name:'إحصاء المحطات — مونوريل شرق النيل',
-      short_name:'إحصاء المحطات',
-      start_url:location.pathname,
-      scope:location.pathname.replace(/[^/]*$/,''),
-      display:'standalone',
-      background_color:'#06121e',
-      theme_color:'#0b1e2e',
-      dir:'rtl',lang:'ar',
-      icons:[{src:icon192,sizes:'192x192',type:'image/png'},{src:icon512,sizes:'512x512',type:'image/png'}]
-    };
-    const l=document.createElement('link');l.rel='manifest';
-    l.href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}));
-    document.head.appendChild(l);
+    const manifest={name:'إحصاء المحطات — مونوريل شرق النيل',short_name:'إحصاء المحطات',start_url:location.pathname,scope:location.pathname.replace(/[^/]*$/,''),display:'standalone',background_color:'#06121e',theme_color:'#0b1e2e',dir:'rtl',lang:'ar',icons:[{src:icon192,sizes:'192x192',type:'image/png'},{src:icon512,sizes:'512x512',type:'image/png'}]};
+    const l=document.createElement('link');l.rel='manifest';l.href=URL.createObjectURL(new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'}));document.head.appendChild(l);
     const a=document.createElement('link');a.rel='apple-touch-icon';a.href=icon180;document.head.appendChild(a);
   }catch(e){}
 }
@@ -515,13 +465,8 @@ function route(){
   const h=location.hash.replace(/^#\/?/,'');
   const seg=h.split('?')[0].split('/').filter(Boolean);
   closeOverlay();window.scrollTo(0,0);
-  
   const auth=getAuth();
-  if(!auth&&seg[0]!=='login'&&seg[0]!=='s'){
-    location.hash='#/login';
-    return;
-  }
-  
+  if(!auth&&seg[0]!=='login'&&seg[0]!=='s'){location.hash='#/login';return;}
   if(seg[0]==='login')return renderLogin();
   if(seg[0]==='dash')return renderDash();
   if(seg[0]==='stats')return renderStats();
@@ -539,26 +484,17 @@ function renderLogin(){
   setActive('');
   $('#topNav').style.display='none';
   $('#logoutBtn').style.display='none';
-  $('#app').innerHTML=`<div class="view">
-    <div class="login-box">
-      <h2>🔐 تسجيل الدخول</h2>
-      <form id="loginForm">
-        <div class="field">
-          <label>اسم المستخدم</label>
-          <div class="in-wrap"><input type="text" id="loginUser" autocomplete="username" required></div>
-        </div>
-        <div class="field">
-          <label>كلمة المرور</label>
-          <div class="in-wrap"><input type="password" id="loginPass" autocomplete="current-password" required></div>
-        </div>
-        <button class="btn big" type="submit" style="width:100%">دخول</button>
-        <p style="color:var(--muted);font-size:12px;margin-top:12px;text-align:center">
-          المستخدم الافتراضي: <b style="color:var(--acc-lite)">admin</b> / كلمة المرور: <b style="color:var(--acc-lite)">admin123</b>
-        </p>
-      </form>
-    </div>
-  </div>`;
-  
+  $('#app').innerHTML=`<div class="view"><div class="login-box">
+    <h2>🔐 تسجيل الدخول</h2>
+    <form id="loginForm">
+      <div class="field"><label>اسم المستخدم</label><div class="in-wrap"><input type="text" id="loginUser" autocomplete="username" required></div></div>
+      <div class="field"><label>كلمة المرور</label><div class="in-wrap"><input type="password" id="loginPass" autocomplete="current-password" required></div></div>
+      <button class="btn big" type="submit" style="width:100%">دخول</button>
+      <p style="color:var(--muted);font-size:12px;margin-top:12px;text-align:center">
+        المستخدم: <b style="color:var(--acc-lite)">admin</b> / كلمة المرور: <b style="color:var(--acc-lite)">admin123</b>
+      </p>
+    </form>
+  </div></div>`;
   $('#loginForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const u=$('#loginUser').value.trim();
@@ -566,13 +502,8 @@ function renderLogin(){
     const btn=e.target.querySelector('button');
     btn.disabled=true;btn.innerHTML=ic('spinner','spin')+' جاري...';
     const user=await login(u,p);
-    if(user){
-      toast('مرحبًا '+user.username+' ✓');
-      location.hash='#/';
-    }else{
-      toast('خطأ في اسم المستخدم أو كلمة المرور');
-      btn.disabled=false;btn.textContent='دخول';
-    }
+    if(user){toast('مرحبًا '+user.username+' ✓');location.hash='#/';}
+    else{toast('خطأ في اسم المستخدم أو كلمة المرور');btn.disabled=false;btn.textContent='دخول';}
   });
 }
 
@@ -585,7 +516,6 @@ async function renderHome(){
   $('#logoutBtn').style.display='';
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل لوحة المحطات…</p></div>';
-  
   const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
   const today=todayISO();
   const recToday=new Map(reports.filter(r=>String(r.date)===today).map(r=>[String(r.stationCode),r]));
@@ -594,20 +524,17 @@ async function renderHome(){
 
   app.innerHTML=`<div class="view">
     <div class="board-head">
-      <div><h1 class="page-title">لوحة المحطات</h1>
-        <p class="page-sub">بيان اليوم — ${fmtDateAr(today)}</p></div>
+      <div><h1 class="page-title">لوحة المحطات</h1><p class="page-sub">بيان اليوم — ${fmtDateAr(today)}</p></div>
       <div class="grow"></div>
       <input class="search" id="stSearch" placeholder="ابحث عن محطة…" autocomplete="off">
       <a class="btn ghost sm" href="#/dash">${ic('board')} لوحة التجميع</a>
     </div>
-    <div class="progress-wrap"><span>اكتمال بيانات اليوم: <b>${pct}%</b> (${done} من ${stations.length})</span>
-      <div class="progress"><i id="progBar"></i></div></div>
+    <div class="progress-wrap"><span>اكتمال بيانات اليوم: <b>${pct}%</b> (${done} من ${stations.length})</span><div class="progress"><i id="progBar"></i></div></div>
     <ol class="stations" id="stList">
       ${stations.map((s,i)=>{const r=recToday.get(s.code);
         return `<li class="station-row" style="--i:${i}" data-search="${esc(s.name)} ${esc(s.code)}">
           <span class="s-code">${esc(s.code)}</span>
-          <div><div class="s-name">${esc(s.name)}</div>
-            <div class="s-status ${r?'on':''}"><span class="dot"></span>${r?('مسجّل اليوم • إيراد '+money(num(r.totalRevenue))):'في انتظار التسجيل'}</div></div>
+          <div><div class="s-name">${esc(s.name)}</div><div class="s-status ${r?'on':''}"><span class="dot"></span>${r?('مسجّل اليوم • إيراد '+money(num(r.totalRevenue))):'في انتظار التسجيل'}</div></div>
           <span class="s-rev">${r?money(num(r.totalRevenue)):''}</span>
           <div class="s-actions">
             <a class="btn sm" href="#/s/${encodeURIComponent(s.code)}/${encodeURIComponent(s.name)}">${ic('ticket')} تسجيل البيان</a>
@@ -617,15 +544,12 @@ async function renderHome(){
     </ol>
   </div>`;
   requestAnimationFrame(()=>{const b=$('#progBar');if(b)b.style.width=pct+'%';});
-  $('#stSearch').addEventListener('input',e=>{const q=e.target.value.trim();
-    $$('#stList .station-row').forEach(li=>li.style.display=li.dataset.search.includes(q)?'':'none');});
+  $('#stSearch').addEventListener('input',e=>{const q=e.target.value.trim();$$('#stList .station-row').forEach(li=>li.style.display=li.dataset.search.includes(q)?'':'none');});
 }
 
 document.addEventListener('click',e=>{
-  const cp=e.target.closest('[data-copy]');
-  if(cp){copyText(cp.dataset.copy,'تم نسخ رابط المحطة ✓');return;}
-  const qr=e.target.closest('[data-qr]');
-  if(qr){openQR(qr.dataset.qr,qr.dataset.qrl);return;}
+  const cp=e.target.closest('[data-copy]');if(cp){copyText(cp.dataset.copy,'تم نسخ رابط المحطة ✓');return;}
+  const qr=e.target.closest('[data-qr]');if(qr){openQR(qr.dataset.qr,qr.dataset.qrl);return;}
 });
 function openQR(name,link){
   openOverlay(`<div class="qr-box">
@@ -643,19 +567,13 @@ function openQR(name,link){
 // ==========================================
 const SECTIONS=[
  {id:'tickets',ord:'أولاً',title:'التذاكر',icon:'ticket',rows:[{label:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'}]},
- {id:'subs',ord:'ثانيًا',title:'الاشتراكات',icon:'pass',rows:[
-   {label:'اشتراك أسبوعي',c:'weekCount',r:'weekRevenue'},
-   {label:'اشتراك شهري',c:'monthCount',r:'monthRevenue'},
-   {label:'اشتراك ربع سنوي',c:'quarterCount',r:'quarterRevenue'}]},
+ {id:'subs',ord:'ثانيًا',title:'الاشتراكات',icon:'pass',rows:[{label:'اشتراك أسبوعي',c:'weekCount',r:'weekRevenue'},{label:'اشتراك شهري',c:'monthCount',r:'monthRevenue'},{label:'اشتراك ربع سنوي',c:'quarterCount',r:'quarterRevenue'}]},
  {id:'subCards',ord:'ثالثًا',title:'كروت الاشتراكات',icon:'copy',rows:[{label:'كروت الاشتراكات',c:'subCardsCount',r:'subCardsRevenue'}]},
  {id:'walletCards',ord:'رابعًا',title:'كروت المحفظة',icon:'wallet',rows:[{label:'كروت المحفظة',c:'walletCardsCount',r:'walletCardsRevenue'}]},
  {id:'recharge',ord:'خامسًا',title:'شحن المحفظة',icon:'zap',rows:[{label:'شحن المحفظة',c:'rechargeCount',r:'rechargeRevenue'}]}
 ];
-function fieldHTML(key,label,unit){
-  return `<div class="field"><label>${label}</label><div class="in-wrap">
-    <input type="text" inputmode="numeric" autocomplete="off" placeholder="0" data-field="${key}" class="${unit?'has-unit':''}">
-    ${unit?`<span class="unit">${unit}</span>`:''}</div></div>`;
-}
+function fieldHTML(key,label,unit){return `<div class="field"><label>${label}</label><div class="in-wrap"><input type="text" inputmode="numeric" autocomplete="off" placeholder="0" data-field="${key}" class="${unit?'has-unit':''}">${unit?`<span class="unit">${unit}</span>`:''}</div></div>`;}
+
 function renderForm(code,nameParam){
   setActive('');
   $('#topNav').style.display='none';
@@ -663,11 +581,7 @@ function renderForm(code,nameParam){
   const app=$('#app');
   app.innerHTML=`<div class="view">
     <a class="back-link" href="#/">${ic('board')} العودة إلى لوحة المحطات</a>
-    <div class="station-sign">
-      <span class="sign-code">${esc(code)}</span>
-      <div><h1>محطة ${esc(nameParam)}</h1>
-        <div class="sign-meta">نموذج تسجيل البيان اليومي — مونوريل شرق النيل</div></div>
-    </div>
+    <div class="station-sign"><span class="sign-code">${esc(code)}</span><div><h1>محطة ${esc(nameParam)}</h1><div class="sign-meta">نموذج تسجيل البيان اليومي — مونوريل شرق النيل</div></div></div>
     <div class="card" style="margin-bottom:16px">
       <div class="meta-grid">
         <div class="field"><label>تاريخ البيان</label><div class="in-wrap"><input type="date" id="fDate" value="${todayISO()}"></div></div>
@@ -676,12 +590,8 @@ function renderForm(code,nameParam){
     </div>
     <form id="entryForm" novalidate>
       ${SECTIONS.map(s=>`<section class="card form-sec">
-        <div class="sec-head"><span class="sec-ord">${s.ord}</span>${ic(s.icon)}<h3>${s.title}</h3>
-          <span class="sec-sum" data-sec="${s.id}">0 ج.م</span></div>
-        ${s.rows.map(r=>{
-          const inner=`<div class="pair">${fieldHTML(r.c,'العدد')}${fieldHTML(r.r,'الإيراد','ج.م')}</div>`;
-          return s.rows.length>1?`<div class="sub-row"><div class="sub-name">${r.label}</div>${inner}</div>`:inner;
-        }).join('')}
+        <div class="sec-head"><span class="sec-ord">${s.ord}</span>${ic(s.icon)}<h3>${s.title}</h3><span class="sec-sum" data-sec="${s.id}">0 ج.م</span></div>
+        ${s.rows.map(r=>{const inner=`<div class="pair">${fieldHTML(r.c,'العدد')}${fieldHTML(r.r,'الإيراد','ج.م')}</div>`;return s.rows.length>1?`<div class="sub-row"><div class="sub-name">${r.label}</div>${inner}</div>`:inner;}).join('')}
       </section>`).join('')}
       <div class="totals-bar">
         <div class="tot-item"><small>إجمالي عدد العمليات</small><b id="tCount">0</b></div>
@@ -700,8 +610,7 @@ function renderForm(code,nameParam){
     const e1=$('#tCount'),e2=$('#tRev');
     if(e1.textContent!==fmt(tC)){e1.textContent=fmt(tC);bump(e1);}
     const m=money(tR);if(e2.textContent!==m){e2.textContent=m;bump(e2);}
-    SECTIONS.forEach(s=>{const sum=s.rows.reduce((a,r)=>a+v[r.r],0);
-      const el=form.querySelector(`[data-sec="${s.id}"]`);if(el)el.textContent=money(sum);});
+    SECTIONS.forEach(s=>{const sum=s.rows.reduce((a,r)=>a+v[r.r],0);const el=form.querySelector(`[data-sec="${s.id}"]`);if(el)el.textContent=money(sum);});
   }
   form.addEventListener('input',recalc);
 
@@ -714,16 +623,11 @@ function renderForm(code,nameParam){
     $('#fDate').value=dateVal;
     const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0), tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
     const auth=getAuth();
-    const rec={stationCode:code,stationName:nameParam,date:dateVal,...v,
-      totalCount:tC,totalRevenue:tR,submittedBy:$('#fBy').value.trim()||auth?.username||'unknown',submittedAt:new Date().toISOString()};
+    const rec={stationCode:code,stationName:nameParam,date:dateVal,...v,totalCount:tC,totalRevenue:tR,submittedBy:$('#fBy').value.trim()||auth?.username||'unknown',submittedAt:new Date().toISOString()};
     const ok=await saveReport(rec);
     btn.disabled=false;btn.innerHTML=ic('send')+' إرسال البيان';
-    if(ok){
-      await addAudit('تسجيل بيان',{station:code,date:dateVal,total:tR},auth?.username);
-      showSuccess(rec);
-    }else{
-      toast('فشل الإرسال — تأكد من الاتصال');
-    }
+    if(ok){await addAudit('تسجيل بيان',{station:code,date:dateVal,total:tR},auth?.username);showSuccess(rec);}
+    else{toast('فشل الإرسال — تأكد من الاتصال');}
     recalc();
   });
 }
@@ -776,19 +680,12 @@ async function renderDash(){
 }
 function buildDayRows(records,dateStr,stations){
   const byCode=new Map(records.filter(r=>String(r.date)===dateStr).map(r=>[String(r.stationCode),r]));
-  const mk=(code,name,rec)=>{const z={};NUM_FIELDS.forEach(f=>z[f]=rec?num(rec[f]):0);
-    return {code,name,...z,
-      totalCount:COUNT_FIELDS.reduce((a,f)=>a+z[f],0),
-      totalRevenue:REV_FIELDS.reduce((a,f)=>a+z[f],0),
-      present:!!rec};};
+  const mk=(code,name,rec)=>{const z={};NUM_FIELDS.forEach(f=>z[f]=rec?num(rec[f]):0);return {code,name,...z,totalCount:COUNT_FIELDS.reduce((a,f)=>a+z[f],0),totalRevenue:REV_FIELDS.reduce((a,f)=>a+z[f],0),present:!!rec};};
   const rows=stations.map(s=>mk(s.code,s.name,byCode.get(s.code)));
   byCode.forEach((r,code)=>{if(!stations.some(s=>s.code===code))rows.push(mk(code,r.stationName||code,r));});
   return rows;
 }
-function totalsOf(rows){return {
-  count:rows.reduce((a,r)=>a+r.totalCount,0),
-  revenue:rows.reduce((a,r)=>a+r.totalRevenue,0),
-  done:rows.filter(r=>r.present).length};}
+function totalsOf(rows){return {count:rows.reduce((a,r)=>a+r.totalCount,0),revenue:rows.reduce((a,r)=>a+r.totalRevenue,0),done:rows.filter(r=>r.present).length};}
 function drawDash(reports,stations){
   const app=$('#app');
   const dayRows=buildDayRows(reports,dashDate,stations);
@@ -796,8 +693,7 @@ function drawDash(reports,stations){
   const top=[...dayRows].filter(r=>r.present).sort((a,b)=>b.totalRevenue-a.totalRevenue)[0];
   app.innerHTML=`<div class="view">
     <div class="board-head">
-      <div><h1 class="page-title">لوحة التجميع</h1>
-        <p class="page-sub">كل بيانات المحطات في مكان واحد — صدّرها Excel بضغطة</p></div>
+      <div><h1 class="page-title">لوحة التجميع</h1><p class="page-sub">كل بيانات المحطات في مكان واحد — صدّرها Excel بضغطة</p></div>
       <div class="grow"></div>
       <button class="btn ghost sm" id="dashRefresh">${ic('refresh')} تحديث</button>
       <button class="btn sm" id="exDay">${ic('sheet')} تصدير إحصاء اليوم Excel</button>
@@ -815,21 +711,10 @@ function drawDash(reports,stations){
       <div class="stat"><small>أعلى محطة إيرادًا</small><b style="font-size:18px;padding-top:6px">${top?esc(top.name):'—'}</b></div>
     </div>
     <div class="table-wrap"><table class="gt">
-      <thead>
-        <tr><th rowspan="2">المحطة</th>${GROUPS.map(g=>`<th colspan="2">${g.t}</th>`).join('')}<th rowspan="2">الحالة</th></tr>
-        <tr>${GROUPS.map(()=>'<th>عدد</th><th>إيراد</th>').join('')}</tr>
-      </thead>
-      <tbody>
-        ${dayRows.map(r=>`<tr class="${r.present?'':'miss'}">
-          <td class="st">${esc(r.name)}</td>
-          ${GROUPS.map(g=>`<td>${fmt(r[g.c])}</td><td class="rev">${fmt(r[g.r])}</td>`).join('')}
-          <td><span class="st-pill ${r.present?'on':'off'}"><span class="dot"></span>${r.present?'مسجّل':'لم يُسجّل'}</span></td>
-        </tr>`).join('')}
-      </tbody>
-      <tfoot><tr><td class="st">الإجمالي العام</td>
-        ${GROUPS.map(g=>{const c=dayRows.reduce((a,r)=>a+r[g.c],0),v=dayRows.reduce((a,r)=>a+r[g.r],0);
-          return `<td>${fmt(c)}</td><td>${fmt(v)}</td>`;}).join('')}
-        <td>${T.done} محطة</td></tr></tfoot>
+      <thead><tr><th rowspan="2">المحطة</th>${GROUPS.map(g=>`<th colspan="2">${g.t}</th>`).join('')}<th rowspan="2">الحالة</th></tr>
+      <tr>${GROUPS.map(()=>'<th>عدد</th><th>إيراد</th>').join('')}</tr></thead>
+      <tbody>${dayRows.map(r=>`<tr class="${r.present?'':'miss'}"><td class="st">${esc(r.name)}</td>${GROUPS.map(g=>`<td>${fmt(r[g.c])}</td><td class="rev">${fmt(r[g.r])}</td>`).join('')}<td><span class="st-pill ${r.present?'on':'off'}"><span class="dot"></span>${r.present?'مسجّل':'لم يُسجّل'}</span></td></tr>`).join('')}</tbody>
+      <tfoot><tr><td class="st">الإجمالي العام</td>${GROUPS.map(g=>{const c=dayRows.reduce((a,r)=>a+r[g.c],0),v=dayRows.reduce((a,r)=>a+r[g.r],0);return `<td>${fmt(c)}</td><td>${fmt(v)}</td>`;}).join('')}<td>${T.done} محطة</td></tr></tfoot>
     </table></div>
     <p class="dash-note">ملحوظة: كل الأيام بتتحفظ في نفس الجدول — اختار أي تاريخ من فوق وشوف بيانه.</p>
   </div>`;
@@ -850,73 +735,31 @@ async function renderStats(){
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل الإحصائيات…</p></div>';
   const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
-  
-  // إحصائيات عامة
   const totalRevenue=reports.reduce((a,r)=>a+num(r.totalRevenue),0);
   const totalTickets=reports.reduce((a,r)=>a+num(r.ticketsCount),0);
   const uniqueDays=new Set(reports.map(r=>r.date)).size;
-  
-  // أفضل محطة
   const byStation={};
-  reports.forEach(r=>{
-    if(!byStation[r.stationCode])byStation[r.stationCode]={name:r.stationName,revenue:0,count:0};
-    byStation[r.stationCode].revenue+=num(r.totalRevenue);
-    byStation[r.stationCode].count+=num(r.totalCount);
-  });
+  reports.forEach(r=>{if(!byStation[r.stationCode])byStation[r.stationCode]={name:r.stationName,revenue:0,count:0};byStation[r.stationCode].revenue+=num(r.totalRevenue);byStation[r.stationCode].count+=num(r.totalCount);});
   const topStation=Object.entries(byStation).sort((a,b)=>b[1].revenue-a[1].revenue)[0];
-  
-  // بيانات آخر 7 أيام
   const last7=[];
-  for(let i=6;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    const dayRev=reports.filter(r=>r.date===iso).reduce((a,r)=>a+num(r.totalRevenue),0);
-    last7.push({date:iso,day:d.toLocaleDateString('ar-EG',{weekday:'short'}),revenue:dayRev});
-  }
-  
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const dayRev=reports.filter(r=>r.date===iso).reduce((a,r)=>a+num(r.totalRevenue),0);last7.push({date:iso,day:d.toLocaleDateString('ar-EG',{weekday:'short'}),revenue:dayRev});}
+
   app.innerHTML=`<div class="view">
-    <div class="board-head">
-      <div><h1 class="page-title">الإحصائيات</h1>
-        <p class="page-sub">نظرة عامة على أداء المحطات</p></div>
-    </div>
+    <div class="board-head"><div><h1 class="page-title">الإحصائيات</h1><p class="page-sub">نظرة عامة على أداء المحطات</p></div></div>
     <div class="stats-strip">
       <div class="stat gold"><small>إجمالي الإيرادات</small><b>${money(totalRevenue)}</b></div>
       <div class="stat"><small>إجمالي التذاكر</small><b>${fmt(totalTickets)}</b></div>
       <div class="stat"><small>أيام مسجلة</small><b>${uniqueDays}</b></div>
       <div class="stat"><small>عدد المحطات</small><b>${stations.length}</b></div>
     </div>
-    ${topStation?`<div class="card"><h2>${ic('chart')} أفضل محطة إيرادًا</h2>
-      <div style="font-size:24px;font-weight:800;color:var(--gold)">${esc(topStation[1].name)}</div>
-      <div style="color:var(--muted);margin-top:6px">إجمالي الإيرادات: <b style="color:var(--acc-lite)">${money(topStation[1].revenue)}</b></div>
-    </div>`:''}
-    <div class="card"><h2>${ic('chart')} الإيرادات — آخر 7 أيام</h2>
-      <div class="chart-container"><canvas id="chart7"></canvas></div>
-    </div>
-    <div class="card"><h2>${ic('chart')} ترتيب المحطات حسب الإيراد</h2>
-      <div class="chart-container"><canvas id="chartStations"></canvas></div>
-    </div>
+    ${topStation?`<div class="card"><h2>${ic('chart')} أفضل محطة إيرادًا</h2><div style="font-size:24px;font-weight:800;color:var(--gold)">${esc(topStation[1].name)}</div><div style="color:var(--muted);margin-top:6px">إجمالي الإيرادات: <b style="color:var(--acc-lite)">${money(topStation[1].revenue)}</b></div></div>`:''}
+    <div class="card"><h2>${ic('chart')} الإيرادات — آخر 7 أيام</h2><div class="chart-container"><canvas id="chart7"></canvas></div></div>
+    <div class="card"><h2>${ic('chart')} ترتيب المحطات حسب الإيراد</h2><div class="chart-container"><canvas id="chartStations"></canvas></div></div>
   </div>`;
-  
-  // رسم بياني 1: آخر 7 أيام
-  new Chart($('#chart7'),{
-    type:'bar',
-    data:{
-      labels:last7.map(d=>d.day),
-      datasets:[{label:'الإيراد',data:last7.map(d=>d.revenue),backgroundColor:'rgba(56,200,176,.6)',borderColor:'#38c8b0',borderWidth:2}]
-    },
-    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#eaf2f8'}}},scales:{x:{ticks:{color:'#8fa9bf'},grid:{color:'rgba(29,58,84,.3)'}},y:{ticks:{color:'#8fa9bf',callback:v=>fmt(v)+' ج.م'},grid:{color:'rgba(29,58,84,.3)'}}}}
-  });
-  
-  // رسم بياني 2: ترتيب المحطات
+
+  new Chart($('#chart7'),{type:'bar',data:{labels:last7.map(d=>d.day),datasets:[{label:'الإيراد',data:last7.map(d=>d.revenue),backgroundColor:'rgba(56,200,176,.6)',borderColor:'#38c8b0',borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#eaf2f8'}}},scales:{x:{ticks:{color:'#8fa9bf'},grid:{color:'rgba(29,58,84,.3)'}},y:{ticks:{color:'#8fa9bf',callback:v=>fmt(v)+' ج.م'},grid:{color:'rgba(29,58,84,.3)'}}}}});
   const sorted=Object.entries(byStation).sort((a,b)=>b[1].revenue-a[1].revenue);
-  new Chart($('#chartStations'),{
-    type:'bar',
-    data:{
-      labels:sorted.map(([k,v])=>v.name),
-      datasets:[{label:'الإيراد',data:sorted.map(([k,v])=>v.revenue),backgroundColor:'rgba(255,181,46,.6)',borderColor:'#ffb52e',borderWidth:2}]
-    },
-    options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#eaf2f8'}}},scales:{x:{ticks:{color:'#8fa9bf',callback:v=>fmt(v)},grid:{color:'rgba(29,58,84,.3)'}},y:{ticks:{color:'#8fa9bf'},grid:{color:'rgba(29,58,84,.3)'}}}}
-  });
+  new Chart($('#chartStations'),{type:'bar',data:{labels:sorted.map(([k,v])=>v.name),datasets:[{label:'الإيراد',data:sorted.map(([k,v])=>v.revenue),backgroundColor:'rgba(255,181,46,.6)',borderColor:'#ffb52e',borderWidth:2}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#eaf2f8'}}},scales:{x:{ticks:{color:'#8fa9bf',callback:v=>fmt(v)},grid:{color:'rgba(29,58,84,.3)'}},y:{ticks:{color:'#8fa9bf'},grid:{color:'rgba(29,58,84,.3)'}}}}});
 }
 
 // ==========================================
@@ -929,33 +772,17 @@ async function renderAudit(){
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل سجل التدقيق…</p></div>';
   const logs=await getAudit();
-  
   app.innerHTML=`<div class="view">
-    <div class="board-head">
-      <div><h1 class="page-title">سجل التدقيق</h1>
-        <p class="page-sub">آخر العمليات في النظام</p></div>
-      <button class="btn ghost sm" id="refreshAudit">${ic('refresh')} تحديث</button>
-    </div>
-    <div class="card">
-      <div class="audit-list">
-        ${logs.length?logs.map(l=>`<div class="audit-item">
-          <div style="flex:1">
-            <div class="action">${esc(l.action)}</div>
-            <div class="details">${esc(l.details||'')}</div>
-          </div>
-          <div style="text-align:left">
-            <div style="font-weight:700;color:var(--acc-lite)">${esc(l.username||'—')}</div>
-            <div class="time">${fmtDateAr(l.created_at?.split('T')[0]||'')} — ${new Date(l.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div>
-          </div>
-        </div>`).join(''):'<p style="text-align:center;color:var(--muted);padding:40px">لا توجد عمليات مسجلة</p>'}
-      </div>
-    </div>
+    <div class="board-head"><div><h1 class="page-title">سجل التدقيق</h1><p class="page-sub">آخر العمليات في النظام</p></div><button class="btn ghost sm" id="refreshAudit">${ic('refresh')} تحديث</button></div>
+    <div class="card"><div class="audit-list">
+      ${logs.length?logs.map(l=>`<div class="audit-item"><div style="flex:1"><div class="action">${esc(l.action)}</div><div class="details">${esc(l.details||'')}</div></div><div style="text-align:left"><div style="font-weight:700;color:var(--acc-lite)">${esc(l.username||'—')}</div><div class="time">${fmtDateAr(l.created_at?.split('T')[0]||'')} — ${new Date(l.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div></div></div>`).join(''):'<p style="text-align:center;color:var(--muted);padding:40px">لا توجد عمليات مسجلة</p>'}
+    </div></div>
   </div>`;
   $('#refreshAudit').addEventListener('click',renderAudit);
 }
 
 // ==========================================
-// Stations Management
+// Stations
 // ==========================================
 async function renderStations(){
   setActive('stations');
@@ -964,137 +791,66 @@ async function renderStations(){
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل المحطات…</p></div>';
   const stations=await getAllStations();
-  
   app.innerHTML=`<div class="view">
-    <div class="board-head">
-      <div><h1 class="page-title">إدارة المحطات</h1>
-        <p class="page-sub">إضافة وحذف المحطات</p></div>
-    </div>
-    <div class="card">
-      <h2>${ic('plus')} إضافة محطة جديدة</h2>
+    <div class="board-head"><div><h1 class="page-title">إدارة المحطات</h1><p class="page-sub">إضافة وحذف المحطات</p></div></div>
+    <div class="card"><h2>${ic('plus')} إضافة محطة جديدة</h2>
       <form id="addStForm" style="display:flex;gap:10px;flex-wrap:wrap">
-        <input type="text" id="newCode" placeholder="الكود (مثل: ABC)" required style="flex:1;min-width:120px">
-        <input type="text" id="newName" placeholder="اسم المحطة" required style="flex:2;min-width:200px">
+        <input type="text" id="newCode" placeholder="الكود (مثل: ABC)" required style="flex:1;min-width:120px;background:#0a1c2d;border:1.5px solid var(--line);color:var(--ink);padding:10px;border-radius:10px;font-family:inherit">
+        <input type="text" id="newName" placeholder="اسم المحطة" required style="flex:2;min-width:200px;background:#0a1c2d;border:1.5px solid var(--line);color:var(--ink);padding:10px;border-radius:10px;font-family:inherit">
         <button class="btn" type="submit">${ic('plus')} إضافة</button>
       </form>
     </div>
-    <div class="card">
-      <h2>${ic('board')} المحطات الحالية (${stations.length})</h2>
-      <div class="st-mng">
-        ${stations.map(s=>`<div class="st-mng-row">
-          <span class="s-code">${esc(s.code)}</span>
-          <b>${esc(s.name)}</b>
-          <button class="icon-btn" data-copy="${esc(stationLink(s))}" title="نسخ الرابط">${ic('link')}</button>
-          <button class="icon-btn" data-del="${s.id}" title="حذف المحطة">${ic('trash')}</button>
-        </div>`).join('')}
-      </div>
-    </div>
+    <div class="card"><h2>${ic('board')} المحطات الحالية (${stations.length})</h2><div class="st-mng">
+      ${stations.map(s=>`<div class="st-mng-row"><span class="s-code">${esc(s.code)}</span><b>${esc(s.name)}</b><button class="icon-btn" data-copy="${esc(stationLink(s))}" title="نسخ الرابط">${ic('link')}</button><button class="icon-btn" data-del="${s.id}" title="حذف المحطة">${ic('trash')}</button></div>`).join('')}
+    </div></div>
   </div>`;
-  
   $('#addStForm').addEventListener('submit',async e=>{
     e.preventDefault();
     const code=$('#newCode').value.trim().toUpperCase();
     const name=$('#newName').value.trim();
     if(!code||!name)return toast('املأ كل الحقول');
     const ok=await addStation(code,name);
-    if(ok){
-      const auth=getAuth();
-      await addAudit('إضافة محطة',{code,name},auth?.username);
-      toast('تمت إضافة المحطة ✓');
-      renderStations();
-    }else{
-      toast('فشل الإضافة — الكود موجود بالفعل؟');
-    }
+    if(ok){const auth=getAuth();await addAudit('إضافة محطة',{code,name},auth?.username);toast('تمت إضافة المحطة ✓');renderStations();}
+    else{toast('فشل الإضافة — الكود موجود بالفعل؟');}
   });
-  
   $$('[data-del]').forEach(b=>b.onclick=async ()=>{
-    const id=b.dataset.del;
-    const s=stations.find(x=>x.id==id);
-    if(confirm('حذف محطة '+(s?s.name:'')+'؟')){
-      const ok=await deleteStation(id);
-      if(ok){
-        const auth=getAuth();
-        await addAudit('حذف محطة',{code:s.code,name:s.name},auth?.username);
-        toast('تم الحذف ✓');
-        renderStations();
-      }
-    }
+    const id=b.dataset.del;const s=stations.find(x=>x.id==id);
+    if(confirm('حذف محطة '+(s?s.name:'')+'؟')){const ok=await deleteStation(id);if(ok){const auth=getAuth();await addAudit('حذف محطة',{code:s.code,name:s.name},auth?.username);toast('تم الحذف ✓');renderStations();}}
   });
 }
 
 // ==========================================
-// Excel Export
+// Excel
 // ==========================================
-function dlBlob(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000);}
-function setNumFmt(ws){const r=XLSX.utils.decode_range(ws['!ref']);
-  for(let R=r.s.r;R<=r.e.r;R++)for(let C=0;C<=r.e.c;C++){const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];
-    if(cell&&typeof cell.v==='number')cell.z='#,##0.##';}}
+function setNumFmt(ws){const r=XLSX.utils.decode_range(ws['!ref']);for(let R=r.s.r;R<=r.e.r;R++)for(let C=0;C<=r.e.c;C++){const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];if(cell&&typeof cell.v==='number')cell.z='#,##0.##';}}
 function exportDayExcel(dayRows){
   const T=totalsOf(dayRows);
-  const aoa=[
-    ['تقرير إحصاء المحطات — مونوريل شرق النيل'],
-    ['التاريخ: '+dashDate+'  ('+fmtDateAr(dashDate)+')','','','','','','','','','','','','','','','','','المسجّل: '+T.done+' من '+dayRows.length],
-    [],
-    ['المحطة','التذاكر','','الاشتراكات','','','','','','كروت الاشتراكات','','كروت المحفظة','','شحن المحفظة','','الإجمالي','','الحالة'],
-    ['','عدد','إيراد','أسبوعي (عدد)','أسبوعي (إيراد)','شهري (عدد)','شهري (إيراد)','ربع سنوي (عدد)','ربع سنوي (إيراد)','عدد','إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','']
-  ];
+  const aoa=[['تقرير إحصاء المحطات — مونوريل شرق النيل'],['التاريخ: '+dashDate+'  ('+fmtDateAr(dashDate)+')','','','','','','','','','','','','','','','','','المسجّل: '+T.done+' من '+dayRows.length],[],['المحطة','التذاكر','','الاشتراكات','','','','','','كروت الاشتراكات','','كروت المحفظة','','شحن المحفظة','','الإجمالي','','الحالة'],['','عدد','إيراد','أسبوعي (عدد)','أسبوعي (إيراد)','شهري (عدد)','شهري (إيراد)','ربع سنوي (عدد)','ربع سنوي (إيراد)','عدد','إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','']];
   dayRows.forEach(r=>aoa.push([r.name,r.ticketsCount,r.ticketsRevenue,r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.totalCount,r.totalRevenue,r.present?'مسجّل':'لم يُسجّل']));
   aoa.push(['الإجمالي العام',...GROUPS.map(g=>[dayRows.reduce((a,r)=>a+r[g.c],0),dayRows.reduce((a,r)=>a+r[g.r],0)]).flat(),T.done+' محطة']);
   if(!window.XLSX)return;
   const ws=XLSX.utils.aoa_to_sheet(aoa);
-  ws['!merges']=[
-    {s:{r:0,c:0},e:{r:0,c:17}},
-    {s:{r:3,c:0},e:{r:4,c:0}},
-    {s:{r:3,c:1},e:{r:3,c:2}},{s:{r:3,c:3},e:{r:3,c:8}},
-    {s:{r:3,c:9},e:{r:3,c:10}},{s:{r:3,c:11},e:{r:3,c:12}},{s:{r:3,c:13},e:{r:3,c:14}},
-    {s:{r:3,c:15},e:{r:3,c:16}},{s:{r:3,c:17},e:{r:4,c:17}}
-  ];
-  ws['!cols']=[{wch:20},...Array(16).fill({wch:14}),{wch:11}];
-  ws['!rows']=[{hpt:26},{hpt:18},{hpt:6},{hpt:20},{hpt:18}];
-  setNumFmt(ws);
-  const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
-  XLSX.utils.book_append_sheet(wb,ws,'إحصاء '+dashDate);
-  XLSX.writeFile(wb,'إحصاء محطات المونوريل '+dashDate+'.xlsx');
-  toast('تم تنزيل ملف Excel ✓');
+  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:17}},{s:{r:3,c:0},e:{r:4,c:0}},{s:{r:3,c:1},e:{r:3,c:2}},{s:{r:3,c:3},e:{r:3,c:8}},{s:{r:3,c:9},e:{r:3,c:10}},{s:{r:3,c:11},e:{r:3,c:12}},{s:{r:3,c:13},e:{r:3,c:14}},{s:{r:3,c:15},e:{r:3,c:16}},{s:{r:3,c:17},e:{r:4,c:17}}];
+  ws['!cols']=[{wch:20},...Array(16).fill({wch:14}),{wch:11}];ws['!rows']=[{hpt:26},{hpt:18},{hpt:6},{hpt:20},{hpt:18}];
+  setNumFmt(ws);const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};XLSX.utils.book_append_sheet(wb,ws,'إحصاء '+dashDate);XLSX.writeFile(wb,'إحصاء محطات المونوريل '+dashDate+'.xlsx');toast('تم تنزيل ملف Excel ✓');
 }
 function exportLogExcel(records){
   const AR={stationCode:'كود المحطة',stationName:'المحطة',date:'التاريخ',ticketsCount:'عدد التذاكر',ticketsRevenue:'إيراد التذاكر',weekCount:'اشتراك أسبوعي (عدد)',weekRevenue:'اشتراك أسبوعي (إيراد)',monthCount:'اشتراك شهري (عدد)',monthRevenue:'اشتراك شهري (إيراد)',quarterCount:'اشتراك ربع سنوي (عدد)',quarterRevenue:'اشتراك ربع سنوي (إيراد)',subCardsCount:'كروت اشتراكات (عدد)',subCardsRevenue:'كروت اشتراكات (إيراد)',walletCardsCount:'كروت محفظة (عدد)',walletCardsRevenue:'كروت محفظة (إيراد)',rechargeCount:'شحن محفظة (عدد)',rechargeRevenue:'شحن محفظة (إيراد)',totalCount:'إجمالي العدد',totalRevenue:'إجمالي الإيراد',submittedBy:'المُسجِّل',submittedAt:'وقت التسجيل'};
   const sorted=[...records].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
   const aoa=[FIELDS.map(f=>AR[f]),...sorted.map(r=>FIELDS.map(f=>r[f]??''))];
   if(!window.XLSX)return;
-  const ws=XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols']=[{wch:12},{wch:20},{wch:12},...Array(16).fill({wch:15}),{wch:14},{wch:20}];
-  ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:aoa.length-1,c:FIELDS.length-1}})};
-  setNumFmt(ws);
-  const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
-  XLSX.utils.book_append_sheet(wb,ws,'السجل الكامل');
-  XLSX.writeFile(wb,'سجل بيانات مونوريل شرق النيل.xlsx');
-  toast('تم تنزيل السجل الكامل ✓');
+  const ws=XLSX.utils.aoa_to_sheet(aoa);ws['!cols']=[{wch:12},{wch:20},{wch:12},...Array(16).fill({wch:15}),{wch:14},{wch:20}];ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:aoa.length-1,c:FIELDS.length-1}})};setNumFmt(ws);
+  const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};XLSX.utils.book_append_sheet(wb,ws,'السجل الكامل');XLSX.writeFile(wb,'سجل بيانات مونوريل شرق النيل.xlsx');toast('تم تنزيل السجل الكامل ✓');
 }
 
 // ==========================================
 // Init
 // ==========================================
-function tickClock(){const n=new Date();
-  $('#clockTime').textContent=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
-  $('#clockDate').textContent=n.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});}
+function tickClock(){const n=new Date();$('#clockTime').textContent=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});$('#clockDate').textContent=n.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});}
 setInterval(tickClock,1000);tickClock();
-
 $('#logoutBtn').addEventListener('click',logout);
-
-injectBottomNav();
-setupPWA();
-route();
-hideSplash();
-
-// Auto-refresh كل 30 ثانية
-setInterval(()=>{
-  const auth=getAuth();
-  if(auth){
-    const hash=location.hash;
-    if(hash==='#/'||hash==='#/dash'||hash==='#/stats')route();
-  }
-},30000);
+injectBottomNav();setupPWA();route();hideSplash();
+setInterval(()=>{const auth=getAuth();if(auth){const hash=location.hash;if(hash==='#/'||hash==='#/dash'||hash==='#/stats')route();}},30000);
 </script>
 </body>
 </html>
