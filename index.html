@@ -318,16 +318,115 @@ nav a.active{
 @media(max-width:900px){.bottom-nav{display:flex}main{padding-bottom:100px}}
 
 main{position:relative;z-index:1;max-width:1400px;margin:auto;padding:28px 24px 40px}
+
+/* ✨ Footer مميز */
 footer{
   position:relative;
   z-index:1;
-  border-top:1px solid var(--border);
-  padding:20px 24px 28px;
-  color:var(--text-muted);
-  font-size:13px;
+  margin-top:40px;
+  padding:32px 24px 28px;
+  background:linear-gradient(180deg,rgba(15,23,42,.3) 0%,rgba(15,23,42,.8) 100%);
+  border-top:1px solid rgba(6,182,212,.2);
   text-align:center;
-  background:rgba(15,23,42,.5);
+  overflow:hidden;
 }
+footer::before{
+  content:'';
+  position:absolute;
+  top:0;left:50%;
+  transform:translateX(-50%);
+  width:200px;height:1px;
+  background:linear-gradient(90deg,transparent,var(--primary),transparent);
+  box-shadow:0 0 20px var(--primary);
+}
+.footer-content{
+  max-width:600px;
+  margin:0 auto;
+  position:relative;
+  z-index:2;
+}
+.footer-title{
+  font:700 14px 'Changa';
+  color:var(--text-secondary);
+  margin-bottom:12px;
+  letter-spacing:.5px;
+}
+.footer-powered{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 24px;
+  background:linear-gradient(135deg,rgba(6,182,212,.1),rgba(139,92,246,.1));
+  border:1px solid rgba(6,182,212,.3);
+  border-radius:99px;
+  font:600 15px 'Changa';
+  color:var(--text-primary);
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  cursor:default;
+  position:relative;
+  overflow:hidden;
+}
+.footer-powered::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.1),transparent);
+  transform:translateX(-100%);
+  transition:transform .6s;
+}
+.footer-powered:hover::before{
+  transform:translateX(100%);
+}
+.footer-powered:hover{
+  transform:translateY(-3px);
+  border-color:var(--primary);
+  box-shadow:0 8px 24px rgba(6,182,212,.3);
+  background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(139,92,246,.15));
+}
+.footer-powered .heart{
+  color:var(--danger);
+  font-size:18px;
+  animation:heartbeat 1.5s ease-in-out infinite;
+  display:inline-block;
+}
+@keyframes heartbeat{
+  0%,100%{transform:scale(1)}
+  15%{transform:scale(1.25)}
+  30%{transform:scale(1)}
+  45%{transform:scale(1.15)}
+}
+.footer-powered .name{
+  background:var(--gradient-primary);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  font-weight:800;
+  font-size:16px;
+}
+.footer-powered .code-icon{
+  width:20px;height:20px;
+  color:var(--primary-light);
+  opacity:.8;
+}
+.footer-subtitle{
+  font-size:11px;
+  color:var(--text-muted);
+  margin-top:12px;
+  font-weight:500;
+}
+.footer-subtitle span{
+  color:var(--primary-light);
+  font-weight:600;
+}
+.footer-divider{
+  width:60px;
+  height:2px;
+  background:var(--gradient-primary);
+  margin:16px auto 0;
+  border-radius:2px;
+  opacity:.5;
+}
+
 .view{animation:fadeUp .5s cubic-bezier(.4,0,.2,1) both}
 @keyframes fadeUp{
   from{opacity:0;transform:translateY(20px)}
@@ -1110,6 +1209,8 @@ table.gt{
   .totals-bar{gap:16px;bottom:calc(80px + env(safe-area-inset-bottom))}
   .totals-bar .btn{margin-inline-start:0;width:100%}
   #toast{bottom:calc(92px + env(safe-area-inset-bottom))}
+  .footer-powered{padding:8px 18px;font-size:13px}
+  .footer-powered .name{font-size:14px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -1156,9 +1257,24 @@ table.gt{
 
 <main id="app"></main>
 
+<!-- ✨ Footer مميز مع Powered by -->
 <footer>
-  <div>منظومة إحصاء المحطات — مونوريل شرق النيل</div>
-  <div style="margin-top:6px;font-size:12px">البيانات تُجمع على Supabase وتُصدَّر إلى Excel باحترافية</div>
+  <div class="footer-content">
+    <div class="footer-title">منظومة إحصاء المحطات — مونوريل شرق النيل</div>
+    <div class="footer-powered">
+      <svg class="code-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="16 18 22 12 16 6"></polyline>
+        <polyline points="8 6 2 12 8 18"></polyline>
+      </svg>
+      <span>Powered by</span>
+      <span class="name">Hisham Fadlloun</span>
+      <span class="heart">❤</span>
+    </div>
+    <div class="footer-subtitle">
+      البيانات تُجمع على <span>Supabase</span> وتُصدَّر إلى Excel باحترافية
+    </div>
+    <div class="footer-divider"></div>
+  </div>
 </footer>
 
 <div id="toast" role="status" aria-live="polite"></div>
@@ -1215,7 +1331,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-]/g,d=>'١٢٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-]/g,d=>'۱۲۳٥٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-]/g,d=>'۱۲۳٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
@@ -1316,7 +1432,6 @@ async function deleteStation(id){
   }catch(e){return false;}
 }
 
-// 🆕 دالة مسح بيانات محطة معينة
 async function deleteStationReports(stationCode){
   if(useMock){
     const idx=MOCK_REPORTS.findIndex(r=>r.station_code===stationCode);
@@ -1329,7 +1444,6 @@ async function deleteStationReports(stationCode){
   }catch(e){return false;}
 }
 
-// 🆕 دالة مسح كل البيانات
 async function deleteAllReports(){
   if(useMock){
     MOCK_REPORTS.length=0;
@@ -2055,7 +2169,6 @@ async function renderStations(){
     }
   });
   
-  // 🆕 مسح بيانات محطة معينة
   $$('[data-del-reports]').forEach(b=>b.onclick=async ()=>{
     const code=b.dataset.delReports;
     const s=stations.find(x=>x.code===code);
@@ -2073,7 +2186,6 @@ async function renderStations(){
     }
   });
   
-  //  مسح كل البيانات
   $('#deleteAllData').onclick=async ()=>{
     if(confirm(`⚠️ تحذير: سيتم مسح كل البيانات (${reports.length} تقرير) من كل المحطات!\n\nهذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد؟`)){
       if(confirm('تأكيد أخير: هل تريد فعلاً مسح كل البيانات؟')){
