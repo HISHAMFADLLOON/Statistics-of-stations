@@ -1336,7 +1336,7 @@ table.gt{
     <nav class="top-nav" id="topNav">
       <a href="#/" data-nav="home">📋 لوحة المحطات</a>
       <a href="#/dash" data-nav="dash">📊 لوحة التجميع</a>
-      <a href="#/stats" data-nav="stats">📈 الإحصائيات</a>
+      <a href="#/stats" data-nav="stats"> الإحصائيات</a>
       <a href="#/audit" data-nav="audit">📋 سجل التدقيق</a>
       <a href="#/stations" data-nav="stations">⚙️ إدارة المحطات</a>
     </nav>
@@ -2365,7 +2365,7 @@ async function renderStations(){
     const code=b.dataset.delReports;
     const s=stations.find(x=>x.code===code);
     const count=reports.filter(r=>r.stationCode===code).length;
-    if(confirm(`مسح كل بيانات محطة "${s?s.name:code}" (${count} تقرير)؟\n\n⚠️ هذا الإجراء لا يمكن التراجع عنه!`)){
+    if(confirm(`مسح كل بيانات محطة "${s?s.name:code}" (${count} تقرير)؟\n\n️ هذا الإجراء لا يمكن التراجع عنه!`)){
       const ok=await deleteStationReports(code);
       if(ok){
         const auth=getAuth();
