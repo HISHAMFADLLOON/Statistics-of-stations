@@ -10,7 +10,6 @@
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
   --bg-primary:#020617;
@@ -36,19 +35,6 @@
   --shadow-lg:0 10px 15px -3px rgba(0,0,0,.5),0 4px 6px -4px rgba(0,0,0,.4);
   --shadow-xl:0 20px 25px -5px rgba(0,0,0,.6),0 8px 10px -6px rgba(0,0,0,.5);
 }
-
-/* Light Mode */
-[data-theme="light"]{
-  --bg-primary:#ffffff;
-  --bg-secondary:#f1f5f9;
-  --bg-card:#ffffff;
-  --bg-hover:#e2e8f0;
-  --border:#cbd5e1;
-  --text-primary:#0f172a;
-  --text-secondary:#475569;
-  --text-muted:#64748b;
-}
-
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 body{
@@ -57,7 +43,6 @@ body{
   background:var(--bg-primary);
   min-height:100vh;
   overflow-x:hidden;
-  transition:background .3s,color .3s;
 }
 body::before{
   content:'';
@@ -80,387 +65,6 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
 ::-webkit-scrollbar-thumb:hover{background:var(--primary-dark)}
 .ic{width:20px;height:20px;flex:none}
 
-/* Monorail Animation */
-.track-strip{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  height:100px;
-  z-index:0;
-  pointer-events:none;
-  overflow:hidden;
-}
-.track-rail{
-  position:absolute;
-  bottom:30px;left:0;right:0;
-  height:6px;
-  background:linear-gradient(90deg,transparent,var(--primary),var(--secondary),transparent);
-  border-radius:3px;
-  opacity:.4;
-}
-.mtrain{
-  position:absolute;
-  bottom:35px;
-  left:-180px;
-  animation:ride 25s linear infinite;
-  filter:drop-shadow(0 8px 20px rgba(6,182,212,.4));
-}
-@keyframes ride{
-  to{left:110%}
-}
-.mtrain .body{
-  width:160px;height:32px;
-  background:linear-gradient(180deg,var(--primary-light),var(--primary));
-  border-radius:16px 20px 10px 10px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 4px 15px rgba(6,182,212,.5),inset 0 2px 10px rgba(255,255,255,.3);
-}
-.mtrain .body::before{
-  content:'';
-  position:absolute;
-  left:12px;right:12px;top:8px;height:10px;
-  background:repeating-linear-gradient(90deg,var(--bg-secondary) 0 14px,var(--primary-light) 14px 18px);
-  border-radius:4px;
-  opacity:.8;
-}
-.mtrain .body::after{
-  content:'';
-  position:absolute;
-  bottom:0;left:0;right:0;
-  height:6px;
-  background:var(--bg-primary);
-  opacity:.3;
-}
-.mtrain .window{
-  position:absolute;
-  top:4px;left:16px;right:16px;height:8px;
-  background:rgba(255,255,255,.9);
-  border-radius:4px;
-}
-
-/* Theme Toggle */
-.theme-toggle{
-  position:fixed;
-  top:20px;
-  left:20px;
-  z-index:1000;
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  background:var(--gradient-primary);
-  border:none;
-  cursor:pointer;
-  display:grid;
-  place-items:center;
-  box-shadow:0 4px 15px rgba(6,182,212,.4);
-  transition:transform .3s;
-}
-.theme-toggle:hover{
-  transform:rotate(180deg) scale(1.1);
-}
-.theme-toggle .ic{
-  width:24px;
-  height:24px;
-  color:var(--bg-primary);
-}
-
-/* Keyboard Shortcuts Help */
-.shortcuts-help{
-  position:fixed;
-  bottom:20px;
-  right:20px;
-  z-index:1000;
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  background:var(--gradient-primary);
-  border:none;
-  cursor:pointer;
-  display:grid;
-  place-items:center;
-  box-shadow:0 4px 15px rgba(6,182,212,.4);
-  transition:transform .3s;
-}
-.shortcuts-help:hover{
-  transform:scale(1.1);
-}
-.shortcuts-help .ic{
-  width:24px;
-  height:24px;
-  color:var(--bg-primary);
-}
-
-.shortcuts-modal{
-  position:fixed;
-  inset:0;
-  background:rgba(2,6,23,.9);
-  backdrop-filter:blur(10px);
-  z-index:2000;
-  display:none;
-  place-items:center;
-  padding:20px;
-}
-.shortcuts-modal.active{
-  display:grid;
-}
-.shortcuts-content{
-  background:var(--bg-card);
-  border-radius:20px;
-  padding:30px;
-  max-width:600px;
-  width:100%;
-  max-height:80vh;
-  overflow-y:auto;
-}
-.shortcuts-content h2{
-  font:800 24px 'Changa';
-  margin-bottom:20px;
-  color:var(--primary-light);
-}
-.shortcut-item{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px;
-  margin:8px 0;
-  background:var(--bg-secondary);
-  border-radius:10px;
-  border:1px solid var(--border);
-}
-.shortcut-item kbd{
-  background:var(--bg-hover);
-  padding:4px 10px;
-  border-radius:6px;
-  font-family:monospace;
-  font-size:13px;
-  border:1px solid var(--border);
-}
-
-/* Auto-lock Warning */
-.auto-lock-warning{
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:var(--bg-card);
-  border:2px solid var(--warning);
-  border-radius:20px;
-  padding:30px;
-  z-index:3000;
-  display:none;
-  text-align:center;
-  box-shadow:0 20px 60px rgba(0,0,0,.5);
-}
-.auto-lock-warning.active{
-  display:block;
-  animation:shake .5s;
-}
-@keyframes shake{
-  0%,100%{transform:translate(-50%,-50%) rotate(0deg)}
-  25%{transform:translate(-50%,-50%) rotate(-5deg)}
-  75%{transform:translate(-50%,-50%) rotate(5deg)}
-}
-.auto-lock-warning h3{
-  color:var(--warning);
-  font:800 22px 'Changa';
-  margin-bottom:15px;
-}
-.auto-lock-warning .countdown{
-  font:700 48px 'Changa';
-  color:var(--danger);
-  margin:20px 0;
-}
-
-/* Validation Alerts */
-.validation-alert{
-  position:fixed;
-  top:80px;
-  right:20px;
-  background:var(--bg-card);
-  border-left:4px solid var(--danger);
-  border-radius:12px;
-  padding:16px 20px;
-  box-shadow:var(--shadow-xl);
-  z-index:2000;
-  display:none;
-  animation:slideIn .3s ease;
-  max-width:400px;
-}
-.validation-alert.active{
-  display:block;
-}
-.validation-alert.success{
-  border-left-color:var(--success);
-}
-.validation-alert.warning{
-  border-left-color:var(--warning);
-}
-@keyframes slideIn{
-  from{transform:translateX(400px);opacity:0}
-  to{transform:translateX(0);opacity:1}
-}
-
-/* Drag and Drop */
-.draggable{
-  cursor:move;
-  transition:transform .2s,box-shadow .2s;
-}
-.draggable:hover{
-  transform:translateY(-2px);
-  box-shadow:var(--shadow-lg);
-}
-.draggable.dragging{
-  opacity:.5;
-  transform:scale(.95);
-}
-.drag-over{
-  border:2px dashed var(--primary);
-  background:rgba(6,182,212,.1);
-}
-
-/* Change Log */
-.changelog-modal{
-  position:fixed;
-  inset:0;
-  background:rgba(2,6,23,.9);
-  backdrop-filter:blur(10px);
-  z-index:2000;
-  display:none;
-  place-items:center;
-  padding:20px;
-}
-.changelog-modal.active{
-  display:grid;
-}
-.changelog-content{
-  background:var(--bg-card);
-  border-radius:20px;
-  padding:30px;
-  max-width:800px;
-  width:100%;
-  max-height:80vh;
-  overflow-y:auto;
-}
-.changelog-content h2{
-  font:800 24px 'Changa';
-  margin-bottom:20px;
-  color:var(--primary-light);
-}
-.changelog-entry{
-  padding:15px;
-  margin:10px 0;
-  background:var(--bg-secondary);
-  border-radius:10px;
-  border-right:4px solid var(--primary);
-}
-.changelog-entry .time{
-  color:var(--text-muted);
-  font-size:12px;
-  margin-bottom:5px;
-}
-.changelog-entry .action{
-  font-weight:700;
-  color:var(--primary-light);
-}
-.changelog-entry .details{
-  color:var(--text-secondary);
-  font-size:13px;
-  margin-top:5px;
-}
-
-/* API Documentation */
-.api-docs{
-  background:var(--bg-card);
-  border-radius:20px;
-  padding:30px;
-  margin:20px 0;
-}
-.api-docs h3{
-  font:700 20px 'Changa';
-  margin-bottom:15px;
-  color:var(--primary-light);
-}
-.api-endpoint{
-  background:var(--bg-secondary);
-  padding:15px;
-  border-radius:10px;
-  margin:10px 0;
-  font-family:monospace;
-  font-size:13px;
-}
-.api-endpoint .method{
-  display:inline-block;
-  padding:4px 10px;
-  border-radius:6px;
-  font-weight:700;
-  margin-right:10px;
-}
-.api-endpoint .method.get{
-  background:rgba(6,182,212,.2);
-  color:var(--primary-light);
-}
-.api-endpoint .method.post{
-  background:rgba(16,185,129,.2);
-  color:var(--success);
-}
-
-/* Widget Preview */
-.widget-preview{
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  border-radius:20px;
-  padding:20px;
-  color:var(--bg-primary);
-  margin:20px 0;
-}
-.widget-preview h3{
-  font:700 18px 'Changa';
-  margin-bottom:15px;
-}
-.widget-stats{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:10px;
-}
-.widget-stat{
-  background:rgba(255,255,255,.2);
-  padding:12px;
-  border-radius:10px;
-  text-align:center;
-}
-.widget-stat b{
-  display:block;
-  font:800 24px 'Changa';
-}
-.widget-stat small{
-  font-size:11px;
-  opacity:.9;
-}
-
-/* Professional PDF/Excel Header */
-.professional-header{
-  background:linear-gradient(135deg,var(--primary),var(--secondary));
-  padding:30px;
-  border-radius:15px;
-  text-align:center;
-  margin-bottom:20px;
-}
-.professional-header .logo{
-  width:80px;
-  height:80px;
-  margin-bottom:15px;
-}
-.professional-header h1{
-  font:800 28px 'Changa';
-  color:var(--bg-primary);
-  margin-bottom:5px;
-}
-.professional-header .subtitle{
-  color:var(--bg-primary);
-  opacity:.9;
-  font-size:14px;
-}
-
-/* Rest of existing styles... */
 #splash{
   position:fixed;inset:0;z-index:1000;
   background:linear-gradient(135deg,var(--bg-primary) 0%,var(--bg-secondary) 100%);
@@ -521,9 +125,200 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   margin-top:8px;
 }
 
-/* ... بقية الـ styles الموجودة ... */
+.track-strip{
+  position:fixed;
+  bottom:0;left:0;right:0;
+  height:100px;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+.track-rail{
+  position:absolute;
+  bottom:30px;left:0;right:0;
+  height:6px;
+  background:linear-gradient(90deg,transparent,var(--primary),var(--secondary),transparent);
+  border-radius:3px;
+  opacity:.4;
+}
+.mtrain{
+  position:absolute;
+  bottom:35px;
+  left:-180px;
+  animation:ride 25s linear infinite;
+  filter:drop-shadow(0 8px 20px rgba(6,182,212,.4));
+}
+@keyframes ride{
+  to{left:110%}
+}
+.mtrain .body{
+  width:160px;height:32px;
+  background:linear-gradient(180deg,var(--primary-light),var(--primary));
+  border-radius:16px 20px 10px 10px;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 4px 15px rgba(6,182,212,.5),inset 0 2px 10px rgba(255,255,255,.3);
+}
+.mtrain .body::before{
+  content:'';
+  position:absolute;
+  left:12px;right:12px;top:8px;height:10px;
+  background:repeating-linear-gradient(90deg,var(--bg-secondary) 0 14px,var(--primary-light) 14px 18px);
+  border-radius:4px;
+  opacity:.8;
+}
+.mtrain .body::after{
+  content:'';
+  position:absolute;
+  bottom:0;left:0;right:0;
+  height:6px;
+  background:var(--bg-primary);
+  opacity:.3;
+}
+.mtrain .window{
+  position:absolute;
+  top:4px;left:16px;right:16px;height:8px;
+  background:rgba(255,255,255,.9);
+  border-radius:4px;
+}
 
-/* Footer */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:50;
+  background:rgba(15,23,42,.85);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-bottom:1px solid rgba(30,41,59,.8);
+  box-shadow:var(--shadow-lg);
+}
+.topbar-in{
+  max-width:1400px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  padding:12px 24px;
+  flex-wrap:wrap;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.brand-badge{
+  width:48px;height:48px;
+  border-radius:14px;
+  background:var(--gradient-primary);
+  display:grid;place-items:center;
+  box-shadow:0 8px 24px rgba(6,182,212,.4),inset 0 2px 8px rgba(255,255,255,.2);
+  transition:transform .3s;
+}
+.brand-badge:hover{transform:rotate(-10deg) scale(1.1)}
+.brand-badge .ic{width:28px;height:28px;color:var(--bg-primary)}
+.brand b{font:800 20px 'Changa';display:block;color:var(--text-primary)}
+.brand small{color:var(--text-secondary);font-size:12px;font-weight:600;letter-spacing:.5px}
+nav.top-nav{
+  display:flex;
+  gap:6px;
+  margin-inline-start:auto;
+  flex-wrap:wrap;
+}
+nav.top-nav a{
+  padding:10px 16px;
+  border-radius:12px;
+  color:var(--text-secondary);
+  font-weight:600;
+  font-size:14px;
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+  display:flex;
+  gap:8px;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+}
+nav.top-nav a::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:var(--gradient-primary);
+  opacity:0;
+  transition:opacity .25s;
+}
+nav.top-nav a:hover::before{opacity:.1}
+nav.top-nav a .ic{width:18px;height:18px;position:relative;z-index:1}
+nav.top-nav a:hover{color:var(--primary-light);transform:translateY(-2px)}
+nav a.active{
+  color:var(--primary-light);
+  background:rgba(6,182,212,.15);
+  box-shadow:0 0 0 2px rgba(6,182,212,.2);
+}
+.head-meta{display:flex;align-items:center;gap:10px}
+#clockTime{font:700 18px 'Changa';color:var(--primary-light)}
+#clockDate{font-size:12px;color:var(--text-secondary)}
+.chip{
+  font-size:11px;
+  font-weight:700;
+  padding:4px 12px;
+  border-radius:99px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  box-shadow:var(--shadow-sm);
+}
+.chip.ok{
+  color:#34d399;
+  background:rgba(16,185,129,.15);
+  border:1px solid rgba(16,185,129,.4);
+}
+.chip.warn{
+  color:#fbbf24;
+  background:rgba(245,158,11,.15);
+  border:1px solid rgba(245,158,11,.4);
+}
+@media(max-width:900px){nav.top-nav{display:none}}
+
+.bottom-nav{
+  display:none;
+  position:fixed;
+  bottom:0;inset-inline:0;
+  z-index:60;
+  background:rgba(15,23,42,.95);
+  backdrop-filter:blur(20px) saturate(180%);
+  border-top:1px solid rgba(30,41,59,.8);
+  padding:8px 8px calc(8px + env(safe-area-inset-bottom));
+  box-shadow:0 -4px 20px rgba(0,0,0,.4);
+}
+.bottom-nav a{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  color:var(--text-secondary);
+  font-size:11px;
+  font-weight:600;
+  padding:8px;
+  border-radius:12px;
+  transition:all .25s;
+  position:relative;
+}
+.bottom-nav a::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:var(--gradient-primary);
+  opacity:0;
+  border-radius:12px;
+  transition:opacity .25s;
+}
+.bottom-nav a .ic{width:22px;height:22px;position:relative;z-index:1;transition:transform .25s}
+.bottom-nav a.active::before{opacity:.15}
+.bottom-nav a.active{color:var(--primary-light)}
+.bottom-nav a.active .ic{transform:scale(1.1)}
+@media(max-width:900px){.bottom-nav{display:flex}main{padding-bottom:100px}}
+
+main{position:relative;z-index:1;max-width:1400px;margin:auto;padding:28px 24px 40px}
+
 footer{
   position:relative;
   z-index:1;
@@ -587,18 +382,6 @@ footer::before{
   box-shadow:0 8px 24px rgba(6,182,212,.3);
   background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(139,92,246,.15));
 }
-.footer-powered .heart{
-  color:var(--danger);
-  font-size:18px;
-  animation:heartbeat 1.5s ease-in-out infinite;
-  display:inline-block;
-}
-@keyframes heartbeat{
-  0%,100%{transform:scale(1)}
-  15%{transform:scale(1.25)}
-  30%{transform:scale(1)}
-  45%{transform:scale(1.15)}
-}
 .footer-powered .name{
   background:var(--gradient-primary);
   -webkit-background-clip:text;
@@ -630,105 +413,804 @@ footer::before{
   border-radius:2px;
   opacity:.5;
 }
+
+.view{animation:fadeUp .5s cubic-bezier(.4,0,.2,1) both}
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.loading{
+  color:var(--text-secondary);
+  padding:60px 0;
+  text-align:center;
+  font-weight:600;
+  font-size:16px;
+}
+
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  background:var(--gradient-primary);
+  color:var(--bg-primary);
+  font:700 14px 'IBM Plex Sans Arabic';
+  padding:12px 20px;
+  border-radius:12px;
+  border:none;
+  cursor:pointer;
+  transition:all .25s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 8px 20px rgba(6,182,212,.35),inset 0 2px 8px rgba(255,255,255,.2);
+  position:relative;
+  overflow:hidden;
+}
+.btn::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,.3),transparent);
+  opacity:0;
+  transition:opacity .25s;
+}
+.btn:hover::before{opacity:1}
+.btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 12px 28px rgba(6,182,212,.45),inset 0 2px 8px rgba(255,255,255,.3);
+}
+.btn:active{transform:translateY(-1px)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.btn.ghost{
+  background:transparent;
+  border:1.5px solid var(--border);
+  color:var(--text-primary);
+  box-shadow:none;
+}
+.btn.ghost:hover{
+  border-color:var(--primary);
+  color:var(--primary-light);
+  background:rgba(6,182,212,.1);
+}
+.btn.navy{
+  background:var(--bg-card);
+  color:var(--primary-light);
+  border:1.5px solid var(--border);
+  box-shadow:none;
+}
+.btn.navy:hover{
+  background:var(--bg-hover);
+  border-color:var(--primary);
+}
+.btn.danger{
+  background:transparent;
+  border:1.5px solid rgba(239,68,68,.5);
+  color:var(--danger);
+  box-shadow:none;
+}
+.btn.danger:hover{
+  background:rgba(239,68,68,.1);
+  border-color:var(--danger);
+}
+.btn.sm{padding:8px 14px;font-size:13px;border-radius:10px}
+.btn.big{padding:14px 28px;font-size:15px;border-radius:14px}
+.icon-btn{
+  width:40px;height:40px;
+  display:grid;place-items:center;
+  border-radius:12px;
+  border:1px solid var(--border);
+  background:var(--bg-card);
+  color:var(--text-secondary);
+  cursor:pointer;
+  transition:all .25s;
+  box-shadow:var(--shadow-sm);
+}
+.icon-btn:hover{
+  color:var(--primary-light);
+  border-color:var(--primary);
+  transform:translateY(-3px);
+  box-shadow:var(--shadow-md);
+}
+.icon-btn.danger-icon:hover{
+  color:var(--danger);
+  border-color:var(--danger);
+  background:rgba(239,68,68,.1);
+}
+.icon-btn .ic{width:18px;height:18px}
+.spin{animation:rot 1s linear infinite}
+@keyframes rot{to{transform:rotate(360deg)}}
+
+.card{
+  background:linear-gradient(180deg,var(--bg-card),var(--bg-secondary));
+  border:1px solid var(--border);
+  border-radius:20px;
+  padding:24px;
+  box-shadow:var(--shadow-xl);
+  margin-bottom:20px;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  position:relative;
+  overflow:hidden;
+}
+.card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:3px;
+  background:var(--gradient-primary);
+  opacity:0;
+  transition:opacity .3s;
+}
+.card:hover::before{opacity:1}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:rgba(6,182,212,.3);
+  box-shadow:0 24px 40px rgba(0,0,0,.5);
+}
+.card h2{
+  font:700 22px 'Changa';
+  margin-bottom:16px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  color:var(--text-primary);
+}
+.card h2 .ic{color:var(--primary);width:24px;height:24px}
+
+.board-head{
+  display:flex;
+  align-items:flex-end;
+  gap:20px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.page-title{font:800 36px 'Changa';background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-sub{color:var(--text-secondary);font-size:15px;margin-top:4px}
+.board-head .grow{flex:1}
+.search{
+  background:var(--bg-card);
+  border:1.5px solid var(--border);
+  border-radius:14px;
+  color:var(--text-primary);
+  padding:12px 16px;
+  font-family:inherit;
+  width:260px;
+  transition:all .25s;
+  box-shadow:var(--shadow-sm);
+}
+.search:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(6,182,212,.2),var(--shadow-md);
+}
+
+.progress-wrap{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  margin:0 0 20px;
+  font-size:14px;
+  color:var(--text-secondary);
+  font-weight:600;
+}
+.progress{
+  flex:1;
+  height:10px;
+  border-radius:99px;
+  background:var(--bg-card);
+  overflow:hidden;
+  border:1px solid var(--border);
+  box-shadow:inset 0 2px 8px rgba(0,0,0,.3);
+}
+.progress i{
+  display:block;
+  height:100%;
+  width:0;
+  background:var(--gradient-primary);
+  border-radius:99px;
+  transition:width 1.2s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 10px rgba(6,182,212,.5);
+}
+.progress-wrap b{color:var(--primary-light);font-family:'Changa';font-size:16px}
+
+.stations{
+  list-style:none;
+  border:1px solid var(--border);
+  border-radius:20px;
+  overflow:hidden;
+  background:var(--bg-secondary);
+  box-shadow:var(--shadow-xl);
+}
+.station-row{
+  display:grid;
+  grid-template-columns:64px 1fr auto auto;
+  align-items:center;
+  gap:16px;
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  transition:all .25s;
+  animation:fadeUp .5s both;
+  animation-delay:calc(var(--i)*40ms);
+  position:relative;
+}
+.station-row::before{
+  content:'';
+  position:absolute;
+  left:0;top:0;bottom:0;
+  width:4px;
+  background:var(--gradient-primary);
+  opacity:0;
+  transition:opacity .25s;
+}
+.station-row:last-child{border-bottom:0}
+.station-row:hover{
+  background:var(--bg-card);
+  padding-inline-start:24px;
+}
+.station-row:hover::before{opacity:1}
+.s-code{
+  font:800 15px 'Changa';
+  color:var(--primary-light);
+  background:rgba(6,182,212,.1);
+  border:1.5px solid rgba(6,182,212,.4);
+  border-radius:12px;
+  text-align:center;
+  padding:10px 0;
+  min-width:60px;
+}
+.s-name{font:700 18px 'Changa';color:var(--text-primary)}
+.s-status{
+  font-size:12px;
+  color:var(--text-secondary);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:4px;
+  font-weight:600;
+}
+.dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  background:var(--text-muted);
+  flex:none;
+  box-shadow:0 0 8px currentColor;
+}
+.s-status.on{color:var(--success)}
+.s-status.on .dot{
+  background:var(--success);
+  animation:pulse 2s infinite;
+}
+@keyframes pulse{
+  0%{box-shadow:0 0 0 0 rgba(16,185,129,.6)}
+  70%{box-shadow:0 0 0 10px rgba(16,185,129,0)}
+  100%{box-shadow:0 0 0 0 rgba(16,185,129,0)}
+}
+.s-rev{
+  font:700 16px 'Changa';
+  color:var(--accent);
+  min-width:120px;
+  text-align:left;
+}
+.s-actions{display:flex;gap:10px;align-items:center}
+
+.back-link{
+  display:inline-flex;
+  gap:10px;
+  align-items:center;
+  color:var(--text-secondary);
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:16px;
+  transition:all .25s;
+}
+.back-link:hover{color:var(--primary-light);transform:translateX(-4px)}
+.station-sign{
+  position:relative;
+  background:linear-gradient(180deg,var(--bg-card),var(--bg-secondary));
+  border:2px solid var(--border);
+  border-radius:20px;
+  padding:24px 30px;
+  display:flex;
+  align-items:center;
+  gap:20px;
+  overflow:hidden;
+  margin-bottom:20px;
+  box-shadow:var(--shadow-xl);
+}
+.station-sign::after{
+  content:'';
+  position:absolute;
+  inset:8px;
+  border:1.5px solid rgba(6,182,212,.4);
+  border-radius:16px;
+  pointer-events:none;
+}
+.sign-code{
+  font:800 22px 'Changa';
+  color:var(--bg-primary);
+  background:var(--gradient-primary);
+  padding:14px 18px;
+  border-radius:14px;
+  box-shadow:0 8px 20px rgba(6,182,212,.4);
+}
+.station-sign h1{font:800 clamp(24px,4vw,36px) 'Changa';color:var(--text-primary)}
+.sign-meta{color:var(--text-secondary);font-size:13px;margin-top:4px;font-weight:600}
+.meta-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+  margin-bottom:20px;
+}
+@media(max-width:600px){.meta-grid{grid-template-columns:1fr}}
+.form-sec{margin-bottom:20px}
+.sec-head{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:16px;
+  flex-wrap:wrap;
+}
+.sec-ord{
+  min-width:60px;height:36px;
+  padding:0 12px;
+  border-radius:12px;
+  background:var(--gradient-primary);
+  color:var(--bg-primary);
+  font:800 14px 'Changa';
+  display:grid;place-items:center;
+  box-shadow:0 6px 16px rgba(6,182,212,.4);
+}
+.sec-head h3{font:700 20px 'Changa';color:var(--text-primary)}
+.sec-head .ic{color:var(--primary);width:24px;height:24px}
+.sec-sum{
+  margin-inline-start:auto;
+  font:700 14px 'Changa';
+  color:var(--primary-light);
+  background:rgba(6,182,212,.1);
+  border:1px dashed rgba(6,182,212,.45);
+  padding:6px 16px;
+  border-radius:99px;
+}
+.pair{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px;
+}
+@media(max-width:520px){.pair{grid-template-columns:1fr}}
+.sub-row{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  margin-bottom:12px;
+  transition:all .25s;
+}
+.sub-row:hover{border-color:rgba(6,182,212,.3)}
+.sub-row:last-child{margin-bottom:0}
+.sub-name{
+  font:700 15px 'Changa';
+  color:var(--primary-light);
+  margin-bottom:12px;
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+.sub-name::before{
+  content:'';
+  width:10px;height:10px;
+  border-radius:3px;
+  background:var(--primary);
+  box-shadow:0 0 10px rgba(6,182,212,.6);
+}
+.field label{
+  display:block;
+  font-size:13px;
+  color:var(--text-secondary);
+  margin-bottom:8px;
+  font-weight:600;
+}
+.in-wrap{position:relative}
+.in-wrap input{
+  width:100%;
+  background:var(--bg-primary);
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  color:var(--text-primary);
+  font:600 18px 'Changa';
+  padding:12px 16px;
+  transition:all .25s;
+  box-shadow:var(--shadow-sm);
+}
+.in-wrap input:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(6,182,212,.2),var(--shadow-md);
+}
+.in-wrap input.has-unit{padding-left:56px}
+.unit{
+  position:absolute;
+  left:16px;top:50%;
+  transform:translateY(-50%);
+  font-size:12px;
+  color:var(--text-muted);
+  font-weight:700;
+}
+.totals-bar{
+  position:sticky;
+  bottom:16px;
+  margin-top:24px;
+  background:linear-gradient(135deg,var(--accent),#fbbf24);
+  color:var(--bg-primary);
+  border-radius:16px;
+  padding:18px 24px;
+  display:flex;
+  align-items:center;
+  gap:28px;
+  box-shadow:0 20px 50px rgba(245,158,11,.4);
+  border:2px dashed rgba(0,0,0,.2);
+  z-index:30;
+  flex-wrap:wrap;
+}
+.tot-item small{
+  display:block;
+  font-size:11px;
+  color:rgba(30,41,59,.8);
+  font-weight:700;
+}
+.tot-item b{
+  font:800 26px 'Changa';
+  color:var(--bg-primary);
+  display:inline-block;
+}
+.tot-item.money b{color:#92400e}
+.totals-bar .btn{margin-inline-start:auto}
+.bump{animation:bump .35s}
+@keyframes bump{
+  45%{transform:scale(1.15)}
+}
+
+.dash-controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  flex-wrap:wrap;
+  margin:20px 0;
+}
+input[type=date]{
+  background:var(--bg-card);
+  border:1.5px solid var(--border);
+  color:var(--text-primary);
+  border-radius:12px;
+  padding:10px 14px;
+  font-family:inherit;
+  font-size:14px;
+  transition:all .25s;
+}
+input[type=date]:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(6,182,212,.2);
+}
+.src-badge{
+  font-size:12px;
+  font-weight:700;
+  color:var(--text-secondary);
+  border:1px solid var(--border);
+  padding:8px 14px;
+  border-radius:99px;
+  background:var(--bg-card);
+}
+.stats-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:linear-gradient(180deg,var(--bg-card),var(--bg-secondary));
+  overflow:hidden;
+  margin-bottom:20px;
+  box-shadow:var(--shadow-xl);
+}
+.stat{
+  padding:20px 24px;
+  border-inline-start:1px dashed var(--border);
+  transition:all .25s;
+}
+.stat:hover{background:rgba(6,182,212,.05)}
+.stat:first-child{border-inline-start:0}
+.stat small{
+  color:var(--text-secondary);
+  font-size:12px;
+  font-weight:700;
+}
+.stat b{
+  display:block;
+  font:800 28px 'Changa';
+  margin-top:6px;
+  font-variant-numeric:tabular-nums;
+}
+.stat.gold b{color:var(--accent)}
+@media(max-width:900px){
+  .stats-strip{grid-template-columns:1fr 1fr}
+  .stat:nth-child(3){border-inline-start:0}
+}
+
+.table-wrap{
+  overflow:auto;
+  border:1px solid var(--border);
+  border-radius:20px;
+  background:var(--bg-secondary);
+  box-shadow:var(--shadow-xl);
+}
+table.gt{
+  border-collapse:collapse;
+  min-width:1300px;
+  width:100%;
+}
+.gt th,.gt td{
+  padding:12px 14px;
+  border-bottom:1px solid var(--border);
+  text-align:center;
+  font-size:13px;
+  white-space:nowrap;
+  font-variant-numeric:tabular-nums;
+}
+.gt thead th{
+  background:var(--bg-card);
+  color:var(--primary-light);
+  font:700 13px 'Changa';
+  border-bottom:2px solid rgba(6,182,212,.3);
+}
+.gt tbody tr{transition:all .2s}
+.gt tbody tr:hover{background:rgba(6,182,212,.05)}
+.gt td.st{text-align:right;font:700 15px 'Changa';color:var(--text-primary)}
+.gt td:first-child,.gt thead th:first-child{
+  position:sticky;
+  right:0;
+  background:var(--bg-secondary);
+  z-index:1;
+}
+.gt thead th:first-child{
+  background:var(--bg-card);
+  z-index:2;
+}
+.gt .rev{color:var(--accent)}
+.gt tr.miss td{color:var(--text-muted)}
+.gt tfoot td{
+  background:rgba(16,185,129,.1);
+  color:var(--success);
+  font:800 15px 'Changa';
+  border-top:2px solid var(--success);
+  border-bottom:0;
+}
+.st-pill{
+  font-size:11px;
+  font-weight:700;
+  padding:4px 12px;
+  border-radius:99px;
+  display:inline-flex;
+  gap:8px;
+  align-items:center;
+}
+.st-pill.on{
+  color:var(--success);
+  background:rgba(16,185,129,.1);
+}
+.st-pill.off{
+  color:var(--danger);
+  background:rgba(239,68,68,.1);
+}
+.dash-note{
+  color:var(--text-secondary);
+  font-size:13px;
+  margin-top:16px;
+}
+
+.login-box{
+  max-width:440px;
+  margin:80px auto;
+  padding:40px;
+  background:linear-gradient(180deg,var(--bg-card),var(--bg-secondary));
+  border:1px solid var(--border);
+  border-radius:24px;
+  box-shadow:var(--shadow-xl);
+  position:relative;
+  overflow:hidden;
+}
+.login-box::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:4px;
+  background:var(--gradient-primary);
+}
+.login-box h2{
+  font:800 28px 'Changa';
+  text-align:center;
+  margin-bottom:24px;
+  background:var(--gradient-primary);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.login-box .field{margin-bottom:20px}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,.9);
+  backdrop-filter:blur(10px);
+  display:grid;
+  place-items:center;
+  z-index:100;
+  padding:20px;
+  animation:fadeUp .4s both;
+}
+.overlay[hidden]{display:none}
+.success-box{
+  text-align:center;
+  max-width:480px;
+  width:100%;
+}
+.okring{
+  width:90px;height:90px;
+  border-radius:50%;
+  background:rgba(16,185,129,.15);
+  border:3px solid var(--success);
+  display:grid;
+  place-items:center;
+  margin:0 auto 18px;
+  animation:pop .6s cubic-bezier(.4,0,.2,1);
+  box-shadow:0 0 40px rgba(16,185,129,.4);
+}
+@keyframes pop{
+  from{transform:scale(.3);opacity:0}
+  to{transform:scale(1);opacity:1}
+}
+.okring .ic{width:42px;height:42px;color:var(--success)}
+.success-box h2{font:800 28px 'Changa';margin-bottom:6px;color:var(--text-primary)}
+.success-box .sub{color:var(--text-secondary);font-size:14px;margin-bottom:20px}
+.receipt{
+  background:linear-gradient(180deg,#fef3c7,#fde68a);
+  color:var(--bg-primary);
+  border-radius:18px;
+  padding:24px 28px;
+  text-align:right;
+  box-shadow:0 30px 70px rgba(0,0,0,.5);
+  position:relative;
+  margin-bottom:20px;
+  border:2px solid rgba(0,0,0,.1);
+}
+.receipt h4{font:800 18px 'Changa';text-align:center;margin-bottom:6px;color:var(--bg-primary)}
+.receipt .r-sub{text-align:center;font-size:12px;color:var(--text-muted);font-weight:700}
+.receipt .perf{border-top:2px dashed rgba(0,0,0,.2);margin:16px 0}
+.receipt .r-line{
+  display:flex;
+  justify-content:space-between;
+  font-size:14px;
+  font-weight:600;
+  padding:4px 0;
+}
+.receipt .r-line b{font-family:'Changa'}
+.receipt .r-total{font-size:16px;color:#92400e}
+.barcode{
+  height:36px;
+  margin-top:16px;
+  background:repeating-linear-gradient(90deg,var(--bg-primary) 0 3px,transparent 3px 6px,var(--bg-primary) 6px 9px,transparent 9px 13px);
+  opacity:.8;
+}
+.success-actions{
+  display:flex;
+  gap:12px;
+  justify-content:center;
+  flex-wrap:wrap;
+}
+.qr-box{
+  background:#fef3c7;
+  border-radius:20px;
+  padding:28px;
+  text-align:center;
+  color:var(--bg-primary);
+  max-width:360px;
+  box-shadow:var(--shadow-xl);
+}
+.qr-box img{
+  width:240px;
+  height:240px;
+  border-radius:12px;
+  background:#fff;
+  padding:10px;
+  box-shadow:var(--shadow-md);
+}
+.qr-box h3{font:800 20px 'Changa';margin:14px 0 6px}
+.qr-box p{font-size:12px;color:var(--text-muted);word-break:break-all;direction:ltr}
+
+.audit-list{display:flex;flex-direction:column;gap:10px}
+.audit-item{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:16px;
+  display:flex;
+  gap:16px;
+  align-items:flex-start;
+  transition:all .25s;
+}
+.audit-item:hover{border-color:rgba(6,182,212,.3);transform:translateX(-4px)}
+.audit-item .time{color:var(--text-muted);font-size:12px;white-space:nowrap}
+.audit-item .action{font-weight:700;color:var(--primary-light)}
+.audit-item .details{color:var(--text-secondary);font-size:13px;margin-top:4px}
+
+.st-mng{display:flex;flex-direction:column;gap:10px}
+.st-mng-row{
+  display:flex;
+  align-items:center;
+  gap:14px;
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:12px 16px;
+  transition:all .25s;
+}
+.st-mng-row:hover{border-color:rgba(6,182,212,.3)}
+.st-mng-row .s-code{padding:6px 12px;min-width:56px}
+.st-mng-row b{font:700 16px 'Changa';flex:1}
+
+.danger-zone{
+  background:linear-gradient(180deg,rgba(239,68,68,.05),rgba(239,68,68,.02));
+  border:2px solid rgba(239,68,68,.3);
+  border-radius:20px;
+  padding:24px;
+  margin-top:24px;
+}
+.danger-zone h2{
+  color:var(--danger);
+  margin-bottom:16px;
+}
+.danger-zone .btn.danger{
+  margin:8px;
+}
+
+#toast{
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  opacity:0;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  color:var(--text-primary);
+  padding:14px 26px;
+  border-radius:14px;
+  z-index:200;
+  box-shadow:var(--shadow-xl);
+  font-weight:600;
+  font-size:14px;
+  max-width:90vw;
+  text-align:center;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:760px){
+  #clockTime,#clockDate{display:none}
+  .head-meta{min-width:0}
+  .station-row{grid-template-columns:52px 1fr;grid-auto-rows:auto;row-gap:10px}
+  .s-rev{display:none}
+  .s-actions{grid-column:1/-1;justify-content:flex-start}
+  .totals-bar{gap:16px;bottom:calc(80px + env(safe-area-inset-bottom))}
+  .totals-bar .btn{margin-inline-start:0;width:100%}
+  #toast{bottom:calc(92px + env(safe-area-inset-bottom))}
+  .footer-powered{padding:8px 18px;font-size:13px}
+  .footer-powered .name{font-size:14px}
+}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
-<!-- Theme Toggle -->
-<button class="theme-toggle" id="themeToggle" title="تبديل الوضع الليلي/النهاري">
-  <svg class="ic sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <circle cx="12" cy="12" r="5"></circle>
-    <line x1="12" y1="1" x2="12" y2="3"></line>
-    <line x1="12" y1="21" x2="12" y2="23"></line>
-    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-    <line x1="1" y1="12" x2="3" y2="12"></line>
-    <line x1="21" y1="12" x2="23" y2="12"></line>
-    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-  </svg>
-</button>
-
-<!-- Keyboard Shortcuts Help -->
-<button class="shortcuts-help" id="shortcutsHelp" title="اختصارات لوحة المفاتيح">
-  <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-    <rect x="2" y="4" width="20" height="16" rx="2"></rect>
-    <line x1="6" y1="8" x2="6" y2="8"></line>
-    <line x1="10" y1="8" x2="10" y2="8"></line>
-    <line x1="14" y1="8" x2="14" y2="8"></line>
-    <line x1="18" y1="8" x2="18" y2="8"></line>
-    <line x1="6" y1="12" x2="6" y2="12"></line>
-    <line x1="10" y1="12" x2="10" y2="12"></line>
-    <line x1="14" y1="12" x2="14" y2="12"></line>
-    <line x1="18" y1="12" x2="18" y2="12"></line>
-    <line x1="6" y1="16" x2="18" y2="16"></line>
-  </svg>
-</button>
-
-<!-- Shortcuts Modal -->
-<div class="shortcuts-modal" id="shortcutsModal">
-  <div class="shortcuts-content">
-    <h2>⌨️ اختصارات لوحة المفاتيح</h2>
-    <div class="shortcut-item">
-      <span>حفظ التقرير</span>
-      <kbd>Ctrl + S</kbd>
-    </div>
-    <div class="shortcut-item">
-      <span>تصدير Excel</span>
-      <kbd>Ctrl + E</kbd>
-    </div>
-    <div class="shortcut-item">
-      <span>تصدير PDF</span>
-      <kbd>Ctrl + P</kbd>
-    </div>
-    <div class="shortcut-item">
-      <span>بحث</span>
-      <kbd>Ctrl + F</kbd>
-    </div>
-    <div class="shortcut-item">
-      <span>تبديل الوضع الليلي</span>
-      <kbd>Ctrl + D</kbd>
-    </div>
-    <div class="shortcut-item">
-      <span>إغلاق النافذة</span>
-      <kbd>Esc</kbd>
-    </div>
-    <button class="btn" onclick="closeShortcutsModal()" style="margin-top:20px">إغلاق</button>
-  </div>
-</div>
-
-<!-- Auto-lock Warning -->
-<div class="auto-lock-warning" id="autoLockWarning">
-  <h3> تحذير القفل التلقائي</h3>
-  <p>سيتم قفل الجلسة بسبب عدم النشاط</p>
-  <div class="countdown" id="lockCountdown">15:00</div>
-  <button class="btn" onclick="resetAutoLock()">أنا هنا، لا تقفل</button>
-</div>
-
-<!-- Validation Alert -->
-<div class="validation-alert" id="validationAlert">
-  <strong>⚠️ تنبيه</strong>
-  <p id="validationMessage"></p>
-</div>
-
-<!-- Change Log Modal -->
-<div class="changelog-modal" id="changelogModal">
-  <div class="changelog-content">
-    <h2>📋 سجل التغييرات</h2>
-    <div id="changelogEntries"></div>
-    <button class="btn" onclick="closeChangelogModal()" style="margin-top:20px">إغلاق</button>
-  </div>
-</div>
-
-<!-- Splash Screen -->
 <div id="splash">
   <div class="splash-container">
-    <div class="splash-icon"></div>
+    <div class="splash-icon">🚝</div>
     <div class="splash-title">إحصاء المحطات</div>
     <div class="splash-subtitle">مونوريل شرق النيل</div>
   </div>
 </div>
 
-<!-- Monorail Animation -->
 <div class="track-strip" aria-hidden="true">
   <div class="track-rail"></div>
   <div class="mtrain">
@@ -738,9 +1220,31 @@ footer::before{
   </div>
 </div>
 
-<!-- Rest of HTML content from knowledge base -->
-<!-- ... باقي المحتوى من الـ knowledge base ... -->
+<header class="topbar">
+  <div class="topbar-in">
+    <a class="brand" href="#/">
+      <span class="brand-badge" id="brandIcon"></span>
+      <span><b>إحصاء المحطات</b><small>مونوريل شرق النيل</small></span>
+    </a>
+    <nav class="top-nav" id="topNav">
+      <a href="#/" data-nav="home">📋 لوحة المحطات</a>
+      <a href="#/dash" data-nav="dash">📊 لوحة التجميع</a>
+      <a href="#/stats" data-nav="stats">📈 الإحصائيات</a>
+      <a href="#/audit" data-nav="audit">📋 سجل التدقيق</a>
+      <a href="#/stations" data-nav="stations">⚙️ إدارة المحطات</a>
+    </nav>
+    <div class="head-meta">
+      <div id="clockTime">--:--</div>
+      <div id="clockDate"></div>
+    </div>
+    <span class="chip warn" id="modeChip">وضع محلي</span>
+    <button class="btn ghost sm" id="logoutBtn" style="display:none">🚪 خروج</button>
+  </div>
+</header>
 
+<main id="app"></main>
+
+<!-- ✨ Footer مميز بدون قلب -->
 <footer>
   <div class="footer-content">
     <div class="footer-title">منظومة إحصاء المحطات — مونوريل شرق النيل</div>
@@ -750,428 +1254,1046 @@ footer::before{
         <polyline points="8 6 2 12 8 18"></polyline>
       </svg>
       <span>Powered by</span>
-      <span class="name">Hisham Fadlloun</span>
-      <span class="heart">❤</span>
+      <span class="name">Hisham Fadloun</span>
     </div>
     <div class="footer-subtitle">
-      البيانات تُجمع على <span>Supabase</span> وتُصدَّر إلى Excel/PDF باحترافية
+      البيانات تُجمع على <span>Supabase</span> وتُصدَّر إلى Excel باحترافية
     </div>
     <div class="footer-divider"></div>
   </div>
 </footer>
 
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="overlay" class="overlay" hidden></div>
+
 <script>
-// Theme Management
-const themeToggle = $('#themeToggle');
-const shortcutsHelp = $('#shortcutsHelp');
-const shortcutsModal = $('#shortcutsModal');
-const changelogModal = $('#changelogModal');
-const autoLockWarning = $('#autoLockWarning');
-const validationAlert = $('#validationAlert');
+'use strict';
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
 
-let autoLockTimer;
-let inactivityTime = 0;
-const AUTO_LOCK_MINUTES = 15;
+const SUPA_URL='https://hdsohnubcqbdwkmtvsvr.supabase.co';
+const SUPA_KEY='sb_publishable_TQ9SWNIZfgc7ZYt5UdCi4A_g9H-4ied';
+const BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1';
+const HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
 
-// Initialize Theme
-function initTheme(){
-  const savedTheme = localStorage.getItem('theme') || 'dark';
-  document.documentElement.setAttribute('data-theme',savedTheme);
-  updateThemeIcon(savedTheme);
+const MOCK_STATIONS=[
+  {id:1,code:'EST',name:'الاستاد'},
+  {id:2,code:'HSH',name:'هشام بركات'},
+  {id:3,code:'AZH',name:'جامعة الأزهر'},
+  {id:4,code:'SB7',name:'الحي السابع'},
+  {id:6,code:'ASH',name:'المشير أحمد إسماعيل'},
+  {id:7,code:'JSH',name:'جيهان السادات'},
+  {id:8,code:'TNT',name:'المشير طنطاوي'},
+  {id:9,code:'190',name:'وان ناينتي (One Ninety)'},
+  {id:10,code:'AIR',name:'المستشفى الجوي'},
+  {id:11,code:'NRJ',name:'النرجس'},
+  {id:12,code:'MST',name:'المستثمرين'},
+  {id:13,code:'LOT',name:'اللوتس'},
+  {id:14,code:'GSQ',name:'جولدن سكوير'},
+  {id:15,code:'BTN',name:'بيت الوطن'},
+  {id:16,code:'FTH',name:'مسجد الفتاح العليم'},
+  {id:17,code:'R01',name:'حي R1'},
+  {id:18,code:'R02',name:'حي R2'},
+  {id:19,code:'MLB',name:'حي المال والأعمال'},
+  {id:20,code:'ART',name:'مدينة الفنون والثقافة'},
+  {id:21,code:'GOV',name:'الحي الحكومي'},
+  {id:22,code:'MSR',name:'مسجد مصر'},
+  {id:23,code:'JST',name:'مدينة العدالة'}
+];
+
+const MOCK_USERS=[
+  {id:1,username:'admin',password:'admin123',role:'admin'},
+  {id:2,username:'hisham',password:'hisham123',role:'admin'}
+];
+const MOCK_REPORTS=[];
+const MOCK_AUDIT=[];
+let useMock=false;
+
+const NUM_FIELDS=['ticketsCount','ticketsRevenue','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue'];
+const COUNT_FIELDS=NUM_FIELDS.filter(f=>f.endsWith('Count'));
+const REV_FIELDS=NUM_FIELDS.filter(f=>f.endsWith('Revenue'));
+const FIELDS=['stationCode','stationName','date',...NUM_FIELDS,'totalCount','totalRevenue','submittedBy','submittedAt'];
+
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
+const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
+const money=n=>fmt(n)+' ج.م';
+const norm=s=>String(s).replace(/[-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-]/g,d=>'۱۲۳٥٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
+
+const COL_MAP={
+ stationCode:'station_code',stationName:'station_name',date:'report_date',
+ ticketsCount:'tickets_count',ticketsRevenue:'tickets_revenue',
+ weekCount:'week_count',weekRevenue:'week_revenue',
+ monthCount:'month_count',monthRevenue:'month_revenue',
+ quarterCount:'quarter_count',quarterRevenue:'quarter_revenue',
+ subCardsCount:'sub_cards_count',subCardsRevenue:'sub_cards_revenue',
+ walletCardsCount:'wallet_cards_count',walletCardsRevenue:'wallet_cards_revenue',
+ rechargeCount:'recharge_count',rechargeRevenue:'recharge_revenue',
+ totalCount:'total_count',totalRevenue:'total_revenue',
+ submittedBy:'submitted_by',submittedAt:'submitted_at'
+};
+const REV_MAP={};Object.entries(COL_MAP).forEach(([k,v])=>REV_MAP[v]=k);
+const toSnake=rec=>{const o={};for(const k in rec){if(COL_MAP[k])o[COL_MAP[k]]=rec[k];}return o;};
+const fromSnake=row=>{const o={};for(const k in row){if(REV_MAP[k])o[REV_MAP[k]]=row[k];}return o;};
+
+const ICONS={
+train:'<rect x="5" y="3" width="14" height="13" rx="3"/><path d="M5 10h14"/><circle cx="9" cy="13.5" r=".7"/><circle cx="15" cy="13.5" r=".7"/><path d="M8 16l-2.5 4M16 16l2.5 4M9.5 20h5"/>',
+ticket:'<path d="M4 7a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v2.5a2.5 2.5 0 0 0 0 5V17a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1v-2.5a2.5 2.5 0 0 0 0-5z"/><path d="M14 6v2.2m0 3.6v2.2m0 3.6V18" stroke-dasharray="2 2.6"/>',
+pass:'<rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="8.5" cy="11" r="2"/><path d="M5.7 16.5c.6-1.8 5-1.8 5.6 0"/><path d="M14 9.5h4.5M14 13h4.5"/>',
+wallet:'<path d="M20 7H5a2 2 0 0 1 0-4h13v4"/><path d="M3 5v13a2 2 0 0 0 2 2h15a1 1 0 0 0 1-1V8a1 1 0 0 0-1-1"/><circle cx="16.5" cy="14" r="1"/>',
+zap:'<path d="M13 2 4.5 13.5H11L9.5 22 19 10h-6.5z"/>',
+download:'<path d="M12 3v11m0 0 4-4m-4 4-4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/>',
+copy:'<rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/>',
+qr:'<rect x="4" y="4" width="6" height="6" rx="1"/><rect x="14" y="4" width="6" height="6" rx="1"/><rect x="4" y="14" width="6" height="6" rx="1"/><path d="M14 14h3v3h-3zM20 20h-3M20 14v.01M14 20v.01"/>',
+check:'<path d="M4 12.5 9.5 18 20 6.5"/>',
+plus:'<path d="M12 5v14M5 12h14"/>',
+trash:'<path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m2 0v12a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V7"/>',
+refresh:'<path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"/>',
+link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3A4 4 0 0 0 13 5.3l-1.5 1.5"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3A4 4 0 0 0 11 18.7l1.5-1.5"/>',
+send:'<path d="M22 2 11 13M22 2l-7 20-4-9-9-4z"/>',
+board:'<path d="M3 4h18v12H3z"/><path d="M8 20h8M12 16v4"/>',
+sheet:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M4 9h16M4 15h16M10 3v18"/>',
+sliders:'<path d="M4 7h9m4 0h3M4 17h3m4 0h9"/><circle cx="15" cy="7" r="2"/><circle cx="9" cy="17" r="2"/>',
+chart:'<path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 5-5"/>',
+audit:'<path d="M9 12l2 2 4-4"/><path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 4.03-9 9-9c1.5 0 2.9.37 4.13 1.02"/>',
+logout:'<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><path d="M16 17l5-5-5-5"/><path d="M21 12H9"/>',
+spinner:'<path d="M21 12a9 9 0 1 1-6.2-8.56"/>'
+};
+const ic=(n,cls='')=>`<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
+$('#brandIcon').innerHTML=ic('train');
+
+async function supaFetch(path,opts={},ms=10000){
+  const url=BASE+'/'+path;
+  const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);
+  try{
+    const r=await fetch(url,{...opts,signal:c.signal,headers:{...HEADERS,...(opts.headers||{})}});
+    return {status:r.status,json:await r.json().catch(()=>null),ok:r.ok};
+  }catch(e){
+    console.warn('Supabase fetch failed, using mock:',e);
+    useMock=true;
+    return {status:200,json:null,ok:false};
+  }finally{clearTimeout(t);}
 }
 
-// Toggle Theme
-themeToggle.addEventListener('click',()=>{
-  const currentTheme = document.documentElement.getAttribute('data-theme');
-  const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme',newTheme);
-  localStorage.setItem('theme',newTheme);
-  updateThemeIcon(newTheme);
-  addChangeLog('تبديل الوضع','تم التبديل إلى الوضع '+ (newTheme === 'light' ? 'النهاري ☀️' : 'الليلي 🌙'),'system');
-});
+async function getAllReports(){
+  if(useMock)return MOCK_REPORTS.map(fromSnake);
+  try{
+    const res=await supaFetch('station_reports?select=*');
+    if(res.status===200&&Array.isArray(res.json))return res.json.map(fromSnake);
+    useMock=true;return MOCK_REPORTS.map(fromSnake);
+  }catch(e){useMock=true;return MOCK_REPORTS.map(fromSnake);}
+}
 
-function updateThemeIcon(theme){
-  const icon = themeToggle.querySelector('.ic');
-  if(theme === 'light'){
-    icon.innerHTML = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>';
-  }else{
-    icon.innerHTML = '<circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>';
+async function getAllStations(){
+  if(useMock)return MOCK_STATIONS;
+  try{
+    const res=await supaFetch('stations?select=*&order=id');
+    if(res.status===200&&Array.isArray(res.json))return res.json;
+    useMock=true;return MOCK_STATIONS;
+  }catch(e){useMock=true;return MOCK_STATIONS;}
+}
+
+async function saveReport(rec){
+  if(useMock){MOCK_REPORTS.push(toSnake(rec));return true;}
+  try{
+    const res=await supaFetch('station_reports',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(toSnake(rec))},15000);
+    return res.ok;
+  }catch(e){return false;}
+}
+
+async function addStation(code,name){
+  if(useMock){MOCK_STATIONS.push({id:MOCK_STATIONS.length+1,code,name});return true;}
+  try{
+    const res=await supaFetch('stations',{method:'POST',body:JSON.stringify({code,name})});
+    return res.ok;
+  }catch(e){return false;}
+}
+
+async function deleteStation(id){
+  if(useMock){const idx=MOCK_STATIONS.findIndex(s=>s.id==id);if(idx>-1)MOCK_STATIONS.splice(idx,1);return true;}
+  try{
+    const res=await supaFetch('stations?id=eq.'+id,{method:'DELETE'});
+    return res.ok;
+  }catch(e){return false;}
+}
+
+async function deleteStationReports(stationCode){
+  if(useMock){
+    const idx=MOCK_REPORTS.findIndex(r=>r.station_code===stationCode);
+    if(idx>-1)MOCK_REPORTS.splice(idx,1);
+    return true;
   }
+  try{
+    const res=await supaFetch('station_reports?station_code=eq.'+encodeURIComponent(stationCode),{method:'DELETE'});
+    return res.ok;
+  }catch(e){return false;}
 }
 
-// Keyboard Shortcuts
-shortcutsHelp.addEventListener('click',()=>{
-  shortcutsModal.classList.add('active');
-});
-
-function closeShortcutsModal(){
-  shortcutsModal.classList.remove('active');
+async function deleteAllReports(){
+  if(useMock){
+    MOCK_REPORTS.length=0;
+    return true;
+  }
+  try{
+    const res=await supaFetch('station_reports',{method:'DELETE'});
+    return res.ok;
+  }catch(e){return false;}
 }
 
-document.addEventListener('keydown',(e)=>{
-  // Ctrl+S: Save
-  if(e.ctrlKey && e.key === 's'){
+async function addAudit(action,details,username){
+  const log={action,details:JSON.stringify(details),username,created_at:new Date().toISOString()};
+  if(useMock){MOCK_AUDIT.push(log);return;}
+  try{await supaFetch('audit_log',{method:'POST',body:JSON.stringify(log)});}catch(e){}
+}
+
+async function getAudit(){
+  if(useMock)return MOCK_AUDIT;
+  try{const res=await supaFetch('audit_log?select=*&order=created_at.desc&limit=100');return res.status===200?res.json:MOCK_AUDIT;}catch(e){return MOCK_AUDIT;}
+}
+
+const AUTH_KEY='monorail_auth_v1';
+function getAuth(){try{return JSON.parse(localStorage.getItem(AUTH_KEY));}catch(e){return null;}}
+function setAuth(u){localStorage.setItem(AUTH_KEY,JSON.stringify(u));}
+function clearAuth(){localStorage.removeItem(AUTH_KEY);}
+
+async function login(username,password){
+  if(useMock){
+    const user=MOCK_USERS.find(u=>u.username===username&&u.password===password);
+    if(user){setAuth({username:user.username,role:user.role});return user;}
+    return null;
+  }
+  try{
+    const res=await supaFetch('app_users?select=*');
+    if(res.status===200&&Array.isArray(res.json)){
+      const user=res.json.find(u=>u.username===username&&u.password===password);
+      if(user){setAuth({username:user.username,role:user.role});await addAudit('تسجيل دخول',{username},'system');return user;}
+    }
+    return null;
+  }catch(e){return null;}
+}
+
+function logout(){clearAuth();location.hash='#/login';toast('تم تسجيل الخروج');}
+
+function stationLink(s){return location.origin+location.pathname+'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name);}
+function copyText(t,msg){
+  const done=()=>toast(msg||'تم النسخ ✓');
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(done).catch(()=>{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();});}
+  else{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done();}catch(e){}ta.remove();}
+}
+let toastTimer;function toast(msg){const el=$('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),3000);}
+function openOverlay(html){const o=$('#overlay');o.innerHTML=html;o.hidden=false;}
+function closeOverlay(){const o=$('#overlay');o.hidden=true;o.innerHTML='';}
+function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.dataset.nav===k));}
+function updateModeChip(){const c=$('#modeChip');if(useMock){c.className='chip warn';c.textContent='وضع محاكاة';}else{c.className='chip ok';c.textContent='متصل — Supabase';}}
+
+function setupPWA(){
+  const favicon = document.createElement('link');
+  favicon.rel = 'icon';
+  favicon.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>";
+  document.head.appendChild(favicon);
+  const themeMeta = document.createElement('meta');
+  themeMeta.name = 'theme-color';
+  themeMeta.content = '#020617';
+  document.head.appendChild(themeMeta);
+}
+
+function injectBottomNav(){
+  document.body.insertAdjacentHTML('beforeend',`<nav class="bottom-nav">
+    <a href="#/" data-nav="home">${ic('board')}<span>المحطات</span></a>
+    <a href="#/dash" data-nav="dash">${ic('sheet')}<span>التجميع</span></a>
+    <a href="#/stats" data-nav="stats">${ic('chart')}<span>إحصائيات</span></a>
+    <a href="#/stations" data-nav="stations">${ic('sliders')}<span>إدارة</span></a>
+  </nav>`);
+}
+
+function hideSplash(){const sp=$('#splash');if(!sp)return;setTimeout(()=>{sp.classList.add('off');setTimeout(()=>sp.remove(),600);},800);}
+
+function route(){
+  const h=location.hash.replace(/^#\/?/,'');
+  const seg=h.split('?')[0].split('/').filter(Boolean);
+  closeOverlay();window.scrollTo(0,0);
+  const auth=getAuth();
+  const isStationLink=seg[0]==='s';
+  if(isStationLink){
+    if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));
+    location.hash='#/';
+    return;
+  }
+  if(!auth&&seg[0]!=='login'&&seg[0]!=='s'){location.hash='#/login';return;}
+  if(seg[0]==='login')return renderLogin();
+  if(seg[0]==='dash')return renderDash();
+  if(seg[0]==='stats')return renderStats();
+  if(seg[0]==='audit')return renderAudit();
+  if(seg[0]==='stations')return renderStations();
+  if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));
+  renderHome();
+}
+window.addEventListener('hashchange',route);
+
+function renderLogin(){
+  setActive('');
+  $('#topNav').style.display='none';
+  $('#logoutBtn').style.display='none';
+  $('#app').innerHTML=`<div class="view"><div class="login-box">
+    <h2>🔐 تسجيل الدخول</h2>
+    <form id="loginForm">
+      <div class="field">
+        <label>اسم المستخدم</label>
+        <div class="in-wrap">
+          <input type="text" id="loginUser" autocomplete="username" required placeholder="أدخل اسم المستخدم">
+        </div>
+      </div>
+      <div class="field">
+        <label>كلمة المرور</label>
+        <div class="in-wrap">
+          <input type="password" id="loginPass" autocomplete="current-password" required placeholder="أدخل كلمة المرور">
+        </div>
+      </div>
+      <button class="btn big" type="submit" style="width:100%">دخول</button>
+      <p style="color:var(--text-secondary);font-size:12px;margin-top:16px;text-align:center">
+        المستخدم: <b style="color:var(--primary-light)">admin</b> / كلمة المرور: <b style="color:var(--primary-light)">admin123</b>
+      </p>
+    </form>
+  </div></div>`;
+  $('#loginForm').addEventListener('submit',async e=>{
     e.preventDefault();
-    showToast('جاري الحفظ... 💾');
-  }
-  // Ctrl+E: Export Excel
-  if(e.ctrlKey && e.key === 'e'){
-    e.preventDefault();
-    showToast('جاري التصدير إلى Excel ');
-  }
-  // Ctrl+P: Export PDF
-  if(e.ctrlKey && e.key === 'p'){
-    e.preventDefault();
-    showToast('جاري التصدير إلى PDF ');
-  }
-  // Ctrl+F: Search
-  if(e.ctrlKey && e.key === 'f'){
-    e.preventDefault();
-    document.querySelector('.search')?.focus();
-  }
-  // Ctrl+D: Toggle Theme
-  if(e.ctrlKey && e.key === 'd'){
-    e.preventDefault();
-    themeToggle.click();
-  }
-  // Esc: Close modals
-  if(e.key === 'Escape'){
-    closeShortcutsModal();
-    closeChangelogModal();
-  }
-});
-
-// Auto-lock after inactivity
-function initAutoLock(){
-  resetAutoLock();
-  document.addEventListener('mousemove',resetAutoLock);
-  document.addEventListener('keypress',resetAutoLock);
-  document.addEventListener('click',resetAutoLock);
-  setInterval(checkInactivity,60000); // Check every minute
+    const u=$('#loginUser').value.trim();
+    const p=$('#loginPass').value;
+    const btn=e.target.querySelector('button');
+    btn.disabled=true;btn.innerHTML=ic('spinner','spin')+' جاري...';
+    const user=await login(u,p);
+    if(user){toast('مرحبًا '+user.username+' ✓');updateModeChip();location.hash='#/';}
+    else{toast('خطأ في اسم المستخدم أو كلمة المرور');btn.disabled=false;btn.textContent='دخول';}
+  });
 }
 
-function resetAutoLock(){
-  inactivityTime = 0;
-  autoLockWarning.classList.remove('active');
-  clearTimeout(autoLockTimer);
-  autoLockTimer = setTimeout(showLockWarning,(AUTO_LOCK_MINUTES-2)*60000); // Warn at 13 minutes
-}
-
-function checkInactivity(){
-  inactivityTime++;
-  if(inactivityTime >= AUTO_LOCK_MINUTES){
-    performAutoLock();
-  }
-  updateCountdown();
-}
-
-function showLockWarning(){
-  autoLockWarning.classList.add('active');
-  updateCountdown();
-}
-
-function updateCountdown(){
-  const remaining = (AUTO_LOCK_MINUTES - inactivityTime) * 60;
-  const minutes = Math.floor(remaining / 60);
-  const seconds = remaining % 60;
-  $('#lockCountdown').textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
-}
-
-function performAutoLock(){
-  showToast('🔒 تم قفل الجلسة بسبب عدم النشاط');
-  // Implement your lock logic here
-  // location.reload(); // Example: reload page
-}
-
-// Validation Alerts
-function showValidationAlert(message,type='error'){
-  const alert = $('#validationAlert');
-  const msg = $('#validationMessage');
-  msg.textContent = message;
-  alert.className = 'validation-alert active ' + (type === 'success' ? 'success' : type === 'warning' ? 'warning' : '');
-  setTimeout(()=>{
-    alert.classList.remove('active');
-  },5000);
-}
-
-// Change Log
-let changeLogs = [];
-
-function addChangeLog(action,details,username){
-  const log = {
-    action,
-    details,
-    username,
-    timestamp: new Date().toISOString()
-  };
-  changeLogs.unshift(log);
-  if(changeLogs.length > 100) changeLogs.pop(); // Keep last 100
-  saveChangeLogs();
-}
-
-function saveChangeLogs(){
-  localStorage.setItem('changeLogs',JSON.stringify(changeLogs));
-}
-
-function loadChangeLogs(){
-  const saved = localStorage.getItem('changeLogs');
-  if(saved){
-    changeLogs = JSON.parse(saved);
-  }
-}
-
-function showChangelog(){
-  loadChangeLogs();
-  const entries = $('#changelogEntries');
-  entries.innerHTML = changeLogs.map(log => `
-    <div class="changelog-entry">
-      <div class="time">${new Date(log.timestamp).toLocaleString('ar-EG')}</div>
-      <div class="action">${log.action}</div>
-      <div class="details">${log.details}</div>
-      <div style="color:var(--text-muted);font-size:11px;margin-top:5px">بواسطة: ${log.username}</div>
+async function renderHome(){
+  setActive('home');
+  $('#topNav').style.display='';
+  $('#logoutBtn').style.display='';
+  updateModeChip();
+  const app=$('#app');
+  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل لوحة المحطات…</p></div>';
+  const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
+  const today=todayISO();
+  const recToday=new Map(reports.filter(r=>String(r.date)===today).map(r=>[String(r.stationCode),r]));
+  const done=stations.filter(s=>recToday.has(s.code)).length;
+  const pct=stations.length?Math.round(done/stations.length*100):0;
+  app.innerHTML=`<div class="view">
+    <div class="board-head">
+      <div>
+        <h1 class="page-title">لوحة المحطات</h1>
+        <p class="page-sub">بيان اليوم — ${fmtDateAr(today)}</p>
+      </div>
+      <div class="grow"></div>
+      <input class="search" id="stSearch" placeholder="ابحث عن محطة…" autocomplete="off">
+      <a class="btn ghost sm" href="#/dash">${ic('board')} لوحة التجميع</a>
     </div>
-  `).join('') || '<p style="text-align:center;color:var(--text-secondary);padding:40px">لا توجد تغييرات مسجلة</p>';
-  changelogModal.classList.add('active');
+    <div class="progress-wrap">
+      <span>اكتمال بيانات اليوم: <b>${pct}%</b> (${done} من ${stations.length})</span>
+      <div class="progress"><i id="progBar"></i></div>
+    </div>
+    <ol class="stations" id="stList">
+      ${stations.map((s,i)=>{const r=recToday.get(s.code);
+        return `<li class="station-row" style="--i:${i}" data-search="${esc(s.name)} ${esc(s.code)}">
+          <span class="s-code">${esc(s.code)}</span>
+          <div>
+            <div class="s-name">${esc(s.name)}</div>
+            <div class="s-status ${r?'on':''}">
+              <span class="dot"></span>
+              ${r?('مسجّل اليوم • إيراد '+money(num(r.totalRevenue))):'في انتظار التسجيل'}
+            </div>
+          </div>
+          <span class="s-rev">${r?money(num(r.totalRevenue)):''}</span>
+          <div class="s-actions">
+            <a class="btn sm" href="#/s/${encodeURIComponent(s.code)}/${encodeURIComponent(s.name)}">${ic('ticket')} تسجيل البيان</a>
+            <button class="icon-btn" title="نسخ رابط المحطة" data-copy="${esc(stationLink(s))}">${ic('link')}</button>
+            <button class="icon-btn" title="QR للمشاركة" data-qr="${esc(s.name)}" data-qrl="${esc(stationLink(s))}">${ic('qr')}</button>
+          </div>
+        </li>`;}).join('')}
+    </ol>
+  </div>`;
+  requestAnimationFrame(()=>{const b=$('#progBar');if(b)b.style.width=pct+'%';});
+  $('#stSearch').addEventListener('input',e=>{const q=e.target.value.trim();$$('#stList .station-row').forEach(li=>li.style.display=li.dataset.search.includes(q)?'':'none');});
 }
 
-function closeChangelogModal(){
-  changelogModal.classList.remove('active');
+document.addEventListener('click',e=>{
+  const cp=e.target.closest('[data-copy]');if(cp){copyText(cp.dataset.copy,'تم نسخ رابط المحطة ✓');return;}
+  const qr=e.target.closest('[data-qr]');if(qr){openQR(qr.dataset.qr,qr.dataset.qrl);return;}
+});
+
+function openQR(name,link){
+  openOverlay(`<div class="qr-box">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(link)}" alt="QR">
+    <h3>محطة ${esc(name)}</h3>
+    <p>${esc(link)}</p>
+    <div class="success-actions" style="margin-top:16px">
+      <button class="btn sm" id="qrCopy">${ic('copy')} نسخ الرابط</button>
+      <button class="btn ghost sm" id="qrClose">إغلاق</button>
+    </div>
+  </div>`);
+  $('#qrCopy').onclick=()=>copyText(link,'تم نسخ الرابط ✓');
+  $('#qrClose').onclick=closeOverlay;
 }
 
-// Drag and Drop for Stations
-function initDragAndDrop(){
-  const stations = document.querySelectorAll('.station-row.draggable');
-  stations.forEach(station=>{
-    station.setAttribute('draggable','true');
-    station.addEventListener('dragstart',handleDragStart);
-    station.addEventListener('dragend',handleDragEnd);
-    station.addEventListener('dragover',handleDragOver);
-    station.addEventListener('drop',handleDrop);
-  });
+const SECTIONS=[
+ {id:'tickets',ord:'أولاً',title:'التذاكر',icon:'ticket',rows:[{label:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'}]},
+ {id:'subs',ord:'ثانيًا',title:'الاشتراكات',icon:'pass',rows:[{label:'اشتراك أسبوعي',c:'weekCount',r:'weekRevenue'},{label:'اشتراك شهري',c:'monthCount',r:'monthRevenue'},{label:'اشتراك ربع سنوي',c:'quarterCount',r:'quarterRevenue'}]},
+ {id:'subCards',ord:'ثالثًا',title:'كروت الاشتراكات',icon:'copy',rows:[{label:'كروت الاشتراكات',c:'subCardsCount',r:'subCardsRevenue'}]},
+ {id:'walletCards',ord:'رابعًا',title:'كروت المحفظة',icon:'wallet',rows:[{label:'كروت المحفظة',c:'walletCardsCount',r:'walletCardsRevenue'}]},
+ {id:'recharge',ord:'خامسًا',title:'شحن المحفظة',icon:'zap',rows:[{label:'شحن المحفظة',c:'rechargeCount',r:'rechargeRevenue'}]}
+];
+
+function fieldHTML(key,label,unit){
+  return `<div class="field">
+    <label>${label}</label>
+    <div class="in-wrap">
+      <input type="text" inputmode="numeric" autocomplete="off" placeholder="0" data-field="${key}" class="${unit?'has-unit':''}">
+      ${unit?`<span class="unit">${unit}</span>`:''}
+    </div>
+  </div>`;
 }
 
-function handleDragStart(e){
-  this.classList.add('dragging');
-  e.dataTransfer.setData('text/plain',this.dataset.stationCode);
-  e.dataTransfer.effectAllowed = 'move';
-}
-
-function handleDragEnd(e){
-  this.classList.remove('dragging');
-  document.querySelectorAll('.station-row').forEach(row=>{
-    row.classList.remove('drag-over');
-  });
-}
-
-function handleDragOver(e){
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'move';
-  this.classList.add('drag-over');
-}
-
-function handleDrop(e){
-  e.preventDefault();
-  const sourceCode = e.dataTransfer.getData('text/plain');
-  const targetCode = this.dataset.stationCode;
-  if(sourceCode !== targetCode){
-    // Reorder stations
-    reorderStations(sourceCode,targetCode);
-    addChangeLog('إعادة ترتيب المحطات',`تم نقل المحطة ${sourceCode} قبل ${targetCode}`,getAuth()?.username || 'unknown');
+function renderForm(code,nameParam){
+  setActive('');
+  $('#topNav').style.display='none';
+  $('#logoutBtn').style.display='none';
+  const app=$('#app');
+  app.innerHTML=`<div class="view">
+    <a class="back-link" href="#/">${ic('board')} العودة إلى لوحة المحطات</a>
+    <div class="station-sign">
+      <span class="sign-code">${esc(code)}</span>
+      <div>
+        <h1>محطة ${esc(nameParam)}</h1>
+        <div class="sign-meta">نموذج تسجيل البيان اليومي — مونوريل شرق النيل</div>
+      </div>
+    </div>
+    <div class="card" style="margin-bottom:20px">
+      <div class="meta-grid">
+        <div class="field">
+          <label>تاريخ البيان</label>
+          <div class="in-wrap">
+            <input type="date" id="fDate" value="${todayISO()}">
+          </div>
+        </div>
+        <div class="field">
+          <label>اسم المُسجِّل (اختياري)</label>
+          <div class="in-wrap">
+            <input type="text" id="fBy" placeholder="موظف المحطة" autocomplete="off">
+          </div>
+        </div>
+      </div>
+    </div>
+    <form id="entryForm" novalidate>
+      ${SECTIONS.map(s=>`<section class="card form-sec">
+        <div class="sec-head">
+          <span class="sec-ord">${s.ord}</span>
+          ${ic(s.icon)}
+          <h3>${s.title}</h3>
+          <span class="sec-sum" data-sec="${s.id}">0 ج.م</span>
+        </div>
+        ${s.rows.map(r=>{
+          const inner=`<div class="pair">${fieldHTML(r.c,'العدد')}${fieldHTML(r.r,'الإيراد','ج.م')}</div>`;
+          return s.rows.length>1?`<div class="sub-row"><div class="sub-name">${r.label}</div>${inner}</div>`:inner;
+        }).join('')}
+      </section>`).join('')}
+      <div class="totals-bar">
+        <div class="tot-item">
+          <small>إجمالي عدد العمليات</small>
+          <b id="tCount">0</b>
+        </div>
+        <div class="tot-item money">
+          <small>إجمالي الإيرادات</small>
+          <b id="tRev">0 ج.م</b>
+        </div>
+        <button class="btn navy big" type="submit" id="submitBtn">${ic('send')} إرسال البيان</button>
+      </div>
+    </form>
+  </div>`;
+  const form=$('#entryForm');
+  const readForm=()=>{const v={};form.querySelectorAll('[data-field]').forEach(i=>v[i.dataset.field]=num(norm(i.value)));return v;};
+  function bump(el){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');}
+  function recalc(){
+    const v=readForm();
+    const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0), tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
+    const e1=$('#tCount'),e2=$('#tRev');
+    if(e1.textContent!==fmt(tC)){e1.textContent=fmt(tC);bump(e1);}
+    const m=money(tR);if(e2.textContent!==m){e2.textContent=m;bump(e2);}
+    SECTIONS.forEach(s=>{
+      const sum=s.rows.reduce((a,r)=>a+v[r.r],0);
+      const el=form.querySelector(`[data-sec="${s.id}"]`);
+      if(el)el.textContent=money(sum);
+    });
   }
+  form.addEventListener('input',recalc);
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const v=readForm();
+    if(NUM_FIELDS.every(f=>!v[f])&&!confirm('كل القيم صفر أو فارغة. هل تريد المتابعة؟'))return;
+    const btn=$('#submitBtn');
+    btn.disabled=true;
+    btn.innerHTML=ic('spinner','spin')+' جارٍ الإرسال…';
+    const dateVal=$('#fDate').value||todayISO();
+    $('#fDate').value=dateVal;
+    const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0), tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
+    const auth=getAuth();
+    const rec={
+      stationCode:code,
+      stationName:nameParam,
+      date:dateVal,
+      ...v,
+      totalCount:tC,
+      totalRevenue:tR,
+      submittedBy:$('#fBy').value.trim()||auth?.username||'unknown',
+      submittedAt:new Date().toISOString()
+    };
+    const ok=await saveReport(rec);
+    btn.disabled=false;
+    btn.innerHTML=ic('send')+' إرسال البيان';
+    if(ok){
+      await addAudit('تسجيل بيان',{station:code,date:dateVal,total:tR},auth?.username);
+      showSuccess(rec);
+    }else{
+      toast('فشل الإرسال — تأكد من الاتصال');
+    }
+    recalc();
+  });
 }
 
-function reorderStations(sourceCode,targetCode){
-  // Implement your reordering logic here
-  showToast('تم إعادة ترتيب المحطات 🔄');
+function showSuccess(rec){
+  openOverlay(`<div class="success-box">
+    <div class="okring">${ic('check')}</div>
+    <h2>تم تسجيل البيان بنجاح</h2>
+    <p class="sub">✓ تم إرسال البيانات ${useMock?'(محاكاة)':'إلى Supabase'}</p>
+    <div class="receipt">
+      <h4>محطة ${esc(rec.stationName)}</h4>
+      <div class="r-sub">مونوريل شرق النيل • بيان يوم ${fmtDateAr(rec.date)}</div>
+      <div class="perf"></div>
+      <div class="r-line"><span>عدد التذاكر</span><b>${fmt(rec.ticketsCount)}</b></div>
+      <div class="r-line"><span>الاشتراكات (أسبوعي / شهري / ربع سنوي)</span><b>${fmt(rec.weekCount)} / ${fmt(rec.monthCount)} / ${fmt(rec.quarterCount)}</b></div>
+      <div class="r-line"><span>كروت الاشتراكات / كروت المحفظة / شحن</span><b>${fmt(rec.subCardsCount)} / ${fmt(rec.walletCardsCount)} / ${fmt(rec.rechargeCount)}</b></div>
+      <div class="perf"></div>
+      <div class="r-line r-total"><span>إجمالي العمليات</span><b>${fmt(rec.totalCount)}</b></div>
+      <div class="r-line r-total"><span>إجمالي الإيرادات</span><b>${money(rec.totalRevenue)}</b></div>
+      <div class="barcode"></div>
+    </div>
+    <div class="success-actions">
+      <button class="btn" id="againBtn">${ic('plus')} بيان جديد</button>
+      <a class="btn ghost" href="#/" id="backHomeBtn">${ic('board')} العودة للوحة</a>
+    </div>
+  </div>`);
+  $('#againBtn').onclick=()=>{
+    closeOverlay();
+    const f=$('#entryForm');
+    if(f){
+      f.reset();
+      $('#fDate').value=todayISO();
+      f.dispatchEvent(new Event('input'));
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+  };
+  $('#backHomeBtn').onclick=closeOverlay;
 }
 
-// Data Validation
-function validateReportData(data){
-  const errors = [];
+let dashDate=todayISO();
+const GROUPS=[
+ {t:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'},
+ {t:'أسبوعي',c:'weekCount',r:'weekRevenue'},
+ {t:'شهري',c:'monthCount',r:'monthRevenue'},
+ {t:'ربع سنوي',c:'quarterCount',r:'quarterRevenue'},
+ {t:'كروت الاشتراكات',c:'subCardsCount',r:'subCardsRevenue'},
+ {t:'كروت المحفظة',c:'walletCardsCount',r:'walletCardsRevenue'},
+ {t:'شحن المحفظة',c:'rechargeCount',r:'rechargeRevenue'},
+ {t:'الإجمالي',c:'totalCount',r:'totalRevenue'}
+];
+
+async function renderDash(){
+  setActive('dash');
+  $('#topNav').style.display='';
+  $('#logoutBtn').style.display='';
+  updateModeChip();
+  const app=$('#app');
+  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل البيانات المجمّعة…</p></div>';
+  const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
+  drawDash(reports,stations);
+}
+
+function buildDayRows(records,dateStr,stations){
+  const byCode=new Map(records.filter(r=>String(r.date)===dateStr).map(r=>[String(r.stationCode),r]));
+  const mk=(code,name,rec)=>{
+    const z={};
+    NUM_FIELDS.forEach(f=>z[f]=rec?num(rec[f]):0);
+    return {
+      code,name,...z,
+      totalCount:COUNT_FIELDS.reduce((a,f)=>a+z[f],0),
+      totalRevenue:REV_FIELDS.reduce((a,f)=>a+z[f],0),
+      present:!!rec
+    };
+  };
+  const rows=stations.map(s=>mk(s.code,s.name,byCode.get(s.code)));
+  byCode.forEach((r,code)=>{
+    if(!stations.some(s=>s.code===code))rows.push(mk(code,r.stationName||code,r));
+  });
+  return rows;
+}
+
+function totalsOf(rows){
+  return {
+    count:rows.reduce((a,r)=>a+r.totalCount,0),
+    revenue:rows.reduce((a,r)=>a+r.totalRevenue,0),
+    done:rows.filter(r=>r.present).length
+  };
+}
+
+function drawDash(reports,stations){
+  const app=$('#app');
+  const dayRows=buildDayRows(reports,dashDate,stations);
+  const T=totalsOf(dayRows);
+  const top=[...dayRows].filter(r=>r.present).sort((a,b)=>b.totalRevenue-a.totalRevenue)[0];
+  app.innerHTML=`<div class="view">
+    <div class="board-head">
+      <div>
+        <h1 class="page-title">لوحة التجميع</h1>
+        <p class="page-sub">كل بيانات المحطات في مكان واحد — صدّرها Excel بضغطة</p>
+      </div>
+      <div class="grow"></div>
+      <button class="btn ghost sm" id="dashRefresh">${ic('refresh')} تحديث</button>
+      <button class="btn sm" id="exDay">${ic('sheet')} تصدير إحصاء اليوم Excel</button>
+      <button class="btn ghost sm" id="exLog">${ic('download')} السجل الكامل</button>
+    </div>
+    <div class="dash-controls">
+      <input type="date" id="dashDate" value="${dashDate}">
+      <button class="btn ghost sm" id="todayBtn">اليوم</button>
+      <span class="src-badge">${useMock?'وضع محاكاة':'المصدر: Supabase ✓'}</span>
+    </div>
+    <div class="stats-strip">
+      <div class="stat">
+        <small>محطات مسجّلة اليوم</small>
+        <b>${T.done} / ${dayRows.length}</b>
+      </div>
+      <div class="stat gold">
+        <small>إجمالي الإيرادات</small>
+        <b>${money(T.revenue)}</b>
+      </div>
+      <div class="stat">
+        <small>إجمالي العمليات</small>
+        <b>${fmt(T.count)}</b>
+      </div>
+      <div class="stat">
+        <small>أعلى محطة إيرادًا</small>
+        <b style="font-size:20px;padding-top:8px">${top?esc(top.name):'—'}</b>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="gt">
+        <thead>
+          <tr>
+            <th rowspan="2">المحطة</th>
+            ${GROUPS.map(g=>`<th colspan="2">${g.t}</th>`).join('')}
+            <th rowspan="2">الحالة</th>
+          </tr>
+          <tr>${GROUPS.map(()=>'<th>عدد</th><th>إيراد</th>').join('')}</tr>
+        </thead>
+        <tbody>
+          ${dayRows.map(r=>`<tr class="${r.present?'':'miss'}">
+            <td class="st">${esc(r.name)}</td>
+            ${GROUPS.map(g=>`<td>${fmt(r[g.c])}</td><td class="rev">${fmt(r[g.r])}</td>`).join('')}
+            <td><span class="st-pill ${r.present?'on':'off'}"><span class="dot"></span>${r.present?'مسجّل':'لم يُسجّل'}</span></td>
+          </tr>`).join('')}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td class="st">الإجمالي العام</td>
+            ${GROUPS.map(g=>{
+              const c=dayRows.reduce((a,r)=>a+r[g.c],0),v=dayRows.reduce((a,r)=>a+r[g.r],0);
+              return `<td>${fmt(c)}</td><td>${fmt(v)}</td>`;
+            }).join('')}
+            <td>${T.done} محطة</td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <p class="dash-note">ملحوظة: كل الأيام بتتحفظ في نفس الجدول — اختار أي تاريخ من فوق وشوف بيانه.</p>
+  </div>`;
+  $('#dashDate').addEventListener('change',e=>{dashDate=e.target.value||todayISO();drawDash(reports,stations);});
+  $('#todayBtn').addEventListener('click',()=>{dashDate=todayISO();drawDash(reports,stations);});
+  $('#dashRefresh').addEventListener('click',renderDash);
+  $('#exDay').addEventListener('click',()=>exportDayExcel(dayRows));
+  $('#exLog').addEventListener('click',()=>exportLogExcel(reports));
+}
+
+async function renderStats(){
+  setActive('stats');
+  $('#topNav').style.display='';
+  $('#logoutBtn').style.display='';
+  updateModeChip();
+  const app=$('#app');
+  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل الإحصائيات…</p></div>';
+  const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
+  const totalRevenue=reports.reduce((a,r)=>a+num(r.totalRevenue),0);
+  const totalTickets=reports.reduce((a,r)=>a+num(r.ticketsCount),0);
+  const uniqueDays=new Set(reports.map(r=>r.date)).size;
+  const byStation={};
+  reports.forEach(r=>{
+    if(!byStation[r.stationCode])byStation[r.stationCode]={name:r.stationName,revenue:0,count:0};
+    byStation[r.stationCode].revenue+=num(r.totalRevenue);
+    byStation[r.stationCode].count+=num(r.totalCount);
+  });
+  const topStation=Object.entries(byStation).sort((a,b)=>b[1].revenue-a[1].revenue)[0];
+  const last7=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    const dayRev=reports.filter(r=>r.date===iso).reduce((a,r)=>a+num(r.totalRevenue),0);
+    last7.push({date:iso,day:d.toLocaleDateString('ar-EG',{weekday:'short'}),revenue:dayRev});
+  }
+  app.innerHTML=`<div class="view">
+    <div class="board-head">
+      <div>
+        <h1 class="page-title">الإحصائيات</h1>
+        <p class="page-sub">نظرة عامة على أداء المحطات</p>
+      </div>
+    </div>
+    <div class="stats-strip">
+      <div class="stat gold">
+        <small>إجمالي الإيرادات</small>
+        <b>${money(totalRevenue)}</b>
+      </div>
+      <div class="stat">
+        <small>إجمالي التذاكر</small>
+        <b>${fmt(totalTickets)}</b>
+      </div>
+      <div class="stat">
+        <small>أيام مسجلة</small>
+        <b>${uniqueDays}</b>
+      </div>
+      <div class="stat">
+        <small>عدد المحطات</small>
+        <b>${stations.length}</b>
+      </div>
+    </div>
+    ${topStation?`<div class="card">
+      <h2>${ic('chart')} أفضل محطة إيرادًا</h2>
+      <div style="font-size:28px;font-weight:800;color:var(--accent)">${esc(topStation[1].name)}</div>
+      <div style="color:var(--text-secondary);margin-top:8px">إجمالي الإيرادات: <b style="color:var(--primary-light);font-size:20px">${money(topStation[1].revenue)}</b></div>
+    </div>`:''}
+    <div class="card">
+      <h2>${ic('chart')} الإيرادات — آخر 7 أيام</h2>
+      <div class="chart-container"><canvas id="chart7"></canvas></div>
+    </div>
+    <div class="card">
+      <h2>${ic('chart')} ترتيب المحطات حسب الإيراد</h2>
+      <div class="chart-container"><canvas id="chartStations"></canvas></div>
+    </div>
+  </div>`;
+  new Chart($('#chart7'),{
+    type:'bar',
+    data:{
+      labels:last7.map(d=>d.day),
+      datasets:[{
+        label:'الإيراد',
+        data:last7.map(d=>d.revenue),
+        backgroundColor:'rgba(6,182,212,.6)',
+        borderColor:'#06b6d4',
+        borderWidth:2,
+        borderRadius:8
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#f1f5f9'}}},
+      scales:{
+        x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}},
+        y:{ticks:{color:'#94a3b8',callback:v=>fmt(v)+' ج.م'},grid:{color:'rgba(51,65,85,.3)'}}
+      }
+    }
+  });
+  const sorted=Object.entries(byStation).sort((a,b)=>b[1].revenue-a[1].revenue);
+  new Chart($('#chartStations'),{
+    type:'bar',
+    data:{
+      labels:sorted.map(([k,v])=>v.name),
+      datasets:[{
+        label:'الإيراد',
+        data:sorted.map(([k,v])=>v.revenue),
+        backgroundColor:'rgba(245,158,11,.6)',
+        borderColor:'#f59e0b',
+        borderWidth:2,
+        borderRadius:8
+      }]
+    },
+    options:{
+      indexAxis:'y',
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{legend:{labels:{color:'#f1f5f9'}}},
+      scales:{
+        x:{ticks:{color:'#94a3b8',callback:v=>fmt(v)},grid:{color:'rgba(51,65,85,.3)'}},
+        y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}}
+      }
+    }
+  });
+}
+
+async function renderAudit(){
+  setActive('audit');
+  $('#topNav').style.display='';
+  $('#logoutBtn').style.display='';
+  updateModeChip();
+  const app=$('#app');
+  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل سجل التدقيق…</p></div>';
+  const logs=await getAudit();
+  app.innerHTML=`<div class="view">
+    <div class="board-head">
+      <div>
+        <h1 class="page-title">سجل التدقيق</h1>
+        <p class="page-sub">آخر العمليات في النظام</p>
+      </div>
+      <button class="btn ghost sm" id="refreshAudit">${ic('refresh')} تحديث</button>
+    </div>
+    <div class="card">
+      <div class="audit-list">
+        ${logs.length?logs.map(l=>`<div class="audit-item">
+          <div style="flex:1">
+            <div class="action">${esc(l.action)}</div>
+            <div class="details">${esc(l.details||'')}</div>
+          </div>
+          <div style="text-align:left">
+            <div style="font-weight:700;color:var(--primary-light)">${esc(l.username||'—')}</div>
+            <div class="time">${fmtDateAr(l.created_at?.split('T')[0]||'')} — ${new Date(l.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div>
+          </div>
+        </div>`).join(''):'<p style="text-align:center;color:var(--text-secondary);padding:60px">لا توجد عمليات مسجلة</p>'}
+      </div>
+    </div>
+  </div>`;
+  $('#refreshAudit').addEventListener('click',renderAudit);
+}
+
+async function renderStations(){
+  setActive('stations');
+  $('#topNav').style.display='';
+  $('#logoutBtn').style.display='';
+  updateModeChip();
+  const app=$('#app');
+  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل المحطات…</p></div>';
+  const [stations,reports]=await Promise.all([getAllStations(),getAllReports()]);
   
-  // Check for negative values
-  Object.keys(data).forEach(key=>{
-    if(key.includes('Count') || key.includes('Revenue')){
-      if(data[key] < 0){
-        errors.push(`القيمة ${key} لا يمكن أن تكون سالبة`);
+  app.innerHTML=`<div class="view">
+    <div class="board-head">
+      <div>
+        <h1 class="page-title">إدارة المحطات</h1>
+        <p class="page-sub">إضافة وحذف المحطات وإدارة البيانات</p>
+      </div>
+    </div>
+    <div class="card">
+      <h2>${ic('plus')} إضافة محطة جديدة</h2>
+      <form id="addStForm" style="display:flex;gap:12px;flex-wrap:wrap">
+        <input type="text" id="newCode" placeholder="الكود (مثل: ABC)" required style="flex:1;min-width:140px;background:var(--bg-primary);border:1.5px solid var(--border);color:var(--text-primary);padding:12px;border-radius:12px;font-family:inherit">
+        <input type="text" id="newName" placeholder="اسم المحطة" required style="flex:2;min-width:220px;background:var(--bg-primary);border:1.5px solid var(--border);color:var(--text-primary);padding:12px;border-radius:12px;font-family:inherit">
+        <button class="btn" type="submit">${ic('plus')} إضافة</button>
+      </form>
+    </div>
+    <div class="card">
+      <h2>${ic('board')} المحطات الحالية (${stations.length})</h2>
+      <div class="st-mng">
+        ${stations.map(s=>{
+          const reportCount=reports.filter(r=>r.stationCode===s.code).length;
+          return `<div class="st-mng-row">
+            <span class="s-code">${esc(s.code)}</span>
+            <b>${esc(s.name)}</b>
+            <span style="color:var(--text-muted);font-size:12px">${reportCount} تقرير</span>
+            <button class="icon-btn" data-copy="${esc(stationLink(s))}" title="نسخ الرابط">${ic('link')}</button>
+            <button class="icon-btn danger-icon" data-del-reports="${esc(s.code)}" title="مسح بيانات هذه المحطة">${ic('trash')}</button>
+            <button class="icon-btn danger-icon" data-del="${s.id}" title="حذف المحطة بالكامل">${ic('trash')}</button>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    
+    <div class="danger-zone">
+      <h2>️ منطقة الخطر — مسح البيانات</h2>
+      <p style="color:var(--text-secondary);margin-bottom:16px">
+        استخدم هذه الأزرار بحذر! مسح البيانات لا يمكن التراجع عنه.
+      </p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button class="btn danger" id="deleteAllData">
+          ${ic('trash')} مسح كل البيانات (${reports.length} تقرير)
+        </button>
+      </div>
+    </div>
+  </div>`;
+  
+  $('#addStForm').addEventListener('submit',async e=>{
+    e.preventDefault();
+    const code=$('#newCode').value.trim().toUpperCase();
+    const name=$('#newName').value.trim();
+    if(!code||!name)return toast('املأ كل الحقول');
+    const ok=await addStation(code,name);
+    if(ok){
+      const auth=getAuth();
+      await addAudit('إضافة محطة',{code,name},auth?.username);
+      toast('تمت إضافة المحطة ✓');
+      renderStations();
+    }else{
+      toast('فشل الإضافة — الكود موجود بالفعل؟');
+    }
+  });
+  
+  $$('[data-del]').forEach(b=>b.onclick=async ()=>{
+    const id=b.dataset.del;
+    const s=stations.find(x=>x.id==id);
+    if(confirm('حذف محطة '+(s?s.name:'')+' وكل بياناتها؟')){
+      const ok=await deleteStation(id);
+      if(ok){
+        const auth=getAuth();
+        await addAudit('حذف محطة',{code:s.code,name:s.name},auth?.username);
+        toast('تم الحذف ✓');
+        renderStations();
       }
     }
   });
   
-  // Check for unusually high values
-  if(data.ticketsCount > 10000){
-    errors.push('عدد التذاكر مرتفع بشكل غير طبيعي');
-  }
-  if(data.totalRevenue > 1000000){
-    errors.push('الإيراد مرتفع بشكل غير طبيعي');
-  }
-  
-  // Check for missing required fields
-  const requiredFields = ['stationCode','date','ticketsCount','ticketsRevenue'];
-  requiredFields.forEach(field=>{
-    if(!data[field] && data[field] !== 0){
-      errors.push(`الحقل ${field} مطلوب`);
+  $$('[data-del-reports]').forEach(b=>b.onclick=async ()=>{
+    const code=b.dataset.delReports;
+    const s=stations.find(x=>x.code===code);
+    const count=reports.filter(r=>r.stationCode===code).length;
+    if(confirm(`مسح كل بيانات محطة "${s?s.name:code}" (${count} تقرير)؟\n\n⚠️ هذا الإجراء لا يمكن التراجع عنه!`)){
+      const ok=await deleteStationReports(code);
+      if(ok){
+        const auth=getAuth();
+        await addAudit('مسح بيانات محطة',{code,name:s?.name,count},auth?.username);
+        toast(`تم مسح بيانات محطة ${s?s.name:code} ✓`);
+        renderStations();
+      }else{
+        toast('فشل مسح البيانات');
+      }
     }
   });
   
-  return errors;
+  $('#deleteAllData').onclick=async ()=>{
+    if(confirm(`️ تحذير: سيتم مسح كل البيانات (${reports.length} تقرير) من كل المحطات!\n\nهذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد؟`)){
+      if(confirm('تأكيد أخير: هل تريد فعلاً مسح كل البيانات؟')){
+        const ok=await deleteAllReports();
+        if(ok){
+          const auth=getAuth();
+          await addAudit('مسح كل البيانات',{count:reports.length},auth?.username);
+          toast('تم مسح كل البيانات ✓');
+          renderStations();
+        }else{
+          toast('فشل مسح البيانات');
+        }
+      }
+    }
+  };
 }
 
-// Professional PDF Export with Logo
-function exportProfessionalPDF(data,stationName){
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-  
-  // Add logo (you'll need to convert your logo to base64)
-  // const logo = 'data:image/png;base64,...'; // Your logo here
-  // doc.addImage(logo,'PNG',20,20,40,40);
-  
-  // Professional header
-  doc.setFillColor(6,182,212);
-  doc.rect(0,0,210,40,'F');
-  
-  doc.setTextColor(255,255,255);
-  doc.setFont('Changa','bold');
-  doc.setFontSize(24);
-  doc.text('مونوريل شرق النيل',105,25,{align:'center'});
-  doc.setFontSize(14);
-  doc.text('تقرير إحصاء المحطات',105,35,{align:'center'});
-  
-  // Content
-  doc.setTextColor(0,0,0);
-  doc.setFontSize(12);
-  doc.text(`المحطة: ${stationName}`,20,60);
-  doc.text(`التاريخ: ${data.date}`,20,70);
-  
-  // Table
-  const headers = [['البند','القيمة']];
-  const rows = [
-    ['عدد التذاكر',data.ticketsCount],
-    ['إيراد التذاكر',data.ticketsRevenue + ' ج.م'],
-    ['الإجمالي',data.totalRevenue + ' ج.م']
+function exportDayExcel(dayRows){
+  const T=totalsOf(dayRows);
+  const aoa=[
+    ['تقرير إحصاء المحطات — مونوريل شرق النيل'],
+    ['التاريخ: '+dashDate+'  ('+fmtDateAr(dashDate)+')','','','','','','','','','','','','','','','','','المسجّل: '+T.done+' من '+dayRows.length],
+    [],
+    ['المحطة','التذاكر','','الاشتراكات','','','','','','كروت الاشتراكات','','كروت المحفظة','','شحن المحفظة','','الإجمالي','','الحالة'],
+    ['','عدد','إيراد','أسبوعي (عدد)','أسبوعي (إيراد)','شهري (عدد)','شهري (إيراد)','ربع سنوي (عدد)','ربع سنوي (إيراد)','عدد','إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','']
   ];
-  
-  let y = 90;
-  doc.setFillColor(241,245,249);
-  doc.rect(20,y-10,170,10,'F');
-  doc.text(headers[0][0],30,y);
-  doc.text(headers[0][1],150,y);
-  
-  rows.forEach((row,index)=>{
-    y += 10;
-    doc.text(row[0],30,y);
-    doc.text(row[1],150,y);
+  dayRows.forEach(r=>aoa.push([
+    r.name,r.ticketsCount,r.ticketsRevenue,
+    r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,
+    r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,
+    r.rechargeCount,r.rechargeRevenue,
+    r.totalCount,r.totalRevenue,
+    r.present?'مسجّل':'لم يُسجّل'
+  ]));
+  const totalRow=['الإجمالي العام'];
+  GROUPS.forEach((g,idx)=>{
+    const col1=String.fromCharCode(66+idx*2);
+    const col2=String.fromCharCode(67+idx*2);
+    const endRow=5+dayRows.length;
+    totalRow.push(`=SUM(${col1}5:${col1}${endRow})`);
+    totalRow.push(`=SUM(${col2}5:${col2}${endRow})`);
   });
-  
-  // Footer
-  doc.setFillColor(6,182,212);
-  doc.rect(0,270,210,20,'F');
-  doc.setTextColor(255,255,255);
-  doc.setFontSize(10);
-  doc.text('Powered by Hisham Fadlloun ❤',105,282,{align:'center'});
-  
-  doc.save(`تقرير_${stationName}_${data.date}.pdf`);
-  addChangeLog('تصدير PDF',`تم تصدير تقرير ${stationName}`,getAuth()?.username || 'unknown');
-}
-
-// Public API
-const PublicAPI = {
-  getStations: async ()=>{
-    return await getAllStations();
-  },
-  getReports: async (stationCode,date)=>{
-    const reports = await getAllReports();
-    return reports.filter(r=>{
-      let match = true;
-      if(stationCode) match = match && r.stationCode === stationCode;
-      if(date) match = match && r.date === date;
-      return match;
-    });
-  },
-  addReport: async (reportData)=>{
-    const errors = validateReportData(reportData);
-    if(errors.length > 0){
-      showValidationAlert(errors.join('، '),'error');
-      return {success:false,errors};
+  totalRow.push(T.done+' محطة');
+  aoa.push(totalRow);
+  if(!window.XLSX)return;
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!merges']=[
+    {s:{r:0,c:0},e:{r:0,c:17}},
+    {s:{r:3,c:0},e:{r:4,c:0}},
+    {s:{r:3,c:1},e:{r:3,c:2}},{s:{r:3,c:3},e:{r:3,c:8}},
+    {s:{r:3,c:9},e:{r:3,c:10}},{s:{r:3,c:11},e:{r:3,c:12}},{s:{r:3,c:13},e:{r:3,c:14}},
+    {s:{r:3,c:15},e:{r:3,c:16}},{s:{r:3,c:17},e:{r:4,c:17}}
+  ];
+  ws['!cols']=[{wch:22},...Array(16).fill({wch:14}),{wch:12}];
+  ws['!rows']=[{hpt:32},{hpt:24},{hpt:10},{hpt:28},{hpt:24}];
+  for(let R=0;R<=aoa.length-1;R++){
+    for(let C=0;C<=17;C++){
+      const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];
+      if(cell){
+        if(R===0){
+          cell.s={fill:{fgColor:{rgb:'06B6D4'}},font:{bold:true,color:{rgb:'FFFFFF'},size:16},alignment:{horizontal:'center'}};
+        }else if(R===3||R===4){
+          cell.s={fill:{fgColor:{rgb:'1E293B'}},font:{bold:true,color:{rgb:'67E8F9'},size:13},alignment:{horizontal:'center'}};
+        }else if(R===aoa.length-1){
+          cell.s={fill:{fgColor:{rgb:'10B981'}},font:{bold:true,color:{rgb:'FFFFFF'},size:14},alignment:{horizontal:'center'}};
+        }else if(C===0&&R>4&&R<aoa.length-1){
+          cell.s={font:{bold:true,size:13},alignment:{horizontal:'right'}};
+        }
+      }
     }
-    const result = await saveReport(reportData);
-    if(result){
-      addChangeLog('إضافة تقرير عبر API',`المحطة: ${reportData.stationCode}`,'API');
-    }
-    return {success:result};
-  },
-  getStatistics: async (stationCode)=>{
-    const reports = await PublicAPI.getReports(stationCode);
-    return {
-      totalReports: reports.length,
-      totalRevenue: reports.reduce((sum,r)=>sum + (r.totalRevenue||0),0),
-      totalTickets: reports.reduce((sum,r)=>sum + (r.ticketsCount||0),0)
-    };
   }
-};
-
-// Expose API globally
-window.MonorailAPI = PublicAPI;
-
-// Service Worker for PWA & Offline Support
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('data:text/javascript,' + encodeURIComponent(`
-    self.addEventListener('install',e=>{
-      e.waitUntil(
-        caches.open('monorail-v1').then(cache=>{
-          return cache.addAll(['/']);
-        })
-      );
-    });
-    self.addEventListener('fetch',e=>{
-      e.respondWith(
-        caches.match(e.request).then(response=>{
-          return response || fetch(e.request);
-        })
-      );
-    });
-  `));
+  const wb=XLSX.utils.book_new();
+  wb.Workbook={Views:[{RTL:true}]};
+  XLSX.utils.book_append_sheet(wb,ws,'إحصاء '+dashDate);
+  XLSX.writeFile(wb,'إحصاء محطات المونوريل '+dashDate+'.xlsx');
+  toast('تم تنزيل ملف Excel ✓');
 }
 
-// Toast Notification
-function showToast(message){
-  const toast = document.createElement('div');
-  toast.style.cssText = `
-    position:fixed;
-    bottom:20px;
-    left:50%;
-    transform:translateX(-50%);
-    background:var(--bg-card);
-    color:var(--text-primary);
-    padding:14px 26px;
-    border-radius:14px;
-    box-shadow:0 10px 30px rgba(0,0,0,.5);
-    z-index:10000;
-    font-weight:600;
-    animation:slideUp .3s ease;
-  `;
-  toast.textContent = message;
-  document.body.appendChild(toast);
-  setTimeout(()=>{
-    toast.remove();
-  },3000);
+function exportLogExcel(records){
+  const AR={
+    stationCode:'كود المحطة',stationName:'المحطة',date:'التاريخ',
+    ticketsCount:'عدد التذاكر',ticketsRevenue:'إيراد التذاكر',
+    weekCount:'اشتراك أسبوعي (عدد)',weekRevenue:'اشتراك أسبوعي (إيراد)',
+    monthCount:'اشتراك شهري (عدد)',monthRevenue:'اشتراك شهري (إيراد)',
+    quarterCount:'اشتراك ربع سنوي (عدد)',quarterRevenue:'اشتراك ربع سنوي (إيراد)',
+    subCardsCount:'كروت اشتراكات (عدد)',subCardsRevenue:'كروت اشتراكات (إيراد)',
+    walletCardsCount:'كروت محفظة (عدد)',walletCardsRevenue:'كروت محفظة (إيراد)',
+    rechargeCount:'شحن محفظة (عدد)',rechargeRevenue:'شحن محفظة (إيراد)',
+    totalCount:'إجمالي العدد',totalRevenue:'إجمالي الإيراد',
+    submittedBy:'المُسجِّل',submittedAt:'وقت التسجيل'
+  };
+  const sorted=[...records].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  const aoa=[FIELDS.map(f=>AR[f]),...sorted.map(r=>FIELDS.map(f=>r[f]??''))];
+  if(!window.XLSX)return;
+  const ws=XLSX.utils.aoa_to_sheet(aoa);
+  ws['!cols']=[{wch:12},{wch:22},{wch:12},...Array(16).fill({wch:15}),{wch:14},{wch:22}];
+  ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:aoa.length-1,c:FIELDS.length-1}})};
+  const wb=XLSX.utils.book_new();
+  wb.Workbook={Views:[{RTL:true}]};
+  XLSX.utils.book_append_sheet(wb,ws,'السجل الكامل');
+  XLSX.writeFile(wb,'سجل بيانات مونوريل شرق النيل.xlsx');
+  toast('تم تنزيل السجل الكامل ✓');
 }
 
-// Initialize
-initTheme();
-initAutoLock();
-
-// Add keyboard shortcuts button to show changelog
-const changelogBtn = document.createElement('button');
-changelogBtn.className = 'btn ghost sm';
-changelogBtn.innerHTML = '📋 سجل التغييرات';
-changelogBtn.style.cssText = 'position:fixed;bottom:20px;left:80px;z-index:1000';
-changelogBtn.onclick = showChangelog;
-document.body.appendChild(changelogBtn);
-
-// Rest of your existing JavaScript code...
-// ... بقية الكود من الـ knowledge base ...
-
+function tickClock(){
+  const n=new Date();
+  $('#clockTime').textContent=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});
+  $('#clockDate').textContent=n.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'});
+}
+setInterval(tickClock,1000);tickClock();
+$('#logoutBtn').addEventListener('click',logout);
+injectBottomNav();
+setupPWA();
+route();
+hideSplash();
+setInterval(()=>{
+  const auth=getAuth();
+  if(auth){
+    const hash=location.hash;
+    if(hash==='#/'||hash==='#/dash'||hash==='#/stats')route();
+  }
+},30000);
 </script>
 </body>
 </html>
