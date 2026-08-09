@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
 <title>إحصاء المحطات — مونوريل شرق النيل</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2306b6d4'/%3E%3Cstop offset='100%25' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23bg)'/%3E%3Cpath d='M20 55 L35 55 L40 45 L60 45 L65 55 L80 55' stroke='white' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Crect x='25' y='48' width='50' height='12' rx='3' fill='white' opacity='0.9'/%3E%3Ccircle cx='35' cy='62' r='4' fill='white'/%3E%3Ccircle cx='65' cy='62' r='4' fill='white'/%3E%3Cpath d='M30 52 L35 48 L45 48 L48 52' stroke='%23fbbf24' stroke-width='2' fill='none'/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='bg' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%2306b6d4'/%3E%3Cstop offset='100%25' stop-color='%238b5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='100' height='100' rx='22' fill='url(%23bg)'/%3E%3Cpath d='M20 55 L35 55 L40 45 L60 45 L65 55 L80 55' stroke='white' stroke-width='4' fill='none' stroke-linecap='round'/%3E%3Crect x='25' y='48' width='50' height='12' rx='3' fill='white' opacity='0.9'/%3E%3Ccircle cx='35' cy='62' r='4' fill='white'/%3E%3Ccircle cx='65' cy='62' r='4' fill='white'/%3E%3Cpath d='M30 52 L35 48 L45 48 L48 52' stroke='%23fbbf24' stroke-width='2' fill='none'/%3E%3C/svg%3E">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -86,14 +86,11 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   background:var(--gradient-primary);
   border-radius:28px;
   display:grid;place-items:center;
+  font-size:64px;
   box-shadow:0 20px 60px rgba(6,182,212,.4),inset 0 2px 10px rgba(255,255,255,.2);
   animation:iconPulse 2s ease-in-out infinite,popIn .6s cubic-bezier(.4,0,.2,1) .2s;
   position:relative;
   overflow:hidden;
-}
-.splash-icon svg{
-  width:80px;
-  height:80px;
 }
 .splash-icon::before{
   content:'';
@@ -129,61 +126,55 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   margin-top:8px;
 }
 
-.track-strip{
-  position:fixed;
-  bottom:0;left:0;right:0;
-  height:100px;
-  z-index:0;
-  pointer-events:none;
+/* Monorail Animation in Pages */
+.page-monorail{
+  position:relative;
+  height:120px;
   overflow:hidden;
+  margin:20px 0;
+  border-radius:20px;
+  background:linear-gradient(180deg,rgba(15,23,42,.5) 0%,rgba(15,23,42,.8) 100%);
+  border:1px solid var(--border);
 }
-.track-rail{
+.page-monorail .track{
   position:absolute;
-  bottom:30px;left:0;right:0;
-  height:6px;
+  bottom:30px;
+  left:0;
+  right:0;
+  height:8px;
   background:linear-gradient(90deg,transparent,var(--primary),var(--secondary),transparent);
-  border-radius:3px;
-  opacity:.4;
+  border-radius:4px;
+  opacity:.6;
 }
-.mtrain{
+.page-monorail .train{
   position:absolute;
   bottom:35px;
-  left:-180px;
-  animation:ride 25s linear infinite;
-  filter:drop-shadow(0 8px 20px rgba(6,182,212,.4));
+  left:-100px;
+  animation:trainMove 15s linear infinite;
+  font-size:48px;
+  filter:drop-shadow(0 4px 12px rgba(6,182,212,.5));
 }
-@keyframes ride{
-  to{left:110%}
+@keyframes trainMove{
+  0%{left:-100px}
+  100%{left:calc(100% + 100px)}
 }
-.mtrain .body{
-  width:160px;height:32px;
-  background:linear-gradient(180deg,var(--primary-light),var(--primary));
-  border-radius:16px 20px 10px 10px;
-  position:relative;
-  overflow:hidden;
-  box-shadow:0 4px 15px rgba(6,182,212,.5),inset 0 2px 10px rgba(255,255,255,.3);
+.page-monorail .station{
+  position:absolute;
+  bottom:40px;
+  font-size:12px;
+  color:var(--text-secondary);
+  font-weight:600;
 }
-.mtrain .body::before{
+.page-monorail .station::before{
   content:'';
   position:absolute;
-  left:12px;right:12px;top:8px;height:10px;
-  background:repeating-linear-gradient(90deg,var(--bg-secondary) 0 14px,var(--primary-light) 14px 18px);
-  border-radius:4px;
-  opacity:.8;
-}
-.mtrain .body::after{
-  content:'';
-  position:absolute;
-  bottom:0;left:0;right:0;
-  height:6px;
-  background:var(--bg-primary);
-  opacity:.3;
-}
-.mtrain .window{
-  position:absolute;
-  top:4px;left:16px;right:16px;height:8px;
-  background:rgba(255,255,255,.9);
-  border-radius:4px;
+  bottom:-8px;
+  left:50%;
+  transform:translateX(-50%);
+  width:4px;
+  height:8px;
+  background:var(--primary);
+  border-radius:2px;
 }
 
 .topbar{
@@ -214,14 +205,11 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   border-radius:14px;
   background:var(--gradient-primary);
   display:grid;place-items:center;
+  font-size:28px;
   box-shadow:0 8px 24px rgba(6,182,212,.4),inset 0 2px 8px rgba(255,255,255,.2);
   transition:transform .3s;
 }
 .brand-badge:hover{transform:rotate(-10deg) scale(1.1)}
-.brand-badge svg{
-  width:32px;
-  height:32px;
-}
 .brand b{font:800 20px 'Changa';display:block;color:var(--text-primary)}
 .brand small{color:var(--text-secondary);font-size:12px;font-weight:600;letter-spacing:.5px}
 nav.top-nav{
@@ -401,16 +389,6 @@ footer::before{
   width:20px;height:20px;
   color:var(--primary-light);
   opacity:.8;
-}
-.footer-subtitle{
-  font-size:11px;
-  color:var(--text-muted);
-  margin-top:12px;
-  font-weight:500;
-}
-.footer-subtitle span{
-  color:var(--primary-light);
-  font-weight:600;
 }
 .footer-divider{
   width:60px;
@@ -1174,6 +1152,59 @@ table.gt{
   margin:8px;
 }
 
+/* Advanced Filter */
+.filter-section{
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  margin:20px 0;
+}
+.filter-section h3{
+  font:700 18px 'Changa';
+  margin-bottom:16px;
+  color:var(--primary-light);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.filter-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:16px;
+  margin-bottom:16px;
+}
+.filter-item{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.filter-item label{
+  font-size:13px;
+  color:var(--text-secondary);
+  font-weight:600;
+}
+.filter-item input,.filter-item select{
+  background:var(--bg-primary);
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  color:var(--text-primary);
+  padding:10px 14px;
+  font-family:inherit;
+  font-size:14px;
+  transition:all .25s;
+}
+.filter-item input:focus,.filter-item select:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(6,182,212,.2);
+}
+.filter-actions{
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+}
+
 #toast{
   position:fixed;
   bottom:24px;
@@ -1194,6 +1225,30 @@ table.gt{
   text-align:center;
 }
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* Unsaved Changes Warning */
+.unsaved-warning{
+  position:fixed;
+  top:20px;
+  right:20px;
+  background:var(--warning);
+  color:var(--bg-primary);
+  padding:12px 20px;
+  border-radius:12px;
+  box-shadow:var(--shadow-lg);
+  z-index:1000;
+  display:none;
+  animation:slideIn .3s ease;
+  font-weight:600;
+}
+.unsaved-warning.show{
+  display:block;
+}
+@keyframes slideIn{
+  from{transform:translateX(400px);opacity:0}
+  to{transform:translateX(0);opacity:1}
+}
+
 @media(max-width:760px){
   #clockTime,#clockDate{display:none}
   .head-meta{min-width:0}
@@ -1205,6 +1260,11 @@ table.gt{
   #toast{bottom:calc(92px + env(safe-area-inset-bottom))}
   .footer-powered{padding:8px 18px;font-size:13px}
   .footer-powered .name{font-size:14px}
+  .page-title{font:800 28px 'Changa'}
+  .card{padding:18px}
+  .filter-grid{grid-template-columns:1fr}
+  .page-monorail{height:100px}
+  .page-monorail .train{font-size:36px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -1212,24 +1272,15 @@ table.gt{
 <body>
 <div id="splash">
   <div class="splash-container">
-    <div class="splash-icon">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="track" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stop-color="#fbbf24"/>
-            <stop offset="100%" stop-color="#f59e0b"/>
-          </linearGradient>
-        </defs>
-        <path d="M20 55 L35 55 L40 45 L60 45 L65 55 L80 55" stroke="url(#track)" stroke-width="4" fill="none" stroke-linecap="round"/>
-        <rect x="25" y="48" width="50" height="12" rx="3" fill="white" opacity="0.95"/>
-        <circle cx="35" cy="62" r="4" fill="white"/>
-        <circle cx="65" cy="62" r="4" fill="white"/>
-        <path d="M30 52 L35 48 L45 48 L48 52" stroke="#fbbf24" stroke-width="2" fill="none"/>
-      </svg>
-    </div>
+    <div class="splash-icon">🚝</div>
     <div class="splash-title">إحصاء المحطات</div>
     <div class="splash-subtitle">مونوريل شرق النيل</div>
   </div>
+</div>
+
+<!-- Unsaved Changes Warning -->
+<div class="unsaved-warning" id="unsavedWarning">
+  ⚠️ لديك بيانات غير محفوظة!
 </div>
 
 <div class="track-strip" aria-hidden="true">
@@ -1244,21 +1295,7 @@ table.gt{
 <header class="topbar">
   <div class="topbar-in">
     <a class="brand" href="#/">
-      <span class="brand-badge">
-        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-          <defs>
-            <linearGradient id="track2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stop-color="#fbbf24"/>
-              <stop offset="100%" stop-color="#f59e0b"/>
-            </linearGradient>
-          </defs>
-          <path d="M20 55 L35 55 L40 45 L60 45 L65 55 L80 55" stroke="url(#track2)" stroke-width="4" fill="none" stroke-linecap="round"/>
-          <rect x="25" y="48" width="50" height="12" rx="3" fill="white" opacity="0.95"/>
-          <circle cx="35" cy="62" r="4" fill="white"/>
-          <circle cx="65" cy="62" r="4" fill="white"/>
-          <path d="M30 52 L35 48 L45 48 L48 52" stroke="#fbbf24" stroke-width="2" fill="none"/>
-        </svg>
-      </span>
+      <span class="brand-badge">🚝</span>
       <span><b>إحصاء المحطات</b><small>مونوريل شرق النيل</small></span>
     </a>
     <nav class="top-nav" id="topNav">
@@ -1266,14 +1303,14 @@ table.gt{
       <a href="#/dash" data-nav="dash">📊 لوحة التجميع</a>
       <a href="#/stats" data-nav="stats">📈 الإحصائيات</a>
       <a href="#/audit" data-nav="audit">📋 سجل التدقيق</a>
-      <a href="#/stations" data-nav="stations">️ إدارة المحطات</a>
+      <a href="#/stations" data-nav="stations">⚙️ إدارة المحطات</a>
     </nav>
     <div class="head-meta">
       <div id="clockTime">--:--</div>
       <div id="clockDate"></div>
     </div>
     <span class="chip warn" id="modeChip">وضع محلي</span>
-    <button class="btn ghost sm" id="logoutBtn" style="display:none"> خروج</button>
+    <button class="btn ghost sm" id="logoutBtn" style="display:none">🚪 خروج</button>
   </div>
 </header>
 
@@ -1289,9 +1326,6 @@ table.gt{
       </svg>
       <span>Powered by</span>
       <span class="name">Hisham Fadloun</span>
-    </div>
-    <div class="footer-subtitle">
-      البيانات تُجمع على <span>Supabase</span>
     </div>
     <div class="footer-divider"></div>
   </div>
@@ -1341,6 +1375,7 @@ const MOCK_USERS=[
 const MOCK_REPORTS=[];
 const MOCK_AUDIT=[];
 let useMock=false;
+let hasUnsavedChanges=false;
 
 const NUM_FIELDS=['ticketsCount','ticketsRevenue','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue'];
 const COUNT_FIELDS=NUM_FIELDS.filter(f=>f.endsWith('Count'));
@@ -1351,7 +1386,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-]/g,d=>'٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-]/g,d=>'۱۲٥٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۲۳٤٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
@@ -1396,21 +1431,21 @@ spinner:'<path d="M21 12a9 9 0 1 1-6.2-8.56"/>'
 };
 const ic=(n,cls='')=>`<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 
-function createMonorailSVG(){
-  return `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="track3" x1="0%" y1="0%" x2="100%" y2="0%">
-        <stop offset="0%" stop-color="#fbbf24"/>
-        <stop offset="100%" stop-color="#f59e0b"/>
-      </linearGradient>
-    </defs>
-    <path d="M20 55 L35 55 L40 45 L60 45 L65 55 L80 55" stroke="url(#track3)" stroke-width="4" fill="none" stroke-linecap="round"/>
-    <rect x="25" y="48" width="50" height="12" rx="3" fill="white" opacity="0.95"/>
-    <circle cx="35" cy="62" r="4" fill="white"/>
-    <circle cx="65" cy="62" r="4" fill="white"/>
-    <path d="M30 52 L35 48 L45 48 L48 52" stroke="#fbbf24" stroke-width="2" fill="none"/>
-  </svg>`;
+// Unsaved Changes Warning
+function markUnsaved(){
+  hasUnsavedChanges=true;
+  $('#unsavedWarning').classList.add('show');
 }
+function clearUnsaved(){
+  hasUnsavedChanges=false;
+  $('#unsavedWarning').classList.remove('show');
+}
+window.addEventListener('beforeunload',(e)=>{
+  if(hasUnsavedChanges){
+    e.preventDefault();
+    e.returnValue='';
+  }
+});
 
 async function supaFetch(path,opts={},ms=10000){
   const url=BASE+'/'+path;
@@ -1613,6 +1648,18 @@ function renderLogin(){
   });
 }
 
+function createMonorailAnimation(){
+  return `<div class="page-monorail">
+    <div class="track"></div>
+    <div class="train">🚝</div>
+    <div class="station" style="right:10%">الاستاد</div>
+    <div class="station" style="right:30%">النزهة</div>
+    <div class="station" style="right:50%">الأزهر</div>
+    <div class="station" style="right:70%">الحي السابع</div>
+    <div class="station" style="right:90%">البادية</div>
+  </div>`;
+}
+
 async function renderHome(){
   setActive('home');
   $('#topNav').style.display='';
@@ -1626,6 +1673,7 @@ async function renderHome(){
   const done=stations.filter(s=>recToday.has(s.code)).length;
   const pct=stations.length?Math.round(done/stations.length*100):0;
   app.innerHTML=`<div class="view">
+    ${createMonorailAnimation()}
     <div class="board-head">
       <div>
         <h1 class="page-title">لوحة المحطات</h1>
@@ -1770,6 +1818,7 @@ function renderForm(code,nameParam){
       const el=form.querySelector(`[data-sec="${s.id}"]`);
       if(el)el.textContent=money(sum);
     });
+    markUnsaved();
   }
   form.addEventListener('input',recalc);
   form.addEventListener('submit',async e=>{
@@ -1798,6 +1847,7 @@ function renderForm(code,nameParam){
     btn.innerHTML=ic('send')+' إرسال البيان';
     if(ok){
       await addAudit('تسجيل بيان',{station:code,date:dateVal,total:tR},auth?.username);
+      clearUnsaved();
       showSuccess(rec);
     }else{
       toast('فشل الإرسال — تأكد من الاتصال');
@@ -2090,6 +2140,7 @@ async function renderAudit(){
   const app=$('#app');
   app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل سجل التدقيق…</p></div>';
   const logs=await getAudit();
+  
   app.innerHTML=`<div class="view">
     <div class="board-head">
       <div>
@@ -2098,8 +2149,49 @@ async function renderAudit(){
       </div>
       <button class="btn ghost sm" id="refreshAudit">${ic('refresh')} تحديث</button>
     </div>
+    
+    <div class="filter-section">
+      <h3>🔍 فلترة متقدمة</h3>
+      <div class="filter-grid">
+        <div class="filter-item">
+          <label>من تاريخ</label>
+          <input type="date" id="filterFrom" value="">
+        </div>
+        <div class="filter-item">
+          <label>إلى تاريخ</label>
+          <input type="date" id="filterTo" value="${todayISO()}">
+        </div>
+        <div class="filter-item">
+          <label>المستخدم</label>
+          <select id="filterUser">
+            <option value="">الكل</option>
+            <option value="admin">admin</option>
+            <option value="hisham">hisham</option>
+            <option value="system">system</option>
+            <option value="API">API</option>
+          </select>
+        </div>
+        <div class="filter-item">
+          <label>نوع العملية</label>
+          <select id="filterAction">
+            <option value="">الكل</option>
+            <option value="تسجيل دخول">تسجيل دخول</option>
+            <option value="تسجيل بيان">تسجيل بيان</option>
+            <option value="إضافة محطة">إضافة محطة</option>
+            <option value="حذف محطة">حذف محطة</option>
+            <option value="مسح بيانات محطة">مسح بيانات محطة</option>
+            <option value="مسح كل البيانات">مسح كل البيانات</option>
+          </select>
+        </div>
+      </div>
+      <div class="filter-actions">
+        <button class="btn" id="applyFilter">تطبيق الفلتر</button>
+        <button class="btn ghost" id="clearFilter">مسح الفلتر</button>
+      </div>
+    </div>
+    
     <div class="card">
-      <div class="audit-list">
+      <div class="audit-list" id="auditList">
         ${logs.length?logs.map(l=>`<div class="audit-item">
           <div style="flex:1">
             <div class="action">${esc(l.action)}</div>
@@ -2113,7 +2205,46 @@ async function renderAudit(){
       </div>
     </div>
   </div>`;
+  
   $('#refreshAudit').addEventListener('click',renderAudit);
+  
+  $('#applyFilter').addEventListener('click',()=>{
+    const from=$('#filterFrom').value;
+    const to=$('#filterTo').value;
+    const user=$('#filterUser').value;
+    const action=$('#filterAction').value;
+    
+    let filtered=logs;
+    if(from)filtered=filtered.filter(l=>l.created_at>=from);
+    if(to)filtered=filtered.filter(l=>l.created_at<=to+'T23:59:59');
+    if(user)filtered=filtered.filter(l=>l.username===user);
+    if(action)filtered=filtered.filter(l=>l.action===action);
+    
+    const list=$('#auditList');
+    if(filtered.length===0){
+      list.innerHTML='<p style="text-align:center;color:var(--text-secondary);padding:60px">لا توجد نتائج مطابقة للفلتر</p>';
+    }else{
+      list.innerHTML=filtered.map(l=>`<div class="audit-item">
+        <div style="flex:1">
+          <div class="action">${esc(l.action)}</div>
+          <div class="details">${esc(l.details||'')}</div>
+        </div>
+        <div style="text-align:left">
+          <div style="font-weight:700;color:var(--primary-light)">${esc(l.username||'—')}</div>
+          <div class="time">${fmtDateAr(l.created_at?.split('T')[0]||'')} — ${new Date(l.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div>
+        </div>
+      </div>`).join('');
+    }
+    toast(`تم تطبيق الفلتر — ${filtered.length} نتيجة`);
+  });
+  
+  $('#clearFilter').addEventListener('click',()=>{
+    $('#filterFrom').value='';
+    $('#filterTo').value=todayISO();
+    $('#filterUser').value='';
+    $('#filterAction').value='';
+    renderAudit();
+  });
 }
 
 async function renderStations(){
@@ -2158,7 +2289,7 @@ async function renderStations(){
     </div>
     
     <div class="danger-zone">
-      <h2>️ منطقة الخطر — مسح البيانات</h2>
+      <h2>⚠️ منطقة الخطر — مسح البيانات</h2>
       <p style="color:var(--text-secondary);margin-bottom:16px">
         استخدم هذه الأزرار بحذر! مسح البيانات لا يمكن التراجع عنه.
       </p>
@@ -2218,7 +2349,7 @@ async function renderStations(){
   });
   
   $('#deleteAllData').onclick=async ()=>{
-    if(confirm(`⚠️ تحذير: سيتم مسح كل البيانات (${reports.length} تقرير) من كل المحطات!\n\nهذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد؟`)){
+    if(confirm(`️ تحذير: سيتم مسح كل البيانات (${reports.length} تقرير) من كل المحطات!\n\nهذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد؟`)){
       if(confirm('تأكيد أخير: هل تريد فعلاً مسح كل البيانات؟')){
         const ok=await deleteAllReports();
         if(ok){
