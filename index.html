@@ -8,10 +8,10 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="إحصاء المحطات">
+<meta name="description" content="نظام إحصاء محطات مونوريل شرق النيل">
 <title>إحصاء المحطات — مونوريل شرق النيل</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
-<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
-<link rel="manifest" href='data:application/manifest+json,{"name":"إحصاء المحطات — مونوريل شرق النيل","short_name":"إحصاء المحطات","start_url":"./","display":"standalone","background_color":"#020617","theme_color":"#0f172a","orientation":"any","dir":"rtl","lang":"ar","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚝</text></svg>","sizes":"192x192","type":"image/svg+xml"},{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚝</text></svg>","sizes":"512x512","type":"image/svg+xml"}]}'>
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'></text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -135,7 +135,6 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   margin-top:8px;
 }
 
-/* Monorail Animation - Old Style */
 .track-strip{
   position:relative;
   height:66px;
@@ -1331,9 +1330,9 @@ table.gt{
     </a>
     <nav class="top-nav" id="topNav">
       <a href="#/" data-nav="home">📋 لوحة المحطات</a>
-      <a href="#/dash" data-nav="dash">📊 لوحة التجميع</a>
-      <a href="#/stats" data-nav="stats">📈 الإحصائيات</a>
-      <a href="#/audit" data-nav="audit">📋 سجل التدقيق</a>
+      <a href="#/dash" data-nav="dash"> لوحة التجميع</a>
+      <a href="#/stats" data-nav="stats"> الإحصائيات</a>
+      <a href="#/audit" data-nav="audit"> سجل التدقيق</a>
       <a href="#/stations" data-nav="stations">⚙️ إدارة المحطات</a>
     </nav>
     <div class="head-meta">
@@ -1417,7 +1416,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲٣٤٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-]/g,d=>'۱۲٣٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
@@ -1602,16 +1601,104 @@ function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.datas
 function updateModeChip(){const c=$('#modeChip');if(useMock){c.className='chip warn';c.textContent='وضع محاكاة';}else{c.className='chip ok';c.textContent='متصل — Supabase';}}
 
 function setupPWA(){
-  if('serviceWorker' in navigator){
-    navigator.serviceWorker.register('data:text/javascript,'+encodeURIComponent(`
-      self.addEventListener('install',e=>self.skipWaiting());
-      self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
-      self.addEventListener('fetch',e=>{
+  // Create dynamic manifest with PNG icons
+  const canvas = document.createElement('canvas');
+  canvas.width = 192;
+  canvas.height = 192;
+  const ctx = canvas.getContext('2d');
+  
+  // Draw gradient background
+  const gradient = ctx.createLinearGradient(0, 0, 192, 192);
+  gradient.addColorStop(0, '#06b6d4');
+  gradient.addColorStop(1, '#8b5cf6');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, 192, 192);
+  
+  // Draw train emoji
+  ctx.font = '120px Arial';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('🚝', 96, 96);
+  
+  const icon192 = canvas.toDataURL('image/png');
+  
+  canvas.width = 512;
+  canvas.height = 512;
+  const ctx2 = canvas.getContext('2d');
+  const gradient2 = ctx2.createLinearGradient(0, 0, 512, 512);
+  gradient2.addColorStop(0, '#06b6d4');
+  gradient2.addColorStop(1, '#8b5cf6');
+  ctx2.fillStyle = gradient2;
+  ctx2.fillRect(0, 0, 512, 512);
+  ctx2.font = '320px Arial';
+  ctx2.textAlign = 'center';
+  ctx2.textBaseline = 'middle';
+  ctx2.fillText('🚝', 256, 256);
+  
+  const icon512 = canvas.toDataURL('image/png');
+  
+  // Create manifest
+  const manifest = {
+    name: 'إحصاء المحطات — مونوريل شرق النيل',
+    short_name: 'إحصاء المحطات',
+    description: 'نظام إحصاء محطات مونوريل شرق النيل',
+    start_url: './',
+    display: 'standalone',
+    background_color: '#020617',
+    theme_color: '#0f172a',
+    orientation: 'any',
+    dir: 'rtl',
+    lang: 'ar',
+    icons: [
+      {
+        src: icon192,
+        sizes: '192x192',
+        type: 'image/png',
+        purpose: 'any maskable'
+      },
+      {
+        src: icon512,
+        sizes: '512x512',
+        type: 'image/png',
+        purpose: 'any maskable'
+      }
+    ]
+  };
+  
+  const manifestBlob = new Blob([JSON.stringify(manifest)], {type: 'application/json'});
+  const manifestURL = URL.createObjectURL(manifestBlob);
+  
+  let manifestLink = document.querySelector('link[rel="manifest"]');
+  if (!manifestLink) {
+    manifestLink = document.createElement('link');
+    manifestLink.rel = 'manifest';
+    document.head.appendChild(manifestLink);
+  }
+  manifestLink.href = manifestURL;
+  
+  // Update apple-touch-icon
+  let appleIcon = document.querySelector('link[rel="apple-touch-icon"]');
+  if (!appleIcon) {
+    appleIcon = document.createElement('link');
+    appleIcon.rel = 'apple-touch-icon';
+    document.head.appendChild(appleIcon);
+  }
+  appleIcon.href = icon192;
+  
+  // Register service worker
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      self.addEventListener('install', e => self.skipWaiting());
+      self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+      self.addEventListener('fetch', e => {
         e.respondWith(
-          caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('/')))
+          caches.match(e.request).then(r => r || fetch(e.request).catch(() => caches.match('/')))
         );
       });
-    `)).catch(()=>{});
+    `;
+    const swBlob = new Blob([swCode], {type: 'application/javascript'});
+    const swURL = URL.createObjectURL(swBlob);
+    navigator.serviceWorker.register(swURL).catch(() => {});
   }
 }
 
@@ -1653,7 +1740,7 @@ function renderLogin(){
   $('#topNav').style.display='none';
   $('#logoutBtn').style.display='none';
   $('#app').innerHTML=`<div class="view"><div class="login-box">
-    <h2> تسجيل الدخول</h2>
+    <h2>🔐 تسجيل الدخول</h2>
     <form id="loginForm">
       <div class="field">
         <label>اسم المستخدم</label>
@@ -2313,7 +2400,7 @@ async function renderStations(){
     </div>
     
     <div class="danger-zone">
-      <h2>⚠️ منطقة الخطر — مسح البيانات</h2>
+      <h2>️ منطقة الخطر — مسح البيانات</h2>
       <p style="color:var(--text-secondary);margin-bottom:16px">
         استخدم هذه الأزرار بحذر! مسح البيانات لا يمكن التراجع عنه.
       </p>
