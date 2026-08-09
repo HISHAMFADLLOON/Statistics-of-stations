@@ -3,10 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0f172a">
+<meta name="theme-color" content="#020617">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="إحصاء المحطات">
 <title>إحصاء المحطات — مونوريل شرق النيل</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
 <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
+<link rel="manifest" href='data:application/manifest+json,{"name":"إحصاء المحطات — مونوريل شرق النيل","short_name":"إحصاء المحطات","start_url":"./","display":"standalone","background_color":"#020617","theme_color":"#0f172a","orientation":"any","dir":"rtl","lang":"ar","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚝</text></svg>","sizes":"192x192","type":"image/svg+xml"},{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚝</text></svg>","sizes":"512x512","type":"image/svg+xml"}]}'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -69,7 +74,9 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
 #splash{
   position:fixed;inset:0;z-index:1000;
   background:linear-gradient(135deg,var(--bg-primary) 0%,var(--bg-secondary) 100%);
-  display:grid;place-items:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   transition:opacity .6s cubic-bezier(.4,0,.2,1);
 }
 #splash.off{opacity:0;pointer-events:none}
@@ -85,7 +92,9 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   width:120px;height:120px;
   background:var(--gradient-primary);
   border-radius:28px;
-  display:grid;place-items:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-size:64px;
   box-shadow:0 20px 60px rgba(6,182,212,.4),inset 0 2px 10px rgba(255,255,255,.2);
   animation:iconPulse 2s ease-in-out infinite,popIn .6s cubic-bezier(.4,0,.2,1) .2s;
@@ -126,55 +135,71 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   margin-top:8px;
 }
 
-/* Monorail Animation in Pages */
-.page-monorail{
+/* Monorail Animation - Old Style */
+.track-strip{
   position:relative;
-  height:120px;
+  height:66px;
   overflow:hidden;
-  margin:20px 0;
-  border-radius:20px;
-  background:linear-gradient(180deg,rgba(15,23,42,.5) 0%,rgba(15,23,42,.8) 100%);
-  border:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+  background:linear-gradient(180deg,rgba(6,182,212,.03),transparent);
+  z-index:1;
 }
-.page-monorail .track{
+.track-strip .ground{
   position:absolute;
-  bottom:30px;
-  left:0;
-  right:0;
-  height:8px;
-  background:linear-gradient(90deg,transparent,var(--primary),var(--secondary),transparent);
-  border-radius:4px;
-  opacity:.6;
+  inset-inline:0;
+  bottom:6px;
+  height:2px;
+  background:#1c3a55;
 }
-.page-monorail .train{
+.track-strip .pillars{
   position:absolute;
-  bottom:35px;
-  left:-100px;
-  animation:trainMove 15s linear infinite;
-  font-size:48px;
-  filter:drop-shadow(0 4px 12px rgba(6,182,212,.5));
+  inset-inline:0;
+  bottom:8px;
+  height:24px;
+  background:repeating-linear-gradient(90deg, transparent 0 96px, #1d3d59 96px 104px);
 }
-@keyframes trainMove{
-  0%{left:-100px}
-  100%{left:calc(100% + 100px)}
-}
-.page-monorail .station{
+.track-strip .beam{
   position:absolute;
-  bottom:40px;
-  font-size:12px;
-  color:var(--text-secondary);
-  font-weight:600;
+  inset-inline:0;
+  bottom:32px;
+  height:7px;
+  background:linear-gradient(180deg,#33587a,#1a3852);
+  box-shadow:0 3px 8px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.12);
 }
-.page-monorail .station::before{
+.mtrain{
+  position:absolute;
+  bottom:37px;
+  left:-280px;
+  animation:ride 24s linear infinite;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,.5));
+}
+@keyframes ride{
+  to{left:106%}
+}
+.mtrain .body{
+  width:132px;
+  height:21px;
+  background:linear-gradient(180deg,#f4f8fb,#c9d7e2);
+  border-radius:11px 16px 6px 6px;
+  position:relative;
+  overflow:hidden;
+}
+.mtrain .body::before{
   content:'';
   position:absolute;
-  bottom:-8px;
-  left:50%;
-  transform:translateX(-50%);
-  width:4px;
-  height:8px;
-  background:var(--primary);
+  inset-inline:9px;
+  top:5px;
+  height:7px;
+  background:repeating-linear-gradient(90deg,#12314a 0 11px,#e8eef3 11px 14px);
   border-radius:2px;
+}
+.mtrain .body::after{
+  content:'';
+  position:absolute;
+  inset-inline:0;
+  bottom:3px;
+  height:3px;
+  background:var(--primary);
 }
 
 .topbar{
@@ -204,7 +229,9 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
   width:48px;height:48px;
   border-radius:14px;
   background:var(--gradient-primary);
-  display:grid;place-items:center;
+  display:flex;
+  align-items:center;
+  justify-content:center;
   font-size:28px;
   box-shadow:0 8px 24px rgba(6,182,212,.4),inset 0 2px 8px rgba(255,255,255,.2);
   transition:transform .3s;
@@ -312,17 +339,24 @@ nav a.active{
 .bottom-nav a.active .ic{transform:scale(1.1)}
 @media(max-width:900px){.bottom-nav{display:flex}main{padding-bottom:100px}}
 
-main{position:relative;z-index:1;max-width:1400px;margin:auto;padding:28px 24px 40px}
+main{
+  position:relative;
+  z-index:1;
+  max-width:1400px;
+  margin:0 auto;
+  padding:28px 24px 20px;
+  min-height:calc(100vh - 200px);
+}
 
 footer{
   position:relative;
   z-index:1;
-  margin-top:40px;
-  padding:32px 24px 28px;
+  padding:24px 24px 20px;
   background:linear-gradient(180deg,rgba(15,23,42,.3) 0%,rgba(15,23,42,.8) 100%);
   border-top:1px solid rgba(6,182,212,.2);
   text-align:center;
   overflow:hidden;
+  margin-top:auto;
 }
 footer::before{
   content:'';
@@ -1152,7 +1186,6 @@ table.gt{
   margin:8px;
 }
 
-/* Advanced Filter */
 .filter-section{
   background:var(--bg-card);
   border:1px solid var(--border);
@@ -1205,28 +1238,6 @@ table.gt{
   flex-wrap:wrap;
 }
 
-#toast{
-  position:fixed;
-  bottom:24px;
-  left:50%;
-  transform:translateX(-50%) translateY(20px);
-  opacity:0;
-  transition:all .3s cubic-bezier(.4,0,.2,1);
-  background:var(--bg-card);
-  border:1px solid var(--border);
-  color:var(--text-primary);
-  padding:14px 26px;
-  border-radius:14px;
-  z-index:200;
-  box-shadow:var(--shadow-xl);
-  font-weight:600;
-  font-size:14px;
-  max-width:90vw;
-  text-align:center;
-}
-#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
-/* Unsaved Changes Warning */
 .unsaved-warning{
   position:fixed;
   top:20px;
@@ -1249,6 +1260,27 @@ table.gt{
   to{transform:translateX(0);opacity:1}
 }
 
+#toast{
+  position:fixed;
+  bottom:24px;
+  left:50%;
+  transform:translateX(-50%) translateY(20px);
+  opacity:0;
+  transition:all .3s cubic-bezier(.4,0,.2,1);
+  background:var(--bg-card);
+  border:1px solid var(--border);
+  color:var(--text-primary);
+  padding:14px 26px;
+  border-radius:14px;
+  z-index:200;
+  box-shadow:var(--shadow-xl);
+  font-weight:600;
+  font-size:14px;
+  max-width:90vw;
+  text-align:center;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
 @media(max-width:760px){
   #clockTime,#clockDate{display:none}
   .head-meta{min-width:0}
@@ -1263,8 +1295,10 @@ table.gt{
   .page-title{font:800 28px 'Changa'}
   .card{padding:18px}
   .filter-grid{grid-template-columns:1fr}
-  .page-monorail{height:100px}
-  .page-monorail .train{font-size:36px}
+  .track-strip{height:50px}
+  .mtrain .body{width:100px;height:16px}
+  main{padding:20px 16px 16px}
+  footer{padding:20px 16px 16px}
 }
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -1278,18 +1312,15 @@ table.gt{
   </div>
 </div>
 
-<!-- Unsaved Changes Warning -->
 <div class="unsaved-warning" id="unsavedWarning">
   ⚠️ لديك بيانات غير محفوظة!
 </div>
 
 <div class="track-strip" aria-hidden="true">
-  <div class="track-rail"></div>
-  <div class="mtrain">
-    <div class="body">
-      <div class="window"></div>
-    </div>
-  </div>
+  <div class="ground"></div>
+  <div class="pillars"></div>
+  <div class="beam"></div>
+  <div class="mtrain"><div class="body"></div></div>
 </div>
 
 <header class="topbar">
@@ -1386,7 +1417,7 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0;};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0);
 const money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۲۳٤٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۱۲٣٤٥٦٧٨٩'.indexOf(d)).replace(/[,،٬\s]/g,'');
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
@@ -1431,7 +1462,6 @@ spinner:'<path d="M21 12a9 9 0 1 1-6.2-8.56"/>'
 };
 const ic=(n,cls='')=>`<svg class="ic ${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[n]}</svg>`;
 
-// Unsaved Changes Warning
 function markUnsaved(){
   hasUnsavedChanges=true;
   $('#unsavedWarning').classList.add('show');
@@ -1572,10 +1602,17 @@ function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.datas
 function updateModeChip(){const c=$('#modeChip');if(useMock){c.className='chip warn';c.textContent='وضع محاكاة';}else{c.className='chip ok';c.textContent='متصل — Supabase';}}
 
 function setupPWA(){
-  const themeMeta = document.createElement('meta');
-  themeMeta.name = 'theme-color';
-  themeMeta.content = '#020617';
-  document.head.appendChild(themeMeta);
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('data:text/javascript,'+encodeURIComponent(`
+      self.addEventListener('install',e=>self.skipWaiting());
+      self.addEventListener('activate',e=>e.waitUntil(self.clients.claim()));
+      self.addEventListener('fetch',e=>{
+        e.respondWith(
+          caches.match(e.request).then(r=>r||fetch(e.request).catch(()=>caches.match('/')))
+        );
+      });
+    `)).catch(()=>{});
+  }
 }
 
 function injectBottomNav(){
@@ -1616,7 +1653,7 @@ function renderLogin(){
   $('#topNav').style.display='none';
   $('#logoutBtn').style.display='none';
   $('#app').innerHTML=`<div class="view"><div class="login-box">
-    <h2>🔐 تسجيل الدخول</h2>
+    <h2> تسجيل الدخول</h2>
     <form id="loginForm">
       <div class="field">
         <label>اسم المستخدم</label>
@@ -1648,18 +1685,6 @@ function renderLogin(){
   });
 }
 
-function createMonorailAnimation(){
-  return `<div class="page-monorail">
-    <div class="track"></div>
-    <div class="train">🚝</div>
-    <div class="station" style="right:10%">الاستاد</div>
-    <div class="station" style="right:30%">النزهة</div>
-    <div class="station" style="right:50%">الأزهر</div>
-    <div class="station" style="right:70%">الحي السابع</div>
-    <div class="station" style="right:90%">البادية</div>
-  </div>`;
-}
-
 async function renderHome(){
   setActive('home');
   $('#topNav').style.display='';
@@ -1673,7 +1698,6 @@ async function renderHome(){
   const done=stations.filter(s=>recToday.has(s.code)).length;
   const pct=stations.length?Math.round(done/stations.length*100):0;
   app.innerHTML=`<div class="view">
-    ${createMonorailAnimation()}
     <div class="board-head">
       <div>
         <h1 class="page-title">لوحة المحطات</h1>
@@ -2349,7 +2373,7 @@ async function renderStations(){
   });
   
   $('#deleteAllData').onclick=async ()=>{
-    if(confirm(`️ تحذير: سيتم مسح كل البيانات (${reports.length} تقرير) من كل المحطات!\n\nهذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد؟`)){
+    if(confirm(`⚠️ تحذير: سيتم مسح كل البيانات (${reports.length} تقرير) من كل المحطات!\n\nهذا الإجراء لا يمكن التراجع عنه!\n\nهل أنت متأكد؟`)){
       if(confirm('تأكيد أخير: هل تريد فعلاً مسح كل البيانات؟')){
         const ok=await deleteAllReports();
         if(ok){
