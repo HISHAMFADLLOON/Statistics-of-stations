@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#020617">
+<meta name="theme-color" content="#1887a5">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="إحصاء المحطات">
+<meta name="apple-mobile-web-app-title" content="المونوريل">
 <title>إحصاء المحطات — مونوريل شرق النيل</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>">
+<link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,48 +18,26 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root{
-  --bg-primary:#020617;
-  --bg-secondary:#0f172a;
-  --bg-card:#1e293b;
-  --bg-hover:#334155;
-  --border:#1e293b;
-  --primary:#06b6d4;
-  --primary-dark:#0891b2;
-  --primary-light:#67e8f9;
-  --secondary:#8b5cf6;
-  --accent:#f59e0b;
-  --success:#10b981;
-  --danger:#ef4444;
-  --warning:#f59e0b;
-  --text-primary:#f1f5f9;
-  --text-secondary:#94a3b8;
-  --text-muted:#64748b;
+  --bg-primary:#020617;--bg-secondary:#0f172a;--bg-card:#1e293b;--bg-hover:#334155;--border:#1e293b;
+  --primary:#06b6d4;--primary-dark:#0891b2;--primary-light:#67e8f9;--secondary:#8b5cf6;
+  --accent:#f59e0b;--success:#10b981;--danger:#ef4444;--warning:#f59e0b;
+  --text-primary:#f1f5f9;--text-secondary:#94a3b8;--text-muted:#64748b;
   --gradient-primary:linear-gradient(135deg,#06b6d4 0%,#8b5cf6 100%);
-  --shadow-sm:0 1px 2px 0 rgba(0,0,0,.3);
-  --shadow-md:0 4px 6px -1px rgba(0,0,0,.4),0 2px 4px -2px rgba(0,0,0,.3);
-  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.5),0 4px 6px -4px rgba(0,0,0,.4);
-  --shadow-xl:0 20px 25px -5px rgba(0,0,0,.6),0 8px 10px -6px rgba(0,0,0,.5);
+  --shadow-sm:0 1px 2px 0 rgba(0,0,0,.3);--shadow-md:0 4px 6px -1px rgba(0,0,0,.4),0 2px 4px -2px rgba(0,0,0,.3);
+  --shadow-lg:0 10px 15px -3px rgba(0,0,0,.5),0 4px 6px -4px rgba(0,0,0,.4);--shadow-xl:0 20px 25px -5px rgba(0,0,0,.6),0 8px 10px -6px rgba(0,0,0,.5);
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
-body{
-  font-family:'IBM Plex Sans Arabic',system-ui,-apple-system,sans-serif;
-  color:var(--text-primary);
-  background:var(--bg-primary);
-  min-height:100vh;
-  overflow-x:hidden;
-}
-body::before{
-  content:'';
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(800px 400px at 90% 10%,rgba(6,182,212,.15),transparent 60%),
-    radial-gradient(600px 350px at 10% 90%,rgba(139,92,246,.12),transparent 60%),
-    radial-gradient(500px 300px at 50% 50%,rgba(245,158,11,.08),transparent 60%);
-  pointer-events:none;
-  z-index:0;
-}
+body{font-family:'IBM Plex Sans Arabic',system-ui,-apple-system,sans-serif;color:var(--text-primary);background:var(--bg-primary);min-height:100vh;overflow-x:hidden}
+
+/* Aurora Background */
+.aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.aurora i{position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(90px);opacity:.13;animation:drift 26s infinite alternate}
+.aurora i:nth-child(1){background:#06b6d4;top:-20%;left:-10%}
+.aurora i:nth-child(2){background:#8b5cf6;bottom:-20%;right:-10%;animation-delay:-8s}
+.aurora i:nth-child(3){background:#f59e0b;top:40%;left:50%;animation-delay:-16s}
+@keyframes drift{to{transform:translate(10%,8%) scale(1.15)}}
+
 ::selection{background:rgba(6,182,212,.35);color:var(--text-primary)}
 a{color:inherit;text-decoration:none;transition:all .2s}
 button{font-family:inherit;touch-action:manipulation;border:none;cursor:pointer}
@@ -69,37 +47,32 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
 ::-webkit-scrollbar-thumb{background:var(--primary);border-radius:5px}
 .ic{width:20px;height:20px;flex:none}
 
-/* Splash - اللوجو في المنتصف تماماً */
-#splash{
-  position:fixed;inset:0;z-index:1000;
-  background:linear-gradient(135deg,var(--bg-primary) 0%,var(--bg-secondary) 100%);
-  display:flex;align-items:center;justify-content:center;
-  transition:opacity .6s cubic-bezier(.4,0,.2,1);
-}
+/* Tooltips */
+[data-tip]{position:relative}
+[data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#0b1220;color:#e2e8f0;font-size:11px;font-weight:600;padding:5px 12px;border-radius:8px;white-space:nowrap;border:1px solid #273549;z-index:80;box-shadow:var(--shadow-md);animation:fadeUp .2s both}
+
+/* Skeleton Loading */
+.skeleton{background:linear-gradient(90deg,#1e293b 25%,#2a3a52 50%,#1e293b 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:10px}
+@keyframes sk{to{background-position:-200% 0}}
+.sk-row{height:70px;margin:10px 0}
+.sk-wrap{padding:14px}
+
+/* Empty States */
+.empty{padding:50px 20px;text-align:center;color:var(--text-muted)}
+.empty svg{width:64px;height:64px;margin:0 auto 14px;display:block;opacity:.45}
+.empty p{font-weight:600;font-size:14px}
+
+#splash{position:fixed;inset:0;z-index:1000;background:linear-gradient(135deg,var(--bg-primary) 0%,var(--bg-secondary) 100%);display:flex;align-items:center;justify-content:center;transition:opacity .6s cubic-bezier(.4,0,.2,1)}
 #splash.off{opacity:0;pointer-events:none}
 .splash-container{text-align:center;animation:slideUp .8s cubic-bezier(.4,0,.2,1)}
 @keyframes slideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
-.splash-icon{
-  width:140px;height:140px;
-  background:#fff;
-  border-radius:32px;
-  display:flex;align-items:center;justify-content:center;
-  font-size:70px;
-  box-shadow:0 20px 60px rgba(6,182,212,.4),0 0 0 4px rgba(24,135,165,.35);
-  animation:iconPulse 2s ease-in-out infinite,popIn .6s cubic-bezier(.4,0,.2,1) .2s;
-  position:relative;overflow:hidden;
-}
+.splash-icon{width:140px;height:140px;background:#fff;border-radius:32px;display:flex;align-items:center;justify-content:center;font-size:70px;box-shadow:0 20px 60px rgba(6,182,212,.4),0 0 0 4px rgba(24,135,165,.35);animation:iconPulse 2s ease-in-out infinite,popIn .6s cubic-bezier(.4,0,.2,1) .2s;position:relative;overflow:hidden}
 .splash-icon img{width:100%;height:100%;object-fit:cover;border-radius:32px}
 @keyframes iconPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
 @keyframes popIn{from{opacity:0;transform:scale(.5)}to{opacity:1;transform:scale(1)}}
-.splash-title{
-  font:800 32px 'Changa';margin-top:24px;
-  background:var(--gradient-primary);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-}
+.splash-title{font:800 32px 'Changa';margin-top:24px;background:var(--gradient-primary);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .splash-subtitle{color:var(--text-secondary);font-size:14px;font-weight:500;margin-top:8px}
 
-/* Monorail Animation - قطار على قناطر بدون أسماء */
 .track-strip{position:relative;height:66px;overflow:hidden;border-bottom:1px solid var(--border);background:linear-gradient(180deg,rgba(6,182,212,.03),transparent);z-index:1}
 .track-strip .ground{position:absolute;inset-inline:0;bottom:6px;height:2px;background:#1c3a55}
 .track-strip .pillars{position:absolute;inset-inline:0;bottom:8px;height:24px;background:repeating-linear-gradient(90deg,transparent 0 96px,#1d3d59 96px 104px)}
@@ -144,7 +117,6 @@ nav a.active{color:var(--primary-light);background:rgba(6,182,212,.15);box-shado
 
 main{position:relative;z-index:1;max-width:1400px;margin:0 auto;padding:28px 24px 20px;min-height:calc(100vh - 220px)}
 
-/* Footer - واضح ومرئي */
 footer{position:relative;z-index:10;background:linear-gradient(180deg,rgba(15,23,42,.95) 0%,rgba(2,6,23,.98) 100%);border-top:2px solid rgba(6,182,212,.3);padding:24px 20px;text-align:center;margin-top:40px;box-shadow:0 -4px 20px rgba(0,0,0,.3)}
 footer::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:200px;height:1px;background:linear-gradient(90deg,transparent,var(--primary),transparent);box-shadow:0 0 20px var(--primary)}
 .footer-content{max-width:600px;margin:0 auto;position:relative;z-index:2}
@@ -342,6 +314,17 @@ table.gt{border-collapse:collapse;min-width:1300px;width:100%}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);padding:14px 26px;border-radius:14px;z-index:200;box-shadow:var(--shadow-xl);font-weight:600;font-size:14px;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
+/* Print Styles */
+@media print{
+  .topbar,.bottom-nav,.track-strip,footer,#toast,.unsaved-warning,.s-actions,.dash-controls,.board-head .btn,.filter-section,.danger-zone,.aurora,#splash{display:none!important}
+  body{background:#fff!important;color:#000!important}
+  main{padding:0!important}
+  .card,.table-wrap,.stats-strip{box-shadow:none!important;border:1px solid #ccc!important;background:#fff!important}
+  .gt td,.gt th,.stat small,.stat b,.page-title,.page-sub{color:#000!important;-webkit-text-fill-color:#000!important}
+  .gt thead th{background:#eee!important}
+  .view{animation:none!important}
+}
+
 @media(max-width:760px){
   #clockTime,#clockDate{display:none}
   .head-meta{min-width:0}
@@ -366,6 +349,8 @@ table.gt{border-collapse:collapse;min-width:1300px;width:100%}
 </style>
 </head>
 <body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
 <div id="splash">
   <div class="splash-container">
     <div class="splash-icon"><img src="logo.png" alt="مونوريل شرق النيل" onerror="this.outerHTML='🚝'"></div>
@@ -435,27 +420,13 @@ const BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1';
 const HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
 
 const MOCK_STATIONS=[
-  {id:1,code:'EST',name:'الاستاد'},
-  {id:2,code:'HSH',name:'هشام بركات'},
-  {id:3,code:'AZH',name:'جامعة الأزهر'},
-  {id:4,code:'SB7',name:'الحي السابع'},
-  {id:6,code:'ASH',name:'المشير أحمد إسماعيل'},
-  {id:7,code:'JSH',name:'جيهان السادات'},
-  {id:8,code:'TNT',name:'المشير طنطاوي'},
-  {id:9,code:'190',name:'وان ناينتي (One Ninety)'},
-  {id:10,code:'AIR',name:'المستشفى الجوي'},
-  {id:11,code:'NRJ',name:'النرجس'},
-  {id:12,code:'MST',name:'المستثمرين'},
-  {id:13,code:'LOT',name:'اللوتس'},
-  {id:14,code:'GSQ',name:'جولدن سكوير'},
-  {id:15,code:'BTN',name:'بيت الوطن'},
-  {id:16,code:'FTH',name:'مسجد الفتاح العليم'},
-  {id:17,code:'R01',name:'حي R1'},
-  {id:18,code:'R02',name:'حي R2'},
-  {id:19,code:'MLB',name:'حي المال والأعمال'},
-  {id:20,code:'ART',name:'مدينة الفنون والثقافة'},
-  {id:21,code:'GOV',name:'الحي الحكومي'},
-  {id:22,code:'MSR',name:'مسجد مصر'},
+  {id:1,code:'EST',name:'الاستاد'},{id:2,code:'HSH',name:'هشام بركات'},{id:3,code:'AZH',name:'جامعة الأزهر'},
+  {id:4,code:'SB7',name:'الحي السابع'},{id:6,code:'ASH',name:'المشير أحمد إسماعيل'},{id:7,code:'JSH',name:'جيهان السادات'},
+  {id:8,code:'TNT',name:'المشير طنطاوي'},{id:9,code:'190',name:'وان ناينتي (One Ninety)'},{id:10,code:'AIR',name:'المستشفى الجوي'},
+  {id:11,code:'NRJ',name:'النرجس'},{id:12,code:'MST',name:'المستثمرين'},{id:13,code:'LOT',name:'اللوتس'},
+  {id:14,code:'GSQ',name:'جولدن سكوير'},{id:15,code:'BTN',name:'بيت الوطن'},{id:16,code:'FTH',name:'مسجد الفتاح العليم'},
+  {id:17,code:'R01',name:'حي R1'},{id:18,code:'R02',name:'حي R2'},{id:19,code:'MLB',name:'حي المال والأعمال'},
+  {id:20,code:'ART',name:'مدينة الفنون والثقافة'},{id:21,code:'GOV',name:'الحي الحكومي'},{id:22,code:'MSR',name:'مسجد مصر'},
   {id:23,code:'JST',name:'مدينة العدالة'}
 ];
 const MOCK_USERS=[
@@ -480,18 +451,25 @@ const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).r
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
-const COL_MAP={
- stationCode:'station_code',stationName:'station_name',date:'report_date',
- ticketsCount:'tickets_count',ticketsRevenue:'tickets_revenue',
- weekCount:'week_count',weekRevenue:'week_revenue',
- monthCount:'month_count',monthRevenue:'month_revenue',
- quarterCount:'quarter_count',quarterRevenue:'quarter_revenue',
- subCardsCount:'sub_cards_count',subCardsRevenue:'sub_cards_revenue',
- walletCardsCount:'wallet_cards_count',walletCardsRevenue:'wallet_cards_revenue',
- rechargeCount:'recharge_count',rechargeRevenue:'recharge_revenue',
- totalCount:'total_count',totalRevenue:'total_revenue',
- submittedBy:'submitted_by',submittedAt:'submitted_at'
-};
+/* Skeleton & Empty States */
+function skList(n){return `<div class="stations sk-wrap">${Array.from({length:n},()=>'<div class="skeleton sk-row"></div>').join('')}</div>`}
+function skStats(){return `<div class="stats-strip">${Array.from({length:4},()=>'<div class="stat"><div class="skeleton" style="height:14px;width:70%;margin-bottom:12px"></div><div class="skeleton" style="height:32px;width:50%"></div></div>').join('')}</div>`}
+function emptyState(msg){return `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l2 6v6H3v-6l2-6z"/><path d="M3 13h4l2 3h6l2-3h4"/></svg><p>${msg}</p></div>`}
+
+/* Count-up Animation */
+function animateCounts(root){
+  root.querySelectorAll('[data-cu]').forEach(el=>{
+    const t=parseFloat(el.dataset.cu)||0;
+    const kind=el.dataset.kind||'num';
+    const dur=900;const st=performance.now();
+    function step(n){const p=Math.min(1,(n-st)/dur);const e=1-Math.pow(1-p,3);const v=t*e;
+      el.textContent=kind==='money'?money(v):fmt(v);
+      if(p<1)requestAnimationFrame(step);}
+    requestAnimationFrame(step);
+  });
+}
+
+const COL_MAP={stationCode:'station_code',stationName:'station_name',date:'report_date',ticketsCount:'tickets_count',ticketsRevenue:'tickets_revenue',weekCount:'week_count',weekRevenue:'week_revenue',monthCount:'month_count',monthRevenue:'month_revenue',quarterCount:'quarter_count',quarterRevenue:'quarter_revenue',subCardsCount:'sub_cards_count',subCardsRevenue:'sub_cards_revenue',walletCardsCount:'wallet_cards_count',walletCardsRevenue:'wallet_cards_revenue',rechargeCount:'recharge_count',rechargeRevenue:'recharge_revenue',totalCount:'total_count',totalRevenue:'total_revenue',submittedBy:'submitted_by',submittedAt:'submitted_at'};
 const REV_MAP={};Object.entries(COL_MAP).forEach(([k,v])=>REV_MAP[v]=k);
 const toSnake=rec=>{const o={};for(const k in rec){if(COL_MAP[k])o[COL_MAP[k]]=rec[k];}return o;};
 const fromSnake=row=>{const o={};for(const k in row){if(REV_MAP[k])o[REV_MAP[k]]=row[k];}return o;};
@@ -531,65 +509,44 @@ async function supaFetch(path,opts={},ms=10000){
   try{
     const r=await fetch(url,{...opts,signal:c.signal,headers:{...HEADERS,...(opts.headers||{})}});
     return {status:r.status,json:await r.json().catch(()=>null),ok:r.ok};
-  }catch(e){
-    console.warn('Supabase fetch failed, using mock:',e);
-    useMock=true;
-    return {status:200,json:null,ok:false};
-  }finally{clearTimeout(t);}
+  }catch(e){console.warn('Supabase fetch failed, using mock:',e);useMock=true;return {status:200,json:null,ok:false};}
+  finally{clearTimeout(t);}
 }
-
 async function getAllReports(){
   if(useMock)return MOCK_REPORTS.map(fromSnake);
-  try{
-    const res=await supaFetch('station_reports?select=*');
-    if(res.status===200&&Array.isArray(res.json))return res.json.map(fromSnake);
-    useMock=true;return MOCK_REPORTS.map(fromSnake);
-  }catch(e){useMock=true;return MOCK_REPORTS.map(fromSnake);}
+  try{const res=await supaFetch('station_reports?select=*');if(res.status===200&&Array.isArray(res.json))return res.json.map(fromSnake);useMock=true;return MOCK_REPORTS.map(fromSnake);}
+  catch(e){useMock=true;return MOCK_REPORTS.map(fromSnake);}
 }
-
 async function getAllStations(){
   if(useMock)return MOCK_STATIONS;
-  try{
-    const res=await supaFetch('stations?select=*&order=id');
-    if(res.status===200&&Array.isArray(res.json))return res.json;
-    useMock=true;return MOCK_STATIONS;
-  }catch(e){useMock=true;return MOCK_STATIONS;}
+  try{const res=await supaFetch('stations?select=*&order=id');if(res.status===200&&Array.isArray(res.json))return res.json;useMock=true;return MOCK_STATIONS;}
+  catch(e){useMock=true;return MOCK_STATIONS;}
 }
-
 async function saveReport(rec){
   if(useMock){MOCK_REPORTS.push(toSnake(rec));return true;}
-  try{
-    const res=await supaFetch('station_reports',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(toSnake(rec))},15000);
-    return res.ok;
-  }catch(e){return false;}
+  try{const res=await supaFetch('station_reports',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(toSnake(rec))},15000);return res.ok;}catch(e){return false;}
 }
-
 async function addStation(code,name){
   if(useMock){MOCK_STATIONS.push({id:MOCK_STATIONS.length+1,code,name});return true;}
   try{const res=await supaFetch('stations',{method:'POST',body:JSON.stringify({code,name})});return res.ok;}catch(e){return false;}
 }
-
 async function deleteStation(id){
   if(useMock){const idx=MOCK_STATIONS.findIndex(s=>s.id==id);if(idx>-1)MOCK_STATIONS.splice(idx,1);return true;}
   try{const res=await supaFetch('stations?id=eq.'+id,{method:'DELETE'});return res.ok;}catch(e){return false;}
 }
-
 async function deleteStationReports(stationCode){
   if(useMock){const idx=MOCK_REPORTS.findIndex(r=>r.station_code===stationCode);if(idx>-1)MOCK_REPORTS.splice(idx,1);return true;}
   try{const res=await supaFetch('station_reports?station_code=eq.'+encodeURIComponent(stationCode),{method:'DELETE'});return res.ok;}catch(e){return false;}
 }
-
 async function deleteAllReports(){
   if(useMock){MOCK_REPORTS.length=0;return true;}
   try{const res=await supaFetch('station_reports',{method:'DELETE'});return res.ok;}catch(e){return false;}
 }
-
 async function addAudit(action,details,username){
   const log={action,details:JSON.stringify(details),username,created_at:new Date().toISOString()};
   if(useMock){MOCK_AUDIT.push(log);return;}
   try{await supaFetch('audit_log',{method:'POST',body:JSON.stringify(log)});}catch(e){}
 }
-
 async function getAudit(){
   if(useMock)return MOCK_AUDIT;
   try{const res=await supaFetch('audit_log?select=*&order=created_at.desc&limit=100');return res.status===200?res.json:MOCK_AUDIT;}catch(e){return MOCK_AUDIT;}
@@ -601,11 +558,7 @@ function setAuth(u){localStorage.setItem(AUTH_KEY,JSON.stringify(u));}
 function clearAuth(){localStorage.removeItem(AUTH_KEY);}
 
 async function login(username,password){
-  if(useMock){
-    const user=MOCK_USERS.find(u=>u.username===username&&u.password===password);
-    if(user){setAuth({username:user.username,role:user.role});return user;}
-    return null;
-  }
+  if(useMock){const user=MOCK_USERS.find(u=>u.username===username&&u.password===password);if(user){setAuth({username:user.username,role:user.role});return user;}return null;}
   try{
     const res=await supaFetch('app_users?select=*');
     if(res.status===200&&Array.isArray(res.json)){
@@ -615,7 +568,6 @@ async function login(username,password){
     return null;
   }catch(e){return null;}
 }
-
 function logout(){clearAuth();location.hash='#/login';toast('تم تسجيل الخروج');}
 
 function stationLink(s){return location.origin+location.pathname+'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name);}
@@ -630,13 +582,9 @@ function closeOverlay(){const o=$('#overlay');o.hidden=true;o.innerHTML='';}
 function setActive(k){$$('nav a').forEach(a=>a.classList.toggle('active',a.dataset.nav===k));}
 function updateModeChip(){const c=$('#modeChip');if(useMock){c.className='chip warn';c.textContent='وضع محاكاة';}else{c.className='chip ok';c.textContent='متصل — Supabase';}}
 
-/* تبديل الـ favicon للوجو الرسمي لو موجود */
 function setupPWA(){
   const t=new Image();
-  t.onload=()=>{
-    const fav=document.querySelector('link[rel="icon"]');
-    if(fav)fav.href='logo.png';
-  };
+  t.onerror=()=>{const f=document.querySelector('link[rel="icon"]');if(f)f.href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚝</text></svg>";};
   t.src='logo.png';
 }
 
@@ -648,7 +596,6 @@ function injectBottomNav(){
     <a href="#/stations" data-nav="stations">${ic('sliders')}<span>إدارة</span></a>
   </nav>`);
 }
-
 function hideSplash(){const sp=$('#splash');if(!sp)return;setTimeout(()=>{sp.classList.add('off');setTimeout(()=>sp.remove(),600);},800);}
 
 function route(){
@@ -656,27 +603,19 @@ function route(){
   const seg=h.split('?')[0].split('/').filter(Boolean);
   closeOverlay();window.scrollTo(0,0);
   const auth=getAuth();
-  const isStationLink=seg[0]==='s';
-  if(isStationLink){
-    if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));
-    location.hash='#/';
-    return;
-  }
-  if(!auth&&seg[0]!=='login'&&seg[0]!=='s'){location.hash='#/login';return;}
+  if(seg[0]==='s'){return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));}
+  if(!auth&&seg[0]!=='login'){location.hash='#/login';return;}
   if(seg[0]==='login')return renderLogin();
   if(seg[0]==='dash')return renderDash();
   if(seg[0]==='stats')return renderStats();
   if(seg[0]==='audit')return renderAudit();
   if(seg[0]==='stations')return renderStations();
-  if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));
   renderHome();
 }
 window.addEventListener('hashchange',route);
 
 function renderLogin(){
-  setActive('');
-  $('#topNav').style.display='none';
-  $('#logoutBtn').style.display='none';
+  setActive('');$('#topNav').style.display='none';$('#logoutBtn').style.display='none';
   $('#app').innerHTML=`<div class="view"><div class="login-box">
     <h2>🔐 تسجيل الدخول</h2>
     <form id="loginForm">
@@ -688,8 +627,7 @@ function renderLogin(){
   </div></div>`;
   $('#loginForm').addEventListener('submit',async e=>{
     e.preventDefault();
-    const u=$('#loginUser').value.trim();
-    const p=$('#loginPass').value;
+    const u=$('#loginUser').value.trim(),p=$('#loginPass').value;
     const btn=e.target.querySelector('button');
     btn.disabled=true;btn.innerHTML=ic('spinner','spin')+' جاري...';
     const user=await login(u,p);
@@ -699,12 +637,9 @@ function renderLogin(){
 }
 
 async function renderHome(){
-  setActive('home');
-  $('#topNav').style.display='';
-  $('#logoutBtn').style.display='';
-  updateModeChip();
+  setActive('home');$('#topNav').style.display='';$('#logoutBtn').style.display='';updateModeChip();
   const app=$('#app');
-  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل لوحة المحطات…</p></div>';
+  app.innerHTML=`<div class="view">${skStats()}${skList(6)}</div>`;
   const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
   const today=todayISO();
   const recToday=new Map(reports.filter(r=>String(r.date)===today).map(r=>[String(r.stationCode),r]));
@@ -717,25 +652,19 @@ async function renderHome(){
       <input class="search" id="stSearch" placeholder="ابحث عن محطة…" autocomplete="off">
       <a class="btn ghost sm" href="#/dash">${ic('board')} لوحة التجميع</a>
     </div>
-    <div class="progress-wrap">
-      <span>اكتمال بيانات اليوم: <b>${pct}%</b> (${done} من ${stations.length})</span>
-      <div class="progress"><i id="progBar"></i></div>
-    </div>
+    <div class="progress-wrap"><span>اكتمال بيانات اليوم: <b>${pct}%</b> (${done} من ${stations.length})</span><div class="progress"><i id="progBar"></i></div></div>
     <ol class="stations" id="stList">
-      ${stations.map((s,i)=>{const r=recToday.get(s.code);
+      ${stations.length?stations.map((s,i)=>{const r=recToday.get(s.code);
         return `<li class="station-row" style="--i:${i}" data-search="${esc(s.name)} ${esc(s.code)}">
           <span class="s-code">${esc(s.code)}</span>
-          <div>
-            <div class="s-name">${esc(s.name)}</div>
-            <div class="s-status ${r?'on':''}"><span class="dot"></span>${r?('مسجّل اليوم • إيراد '+money(num(r.totalRevenue))):'في انتظار التسجيل'}</div>
-          </div>
+          <div><div class="s-name">${esc(s.name)}</div>
+            <div class="s-status ${r?'on':''}"><span class="dot"></span>${r?('مسجّل اليوم • إيراد '+money(num(r.totalRevenue))):'في انتظار التسجيل'}</div></div>
           <span class="s-rev">${r?money(num(r.totalRevenue)):''}</span>
           <div class="s-actions">
             <a class="btn sm" href="#/s/${encodeURIComponent(s.code)}/${encodeURIComponent(s.name)}">${ic('ticket')} تسجيل البيان</a>
-            <button class="icon-btn" title="نسخ رابط المحطة" data-copy="${esc(stationLink(s))}">${ic('link')}</button>
-            <button class="icon-btn" title="QR للمشاركة" data-qr="${esc(s.name)}" data-qrl="${esc(stationLink(s))}">${ic('qr')}</button>
-          </div>
-        </li>`;}).join('')}
+            <button class="icon-btn" data-tip="نسخ الرابط" data-copy="${esc(stationLink(s))}">${ic('link')}</button>
+            <button class="icon-btn" data-tip="QR للمشاركة" data-qr="${esc(s.name)}" data-qrl="${esc(stationLink(s))}">${ic('qr')}</button>
+          </div></li>`;}).join(''):emptyState('لا توجد محطات — أضف محطة من صفحة الإدارة')}
     </ol>
   </div>`;
   requestAnimationFrame(()=>{const b=$('#progBar');if(b)b.style.width=pct+'%';});
@@ -750,13 +679,11 @@ document.addEventListener('click',e=>{
 function openQR(name,link){
   openOverlay(`<div class="qr-box">
     <img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(link)}" alt="QR">
-    <h3>محطة ${esc(name)}</h3>
-    <p>${esc(link)}</p>
+    <h3>محطة ${esc(name)}</h3><p>${esc(link)}</p>
     <div class="success-actions" style="margin-top:16px">
       <button class="btn sm" id="qrCopy">${ic('copy')} نسخ الرابط</button>
       <button class="btn ghost sm" id="qrClose">إغلاق</button>
-    </div>
-  </div>`);
+    </div></div>`);
   $('#qrCopy').onclick=()=>copyText(link,'تم نسخ الرابط ✓');
   $('#qrClose').onclick=closeOverlay;
 }
@@ -768,15 +695,12 @@ const SECTIONS=[
  {id:'walletCards',ord:'رابعًا',title:'كروت المحفظة',icon:'wallet',rows:[{label:'كروت المحفظة',c:'walletCardsCount',r:'walletCardsRevenue'}]},
  {id:'recharge',ord:'خامسًا',title:'شحن المحفظة',icon:'zap',rows:[{label:'شحن المحفظة',c:'rechargeCount',r:'rechargeRevenue'}]}
 ];
-
 function fieldHTML(key,label,unit){
   return `<div class="field"><label>${label}</label><div class="in-wrap"><input type="text" inputmode="numeric" autocomplete="off" placeholder="0" data-field="${key}" class="${unit?'has-unit':''}">${unit?`<span class="unit">${unit}</span>`:''}</div></div>`;
 }
 
 function renderForm(code,nameParam){
-  setActive('');
-  $('#topNav').style.display='none';
-  $('#logoutBtn').style.display='none';
+  setActive('');$('#topNav').style.display='none';$('#logoutBtn').style.display='none';
   const app=$('#app');
   app.innerHTML=`<div class="view">
     <a class="back-link" href="#/">${ic('board')} العودة إلى لوحة المحطات</a>
@@ -793,10 +717,7 @@ function renderForm(code,nameParam){
     <form id="entryForm" novalidate>
       ${SECTIONS.map(s=>`<section class="card form-sec">
         <div class="sec-head"><span class="sec-ord">${s.ord}</span>${ic(s.icon)}<h3>${s.title}</h3><span class="sec-sum" data-sec="${s.id}">0 ج.م</span></div>
-        ${s.rows.map(r=>{
-          const inner=`<div class="pair">${fieldHTML(r.c,'العدد')}${fieldHTML(r.r,'الإيراد','ج.م')}</div>`;
-          return s.rows.length>1?`<div class="sub-row"><div class="sub-name">${r.label}</div>${inner}</div>`:inner;
-        }).join('')}
+        ${s.rows.map(r=>{const inner=`<div class="pair">${fieldHTML(r.c,'العدد')}${fieldHTML(r.r,'الإيراد','ج.م')}</div>`;return s.rows.length>1?`<div class="sub-row"><div class="sub-name">${r.label}</div>${inner}</div>`:inner;}).join('')}
       </section>`).join('')}
       <div class="totals-bar">
         <div class="tot-item"><small>إجمالي عدد العمليات</small><b id="tCount">0</b></div>
@@ -810,15 +731,11 @@ function renderForm(code,nameParam){
   function bump(el){el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump');}
   function recalc(){
     const v=readForm();
-    const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0), tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
+    const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0),tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
     const e1=$('#tCount'),e2=$('#tRev');
     if(e1.textContent!==fmt(tC)){e1.textContent=fmt(tC);bump(e1);}
     const m=money(tR);if(e2.textContent!==m){e2.textContent=m;bump(e2);}
-    SECTIONS.forEach(s=>{
-      const sum=s.rows.reduce((a,r)=>a+v[r.r],0);
-      const el=form.querySelector(`[data-sec="${s.id}"]`);
-      if(el)el.textContent=money(sum);
-    });
+    SECTIONS.forEach(s=>{const sum=s.rows.reduce((a,r)=>a+v[r.r],0);const el=form.querySelector(`[data-sec="${s.id}"]`);if(el)el.textContent=money(sum);});
     markUnsaved();
   }
   form.addEventListener('input',recalc);
@@ -826,22 +743,15 @@ function renderForm(code,nameParam){
     e.preventDefault();
     const v=readForm();
     if(NUM_FIELDS.every(f=>!v[f])&&!confirm('كل القيم صفر أو فارغة. هل تريد المتابعة؟'))return;
-    const btn=$('#submitBtn');
-    btn.disabled=true;
-    btn.innerHTML=ic('spinner','spin')+' جارٍ الإرسال…';
-    const dateVal=$('#fDate').value||todayISO();
-    $('#fDate').value=dateVal;
-    const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0), tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
+    const btn=$('#submitBtn');btn.disabled=true;btn.innerHTML=ic('spinner','spin')+' جارٍ الإرسال…';
+    const dateVal=$('#fDate').value||todayISO();$('#fDate').value=dateVal;
+    const tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0),tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);
     const auth=getAuth();
     const rec={stationCode:code,stationName:nameParam,date:dateVal,...v,totalCount:tC,totalRevenue:tR,submittedBy:$('#fBy').value.trim()||auth?.username||'unknown',submittedAt:new Date().toISOString()};
     const ok=await saveReport(rec);
-    btn.disabled=false;
-    btn.innerHTML=ic('send')+' إرسال البيان';
-    if(ok){
-      await addAudit('تسجيل بيان',{station:code,date:dateVal,total:tR},auth?.username);
-      clearUnsaved();
-      showSuccess(rec);
-    }else{toast('فشل الإرسال — تأكد من الاتصال');}
+    btn.disabled=false;btn.innerHTML=ic('send')+' إرسال البيان';
+    if(ok){await addAudit('تسجيل بيان',{station:code,date:dateVal,total:tR},auth?.username);clearUnsaved();showSuccess(rec);}
+    else{toast('فشل الإرسال — تأكد من الاتصال');}
     recalc();
   });
 }
@@ -866,50 +776,35 @@ function showSuccess(rec){
     <div class="success-actions">
       <button class="btn" id="againBtn">${ic('plus')} بيان جديد</button>
       <a class="btn ghost" href="#/" id="backHomeBtn">${ic('board')} العودة للوحة</a>
-    </div>
-  </div>`);
+    </div></div>`);
   $('#againBtn').onclick=()=>{closeOverlay();const f=$('#entryForm');if(f){f.reset();$('#fDate').value=todayISO();f.dispatchEvent(new Event('input'));window.scrollTo({top:0,behavior:'smooth'});}};
   $('#backHomeBtn').onclick=closeOverlay;
 }
 
 let dashDate=todayISO();
 const GROUPS=[
- {t:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'},
- {t:'أسبوعي',c:'weekCount',r:'weekRevenue'},
- {t:'شهري',c:'monthCount',r:'monthRevenue'},
- {t:'ربع سنوي',c:'quarterCount',r:'quarterRevenue'},
- {t:'كروت الاشتراكات',c:'subCardsCount',r:'subCardsRevenue'},
- {t:'كروت المحفظة',c:'walletCardsCount',r:'walletCardsRevenue'},
- {t:'شحن المحفظة',c:'rechargeCount',r:'rechargeRevenue'},
- {t:'الإجمالي',c:'totalCount',r:'totalRevenue'}
+ {t:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'},{t:'أسبوعي',c:'weekCount',r:'weekRevenue'},
+ {t:'شهري',c:'monthCount',r:'monthRevenue'},{t:'ربع سنوي',c:'quarterCount',r:'quarterRevenue'},
+ {t:'كروت الاشتراكات',c:'subCardsCount',r:'subCardsRevenue'},{t:'كروت المحفظة',c:'walletCardsCount',r:'walletCardsRevenue'},
+ {t:'شحن المحفظة',c:'rechargeCount',r:'rechargeRevenue'},{t:'الإجمالي',c:'totalCount',r:'totalRevenue'}
 ];
 
 async function renderDash(){
-  setActive('dash');
-  $('#topNav').style.display='';
-  $('#logoutBtn').style.display='';
-  updateModeChip();
+  setActive('dash');$('#topNav').style.display='';$('#logoutBtn').style.display='';updateModeChip();
   const app=$('#app');
-  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل البيانات المجمّعة…</p></div>';
+  app.innerHTML=`<div class="view">${skStats()}${skList(4)}</div>`;
   const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
   drawDash(reports,stations);
 }
-
 function buildDayRows(records,dateStr,stations){
   const byCode=new Map(records.filter(r=>String(r.date)===dateStr).map(r=>[String(r.stationCode),r]));
-  const mk=(code,name,rec)=>{
-    const z={};
-    NUM_FIELDS.forEach(f=>z[f]=rec?num(rec[f]):0);
-    return {code,name,...z,totalCount:COUNT_FIELDS.reduce((a,f)=>a+z[f],0),totalRevenue:REV_FIELDS.reduce((a,f)=>a+z[f],0),present:!!rec};
-  };
+  const mk=(code,name,rec)=>{const z={};NUM_FIELDS.forEach(f=>z[f]=rec?num(rec[f]):0);
+    return {code,name,...z,totalCount:COUNT_FIELDS.reduce((a,f)=>a+z[f],0),totalRevenue:REV_FIELDS.reduce((a,f)=>a+z[f],0),present:!!rec};};
   const rows=stations.map(s=>mk(s.code,s.name,byCode.get(s.code)));
   byCode.forEach((r,code)=>{if(!stations.some(s=>s.code===code))rows.push(mk(code,r.stationName||code,r));});
   return rows;
 }
-
-function totalsOf(rows){
-  return {count:rows.reduce((a,r)=>a+r.totalCount,0),revenue:rows.reduce((a,r)=>a+r.totalRevenue,0),done:rows.filter(r=>r.present).length};
-}
+function totalsOf(rows){return {count:rows.reduce((a,r)=>a+r.totalCount,0),revenue:rows.reduce((a,r)=>a+r.totalRevenue,0),done:rows.filter(r=>r.present).length};}
 
 function drawDash(reports,stations){
   const app=$('#app');
@@ -931,32 +826,27 @@ function drawDash(reports,stations){
     </div>
     <div class="stats-strip">
       <div class="stat"><small>محطات مسجّلة اليوم</small><b>${T.done} / ${dayRows.length}</b></div>
-      <div class="stat gold"><small>إجمالي الإيرادات</small><b>${money(T.revenue)}</b></div>
-      <div class="stat"><small>إجمالي العمليات</small><b>${fmt(T.count)}</b></div>
+      <div class="stat gold"><small>إجمالي الإيرادات</small><b data-cu="${T.revenue}" data-kind="money">0</b></div>
+      <div class="stat"><small>إجمالي العمليات</small><b data-cu="${T.count}">0</b></div>
       <div class="stat"><small>أعلى محطة إيرادًا</small><b style="font-size:20px;padding-top:8px">${top?esc(top.name):'—'}</b></div>
     </div>
     <div class="table-wrap">
       <table class="gt">
-        <thead>
-          <tr><th rowspan="2">المحطة</th>${GROUPS.map(g=>`<th colspan="2">${g.t}</th>`).join('')}<th rowspan="2">الحالة</th></tr>
-          <tr>${GROUPS.map(()=>'<th>عدد</th><th>إيراد</th>').join('')}</tr>
-        </thead>
-        <tbody>
-          ${dayRows.map(r=>`<tr class="${r.present?'':'miss'}">
-            <td class="st">${esc(r.name)}</td>
-            ${GROUPS.map(g=>`<td>${fmt(r[g.c])}</td><td class="rev">${fmt(r[g.r])}</td>`).join('')}
-            <td><span class="st-pill ${r.present?'on':'off'}"><span class="dot"></span>${r.present?'مسجّل':'لم يُسجّل'}</span></td>
-          </tr>`).join('')}
-        </tbody>
-        <tfoot>
-          <tr><td class="st">الإجمالي العام</td>
-            ${GROUPS.map(g=>{const c=dayRows.reduce((a,r)=>a+r[g.c],0),v=dayRows.reduce((a,r)=>a+r[g.r],0);return `<td>${fmt(c)}</td><td>${fmt(v)}</td>`;}).join('')}
-            <td>${T.done} محطة</td></tr>
-        </tfoot>
+        <thead><tr><th rowspan="2">المحطة</th>${GROUPS.map(g=>`<th colspan="2">${g.t}</th>`).join('')}<th rowspan="2">الحالة</th></tr>
+        <tr>${GROUPS.map(()=>'<th>عدد</th><th>إيراد</th>').join('')}</tr></thead>
+        <tbody>${dayRows.map(r=>`<tr class="${r.present?'':'miss'}">
+          <td class="st">${esc(r.name)}</td>
+          ${GROUPS.map(g=>`<td>${fmt(r[g.c])}</td><td class="rev">${fmt(r[g.r])}</td>`).join('')}
+          <td><span class="st-pill ${r.present?'on':'off'}"><span class="dot"></span>${r.present?'مسجّل':'لم يُسجّل'}</span></td>
+        </tr>`).join('')}</tbody>
+        <tfoot><tr><td class="st">الإجمالي العام</td>
+          ${GROUPS.map(g=>{const c=dayRows.reduce((a,r)=>a+r[g.c],0),v=dayRows.reduce((a,r)=>a+r[g.r],0);return `<td>${fmt(c)}</td><td>${fmt(v)}</td>`;}).join('')}
+          <td>${T.done} محطة</td></tr></tfoot>
       </table>
     </div>
     <p class="dash-note">ملحوظة: كل الأيام بتتحفظ في نفس الجدول — اختار أي تاريخ من فوق وشوف بيانه.</p>
   </div>`;
+  animateCounts(app);
   $('#dashDate').addEventListener('change',e=>{dashDate=e.target.value||todayISO();drawDash(reports,stations);});
   $('#todayBtn').addEventListener('click',()=>{dashDate=todayISO();drawDash(reports,stations);});
   $('#dashRefresh').addEventListener('click',renderDash);
@@ -964,55 +854,47 @@ function drawDash(reports,stations){
   $('#exLog').addEventListener('click',()=>exportLogExcel(reports));
 }
 
+function barGrad(c1a,c1b){
+  return (c)=>{const {ctx,chartArea}=c.chart;if(!chartArea)return c1a;
+    const g=ctx.createLinearGradient(0,chartArea.bottom,0,chartArea.top);
+    g.addColorStop(0,c1a);g.addColorStop(1,c1b);return g;};
+}
+
 async function renderStats(){
-  setActive('stats');
-  $('#topNav').style.display='';
-  $('#logoutBtn').style.display='';
-  updateModeChip();
+  setActive('stats');$('#topNav').style.display='';$('#logoutBtn').style.display='';updateModeChip();
   const app=$('#app');
-  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل الإحصائيات…</p></div>';
+  app.innerHTML=`<div class="view">${skStats()}${skList(3)}</div>`;
   const [reports,stations]=await Promise.all([getAllReports(),getAllStations()]);
   const totalRevenue=reports.reduce((a,r)=>a+num(r.totalRevenue),0);
   const totalTickets=reports.reduce((a,r)=>a+num(r.ticketsCount),0);
   const uniqueDays=new Set(reports.map(r=>r.date)).size;
   const byStation={};
-  reports.forEach(r=>{
-    if(!byStation[r.stationCode])byStation[r.stationCode]={name:r.stationName,revenue:0,count:0};
-    byStation[r.stationCode].revenue+=num(r.totalRevenue);
-    byStation[r.stationCode].count+=num(r.totalCount);
-  });
+  reports.forEach(r=>{if(!byStation[r.stationCode])byStation[r.stationCode]={name:r.stationName,revenue:0,count:0};byStation[r.stationCode].revenue+=num(r.totalRevenue);byStation[r.stationCode].count+=num(r.totalCount);});
   const topStation=Object.entries(byStation).sort((a,b)=>b[1].revenue-a[1].revenue)[0];
   const last7=[];
-  for(let i=6;i>=0;i--){
-    const d=new Date();d.setDate(d.getDate()-i);
-    const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
-    const dayRev=reports.filter(r=>r.date===iso).reduce((a,r)=>a+num(r.totalRevenue),0);
-    last7.push({date:iso,day:d.toLocaleDateString('ar-EG',{weekday:'short'}),revenue:dayRev});
-  }
+  for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const iso=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');const dayRev=reports.filter(r=>r.date===iso).reduce((a,r)=>a+num(r.totalRevenue),0);last7.push({date:iso,day:d.toLocaleDateString('ar-EG',{weekday:'short'}),revenue:dayRev});}
   app.innerHTML=`<div class="view">
     <div class="board-head"><div><h1 class="page-title">الإحصائيات</h1><p class="page-sub">نظرة عامة على أداء المحطات</p></div></div>
     <div class="stats-strip">
-      <div class="stat gold"><small>إجمالي الإيرادات</small><b>${money(totalRevenue)}</b></div>
-      <div class="stat"><small>إجمالي التذاكر</small><b>${fmt(totalTickets)}</b></div>
-      <div class="stat"><small>أيام مسجلة</small><b>${uniqueDays}</b></div>
-      <div class="stat"><small>عدد المحطات</small><b>${stations.length}</b></div>
+      <div class="stat gold"><small>إجمالي الإيرادات</small><b data-cu="${totalRevenue}" data-kind="money">0</b></div>
+      <div class="stat"><small>إجمالي التذاكر</small><b data-cu="${totalTickets}">0</b></div>
+      <div class="stat"><small>أيام مسجلة</small><b data-cu="${uniqueDays}">0</b></div>
+      <div class="stat"><small>عدد المحطات</small><b data-cu="${stations.length}">0</b></div>
     </div>
     ${topStation?`<div class="card"><h2>${ic('chart')} أفضل محطة إيرادًا</h2><div style="font-size:28px;font-weight:800;color:var(--accent)">${esc(topStation[1].name)}</div><div style="color:var(--text-secondary);margin-top:8px">إجمالي الإيرادات: <b style="color:var(--primary-light);font-size:20px">${money(topStation[1].revenue)}</b></div></div>`:''}
     <div class="card"><h2>${ic('chart')} الإيرادات — آخر 7 أيام</h2><div class="chart-container"><canvas id="chart7"></canvas></div></div>
     <div class="card"><h2>${ic('chart')} ترتيب المحطات حسب الإيراد</h2><div class="chart-container"><canvas id="chartStations"></canvas></div></div>
   </div>`;
-  new Chart($('#chart7'),{type:'bar',data:{labels:last7.map(d=>d.day),datasets:[{label:'الإيراد',data:last7.map(d=>d.revenue),backgroundColor:'rgba(6,182,212,.6)',borderColor:'#06b6d4',borderWidth:2,borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#f1f5f9'}}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}},y:{ticks:{color:'#94a3b8',callback:v=>fmt(v)+' ج.م'},grid:{color:'rgba(51,65,85,.3)'}}}}});
+  animateCounts(app);
+  new Chart($('#chart7'),{type:'bar',data:{labels:last7.map(d=>d.day),datasets:[{label:'الإيراد',data:last7.map(d=>d.revenue),backgroundColor:barGrad('rgba(6,182,212,.25)','rgba(6,182,212,.9)'),borderColor:'#06b6d4',borderWidth:2,borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#f1f5f9'}}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}},y:{ticks:{color:'#94a3b8',callback:v=>fmt(v)+' ج.م'},grid:{color:'rgba(51,65,85,.3)'}}}}});
   const sorted=Object.entries(byStation).sort((a,b)=>b[1].revenue-a[1].revenue);
-  new Chart($('#chartStations'),{type:'bar',data:{labels:sorted.map(([k,v])=>v.name),datasets:[{label:'الإيراد',data:sorted.map(([k,v])=>v.revenue),backgroundColor:'rgba(245,158,11,.6)',borderColor:'#f59e0b',borderWidth:2,borderRadius:8}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#f1f5f9'}}},scales:{x:{ticks:{color:'#94a3b8',callback:v=>fmt(v)},grid:{color:'rgba(51,65,85,.3)'}},y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}}}}});
+  new Chart($('#chartStations'),{type:'bar',data:{labels:sorted.map(([k,v])=>v.name),datasets:[{label:'الإيراد',data:sorted.map(([k,v])=>v.revenue),backgroundColor:barGrad('rgba(245,158,11,.25)','rgba(245,158,11,.9)'),borderColor:'#f59e0b',borderWidth:2,borderRadius:8}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:'#f1f5f9'}}},scales:{x:{ticks:{color:'#94a3b8',callback:v=>fmt(v)},grid:{color:'rgba(51,65,85,.3)'}},y:{ticks:{color:'#94a3b8'},grid:{color:'rgba(51,65,85,.3)'}}}}});
 }
 
 async function renderAudit(){
-  setActive('audit');
-  $('#topNav').style.display='';
-  $('#logoutBtn').style.display='';
-  updateModeChip();
+  setActive('audit');$('#topNav').style.display='';$('#logoutBtn').style.display='';updateModeChip();
   const app=$('#app');
-  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل سجل التدقيق…</p></div>';
+  app.innerHTML=`<div class="view">${skList(5)}</div>`;
   const logs=await getAudit();
   app.innerHTML=`<div class="view">
     <div class="board-head">
@@ -1037,7 +919,7 @@ async function renderAudit(){
         ${logs.length?logs.map(l=>`<div class="audit-item">
           <div style="flex:1"><div class="action">${esc(l.action)}</div><div class="details">${esc(l.details||'')}</div></div>
           <div style="text-align:left"><div style="font-weight:700;color:var(--primary-light)">${esc(l.username||'—')}</div><div class="time">${fmtDateAr(l.created_at?.split('T')[0]||'')} — ${new Date(l.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div></div>
-        </div>`).join(''):'<p style="text-align:center;color:var(--text-secondary);padding:60px">لا توجد عمليات مسجلة</p>'}
+        </div>`).join(''):emptyState('لا توجد عمليات مسجلة')}
       </div>
     </div>
   </div>`;
@@ -1049,23 +931,19 @@ async function renderAudit(){
     if(to)filtered=filtered.filter(l=>l.created_at<=to+'T23:59:59');
     if(user)filtered=filtered.filter(l=>l.username===user);
     if(action)filtered=filtered.filter(l=>l.action===action);
-    const list=$('#auditList');
-    list.innerHTML=filtered.length?filtered.map(l=>`<div class="audit-item">
+    $('#auditList').innerHTML=filtered.length?filtered.map(l=>`<div class="audit-item">
       <div style="flex:1"><div class="action">${esc(l.action)}</div><div class="details">${esc(l.details||'')}</div></div>
       <div style="text-align:left"><div style="font-weight:700;color:var(--primary-light)">${esc(l.username||'—')}</div><div class="time">${fmtDateAr(l.created_at?.split('T')[0]||'')} — ${new Date(l.created_at).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'})}</div></div>
-    </div>`).join(''):'<p style="text-align:center;color:var(--text-secondary);padding:60px">لا توجد نتائج مطابقة للفلتر</p>';
+    </div>`).join(''):emptyState('لا توجد نتائج مطابقة للفلتر');
     toast(`تم تطبيق الفلتر — ${filtered.length} نتيجة`);
   });
   $('#clearFilter').addEventListener('click',()=>{$('#filterFrom').value='';$('#filterTo').value=todayISO();$('#filterUser').value='';$('#filterAction').value='';renderAudit();});
 }
 
 async function renderStations(){
-  setActive('stations');
-  $('#topNav').style.display='';
-  $('#logoutBtn').style.display='';
-  updateModeChip();
+  setActive('stations');$('#topNav').style.display='';$('#logoutBtn').style.display='';updateModeChip();
   const app=$('#app');
-  app.innerHTML='<div class="view"><p class="loading">جارٍ تحميل المحطات…</p></div>';
+  app.innerHTML=`<div class="view">${skList(5)}</div>`;
   const [stations,reports]=await Promise.all([getAllStations(),getAllReports()]);
   app.innerHTML=`<div class="view">
     <div class="board-head"><div><h1 class="page-title">إدارة المحطات</h1><p class="page-sub">إضافة وحذف المحطات وإدارة البيانات</p></div></div>
@@ -1080,16 +958,15 @@ async function renderStations(){
     <div class="card">
       <h2>${ic('board')} المحطات الحالية (${stations.length})</h2>
       <div class="st-mng">
-        ${stations.map(s=>{
-          const reportCount=reports.filter(r=>r.stationCode===s.code).length;
+        ${stations.length?stations.map(s=>{const reportCount=reports.filter(r=>r.stationCode===s.code).length;
           return `<div class="st-mng-row">
             <span class="s-code">${esc(s.code)}</span>
             <b>${esc(s.name)}</b>
             <span style="color:var(--text-muted);font-size:12px">${reportCount} تقرير</span>
-            <button class="icon-btn" data-copy="${esc(stationLink(s))}" title="نسخ الرابط">${ic('link')}</button>
-            <button class="icon-btn danger-icon" data-del-reports="${esc(s.code)}" title="مسح بيانات هذه المحطة">${ic('trash')}</button>
-            <button class="icon-btn danger-icon" data-del="${s.id}" title="حذف المحطة بالكامل">${ic('trash')}</button>
-          </div>`;}).join('')}
+            <button class="icon-btn" data-tip="نسخ الرابط" data-copy="${esc(stationLink(s))}">${ic('link')}</button>
+            <button class="icon-btn danger-icon" data-tip="مسح البيانات" data-del-reports="${esc(s.code)}">${ic('trash')}</button>
+            <button class="icon-btn danger-icon" data-tip="حذف المحطة" data-del="${s.id}">${ic('trash')}</button>
+          </div>`;}).join(''):emptyState('لا توجد محطات بعد — أضف أول محطة')}
       </div>
     </div>
     <div class="danger-zone">
@@ -1102,24 +979,21 @@ async function renderStations(){
   </div>`;
   $('#addStForm').addEventListener('submit',async e=>{
     e.preventDefault();
-    const code=$('#newCode').value.trim().toUpperCase();
-    const name=$('#newName').value.trim();
+    const code=$('#newCode').value.trim().toUpperCase(),name=$('#newName').value.trim();
     if(!code||!name)return toast('املأ كل الحقول');
     const ok=await addStation(code,name);
     if(ok){const auth=getAuth();await addAudit('إضافة محطة',{code,name},auth?.username);toast('تمت إضافة المحطة ✓');renderStations();}
     else{toast('فشل الإضافة — الكود موجود بالفعل؟');}
   });
   $$('[data-del]').forEach(b=>b.onclick=async ()=>{
-    const id=b.dataset.del;
-    const s=stations.find(x=>x.id==id);
+    const id=b.dataset.del,s=stations.find(x=>x.id==id);
     if(confirm('حذف محطة '+(s?s.name:'')+' وكل بياناتها؟')){
       const ok=await deleteStation(id);
       if(ok){const auth=getAuth();await addAudit('حذف محطة',{code:s.code,name:s.name},auth?.username);toast('تم الحذف ✓');renderStations();}
     }
   });
   $$('[data-del-reports]').forEach(b=>b.onclick=async ()=>{
-    const code=b.dataset.delReports;
-    const s=stations.find(x=>x.code===code);
+    const code=b.dataset.delReports,s=stations.find(x=>x.code===code);
     const count=reports.filter(r=>r.stationCode===code).length;
     if(confirm(`مسح كل بيانات محطة "${s?s.name:code}" (${count} تقرير)؟\n\n⚠️ هذا الإجراء لا يمكن التراجع عنه!`)){
       const ok=await deleteStationReports(code);
@@ -1150,9 +1024,7 @@ function exportDayExcel(dayRows){
   dayRows.forEach(r=>aoa.push([r.name,r.ticketsCount,r.ticketsRevenue,r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.totalCount,r.totalRevenue,r.present?'مسجّل':'لم يُسجّل']));
   const totalRow=['الإجمالي العام'];
   GROUPS.forEach((g,idx)=>{
-    const col1=String.fromCharCode(66+idx*2);
-    const col2=String.fromCharCode(67+idx*2);
-    const endRow=5+dayRows.length;
+    const col1=String.fromCharCode(66+idx*2),col2=String.fromCharCode(67+idx*2),endRow=5+dayRows.length;
     totalRow.push(`=SUM(${col1}5:${col1}${endRow})`);
     totalRow.push(`=SUM(${col2}5:${col2}${endRow})`);
   });
@@ -1163,17 +1035,13 @@ function exportDayExcel(dayRows){
   ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:17}},{s:{r:3,c:0},e:{r:4,c:0}},{s:{r:3,c:1},e:{r:3,c:2}},{s:{r:3,c:3},e:{r:3,c:8}},{s:{r:3,c:9},e:{r:3,c:10}},{s:{r:3,c:11},e:{r:3,c:12}},{s:{r:3,c:13},e:{r:3,c:14}},{s:{r:3,c:15},e:{r:3,c:16}},{s:{r:3,c:17},e:{r:4,c:17}}];
   ws['!cols']=[{wch:22},...Array(16).fill({wch:14}),{wch:12}];
   ws['!rows']=[{hpt:32},{hpt:24},{hpt:10},{hpt:28},{hpt:24}];
-  for(let R=0;R<=aoa.length-1;R++){
-    for(let C=0;C<=17;C++){
-      const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];
-      if(cell){
-        if(R===0)cell.s={fill:{fgColor:{rgb:'06B6D4'}},font:{bold:true,color:{rgb:'FFFFFF'},size:16},alignment:{horizontal:'center'}};
-        else if(R===3||R===4)cell.s={fill:{fgColor:{rgb:'1E293B'}},font:{bold:true,color:{rgb:'67E8F9'},size:13},alignment:{horizontal:'center'}};
-        else if(R===aoa.length-1)cell.s={fill:{fgColor:{rgb:'10B981'}},font:{bold:true,color:{rgb:'FFFFFF'},size:14},alignment:{horizontal:'center'}};
-        else if(C===0&&R>4&&R<aoa.length-1)cell.s={font:{bold:true,size:13},alignment:{horizontal:'right'}};
-      }
-    }
-  }
+  for(let R=0;R<=aoa.length-1;R++){for(let C=0;C<=17;C++){const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];
+    if(cell){
+      if(R===0)cell.s={fill:{fgColor:{rgb:'06B6D4'}},font:{bold:true,color:{rgb:'FFFFFF'},size:16},alignment:{horizontal:'center'}};
+      else if(R===3||R===4)cell.s={fill:{fgColor:{rgb:'1E293B'}},font:{bold:true,color:{rgb:'67E8F9'},size:13},alignment:{horizontal:'center'}};
+      else if(R===aoa.length-1)cell.s={fill:{fgColor:{rgb:'10B981'}},font:{bold:true,color:{rgb:'FFFFFF'},size:14},alignment:{horizontal:'center'}};
+      else if(C===0&&R>4&&R<aoa.length-1)cell.s={font:{bold:true,size:13},alignment:{horizontal:'right'}};
+    }}}
   const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
   XLSX.utils.book_append_sheet(wb,ws,'إحصاء '+dashDate);
   XLSX.writeFile(wb,'إحصاء محطات المونوريل '+dashDate+'.xlsx');
@@ -1205,13 +1073,7 @@ injectBottomNav();
 setupPWA();
 route();
 hideSplash();
-setInterval(()=>{
-  const auth=getAuth();
-  if(auth){
-    const hash=location.hash;
-    if(hash==='#/'||hash==='#/dash'||hash==='#/stats')route();
-  }
-},30000);
+setInterval(()=>{const auth=getAuth();if(auth){const hash=location.hash;if(hash==='#/'||hash==='#/dash'||hash==='#/stats')route();}},30000);
 </script>
 </body>
 </html>
