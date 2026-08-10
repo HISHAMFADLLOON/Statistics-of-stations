@@ -14,7 +14,7 @@
 <link rel="manifest" href="manifest.json">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;500;600;700;800&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root{
@@ -30,7 +30,6 @@
 html{scroll-behavior:smooth;-webkit-tap-highlight-color:transparent}
 body{font-family:'IBM Plex Sans Arabic',system-ui,-apple-system,sans-serif;color:var(--text-primary);background:var(--bg-primary);min-height:100vh;overflow-x:hidden}
 
-/* Aurora Background */
 .aurora{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 .aurora i{position:absolute;width:60vmax;height:60vmax;border-radius:50%;filter:blur(90px);opacity:.13;animation:drift 26s infinite alternate}
 .aurora i:nth-child(1){background:#06b6d4;top:-20%;left:-10%}
@@ -47,17 +46,14 @@ input,select,textarea{font-family:inherit;border:none;outline:none}
 ::-webkit-scrollbar-thumb{background:var(--primary);border-radius:5px}
 .ic{width:20px;height:20px;flex:none}
 
-/* Tooltips */
 [data-tip]{position:relative}
 [data-tip]:hover::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#0b1220;color:#e2e8f0;font-size:11px;font-weight:600;padding:5px 12px;border-radius:8px;white-space:nowrap;border:1px solid #273549;z-index:80;box-shadow:var(--shadow-md);animation:fadeUp .2s both}
 
-/* Skeleton Loading */
 .skeleton{background:linear-gradient(90deg,#1e293b 25%,#2a3a52 50%,#1e293b 75%);background-size:200% 100%;animation:sk 1.2s infinite;border-radius:10px}
 @keyframes sk{to{background-position:-200% 0}}
 .sk-row{height:70px;margin:10px 0}
 .sk-wrap{padding:14px}
 
-/* Empty States */
 .empty{padding:50px 20px;text-align:center;color:var(--text-muted)}
 .empty svg{width:64px;height:64px;margin:0 auto 14px;display:block;opacity:.45}
 .empty p{font-weight:600;font-size:14px}
@@ -314,7 +310,6 @@ table.gt{border-collapse:collapse;min-width:1300px;width:100%}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;transition:all .3s cubic-bezier(.4,0,.2,1);background:var(--bg-card);border:1px solid var(--border);color:var(--text-primary);padding:14px 26px;border-radius:14px;z-index:200;box-shadow:var(--shadow-xl);font-weight:600;font-size:14px;max-width:90vw;text-align:center}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* Print Styles */
 @media print{
   .topbar,.bottom-nav,.track-strip,footer,#toast,.unsaved-warning,.s-actions,.dash-controls,.board-head .btn,.filter-section,.danger-zone,.aurora,#splash{display:none!important}
   body{background:#fff!important;color:#000!important}
@@ -451,12 +446,10 @@ const norm=s=>String(s).replace(/[٠-٩]/g,d=>'١٢٣٤٥٦٧٨٩'.indexOf(d)).r
 function todayISO(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
 function fmtDateAr(iso){try{return new Date(iso+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}catch(e){return iso;}}
 
-/* Skeleton & Empty States */
 function skList(n){return `<div class="stations sk-wrap">${Array.from({length:n},()=>'<div class="skeleton sk-row"></div>').join('')}</div>`}
 function skStats(){return `<div class="stats-strip">${Array.from({length:4},()=>'<div class="stat"><div class="skeleton" style="height:14px;width:70%;margin-bottom:12px"></div><div class="skeleton" style="height:32px;width:50%"></div></div>').join('')}</div>`}
 function emptyState(msg){return `<div class="empty"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 7h14l2 6v6H3v-6l2-6z"/><path d="M3 13h4l2 3h6l2-3h4"/></svg><p>${msg}</p></div>`}
 
-/* Count-up Animation */
 function animateCounts(root){
   root.querySelectorAll('[data-cu]').forEach(el=>{
     const t=parseFloat(el.dataset.cu)||0;
@@ -1012,53 +1005,114 @@ async function renderStations(){
   };
 }
 
-function exportDayExcel(dayRows){
+/* ===== أدوات الإكسيل (ExcelJS) ===== */
+function bufToBase64(buf){
+  const bytes=new Uint8Array(buf);let bin='';
+  for(let i=0;i<bytes.length;i+=0x8000){bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));}
+  return btoa(bin);
+}
+async function loadLogo(){
+  try{
+    const r=await fetch('logo.png');
+    if(!r.ok)return null;
+    return bufToBase64(await r.arrayBuffer());
+  }catch(e){return null;}
+}
+function thin(){return {top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}};}
+const HEAD_FILL={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};
+const HEAD_FONT={bold:true,size:11,color:{argb:'FF67E8F9'}};
+const TOT_FILL={type:'pattern',pattern:'solid',fgColor:{argb:'FF10B981'}};
+const TOT_FONT={bold:true,size:11,color:{argb:'FFFFFFFF'}};
+const CTR={horizontal:'center',vertical:'middle'};
+
+async function exportDayExcel(dayRows){
+  if(!window.ExcelJS){toast('مكتبة Excel غير جاهزة');return;}
   const T=totalsOf(dayRows);
-  const aoa=[
-    ['تقرير إحصاء المحطات — مونوريل شرق النيل'],
-    ['التاريخ: '+dashDate+'  ('+fmtDateAr(dashDate)+')','','','','','','','','','','','','','','','','','المسجّل: '+T.done+' من '+dayRows.length],
-    [],
-    ['المحطة','التذاكر','','الاشتراكات','','','','','','كروت الاشتراكات','','كروت المحفظة','','شحن المحفظة','','الإجمالي','','الحالة'],
-    ['','عدد','إيراد','أسبوعي (عدد)','أسبوعي (إيراد)','شهري (عدد)','شهري (إيراد)','ربع سنوي (عدد)','ربع سنوي (إيراد)','عدد','إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','']
-  ];
-  dayRows.forEach(r=>aoa.push([r.name,r.ticketsCount,r.ticketsRevenue,r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.totalCount,r.totalRevenue,r.present?'مسجّل':'لم يُسجّل']));
-  const totalRow=['الإجمالي العام'];
-  GROUPS.forEach((g,idx)=>{
-    const col1=String.fromCharCode(66+idx*2),col2=String.fromCharCode(67+idx*2),endRow=5+dayRows.length;
-    totalRow.push(`=SUM(${col1}5:${col1}${endRow})`);
-    totalRow.push(`=SUM(${col2}5:${col2}${endRow})`);
+  const wb=new ExcelJS.Workbook();
+  wb.views=[{rightToLeft:true}];
+  const ws=wb.addWorksheet('إحصاء '+dashDate,{views:[{rightToLeft:true}]});
+  ws.columns=[{width:24},...Array.from({length:17},()=>({width:13}))];
+
+  const logo=await loadLogo();
+  if(logo){
+    const img=wb.addImage({base64:logo,extension:'png'});
+    ws.addImage(img,{tl:{col:0.15,row:0.15},ext:{width:72,height:72}});
+  }
+  ws.mergeCells('D1:R1');
+  const t=ws.getCell('D1');
+  t.value='تقرير إحصاء المحطات — مونوريل شرق النيل';
+  t.font={bold:true,size:16,color:{argb:'FFFFFFFF'}};
+  t.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF06B6D4'}};
+  t.alignment=CTR; ws.getRow(1).height=24;
+  ws.mergeCells('D2:R2');
+  const d=ws.getCell('D2');
+  d.value='التاريخ: '+dashDate+'  ('+fmtDateAr(dashDate)+')   —   المسجّل: '+T.done+' من '+dayRows.length;
+  d.font={size:11,bold:true,color:{argb:'FF334155'}};
+  d.alignment=CTR; ws.getRow(2).height=20;
+
+  ws.mergeCells('A4:A5'); ws.getCell('A4').value='المحطة';
+  ws.mergeCells('B4:C4'); ws.getCell('B4').value='التذاكر';
+  ws.mergeCells('D4:I4'); ws.getCell('D4').value='الاشتراكات';
+  ws.mergeCells('J4:K4'); ws.getCell('J4').value='كروت الاشتراكات';
+  ws.mergeCells('L4:M4'); ws.getCell('L4').value='كروت المحفظة';
+  ws.mergeCells('N4:O4'); ws.getCell('N4').value='شحن المحفظة';
+  ws.mergeCells('P4:Q4'); ws.getCell('P4').value='الإجمالي';
+  ws.mergeCells('R4:R5'); ws.getCell('R4').value='الحالة';
+  ['A4','B4','D4','J4','L4','N4','P4','R4'].forEach(ref=>{const c=ws.getCell(ref);c.fill=HEAD_FILL;c.font=HEAD_FONT;c.alignment=CTR;c.border=thin();});
+  const sub=['عدد','إيراد','أسبوعي عدد','أسبوعي إيراد','شهري عدد','شهري إيراد','ربع عدد','ربع إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد'];
+  ['B5','C5','D5','E5','F5','G5','H5','I5','J5','K5','L5','M5','N5','O5','P5','Q5'].forEach((ref,i)=>{
+    const c=ws.getCell(ref);c.value=sub[i];c.fill=HEAD_FILL;c.font={bold:true,size:10,color:{argb:'FF67E8F9'}};c.alignment=CTR;c.border=thin();
   });
-  totalRow.push(T.done+' محطة');
-  aoa.push(totalRow);
-  if(!window.XLSX)return;
-  const ws=XLSX.utils.aoa_to_sheet(aoa);
-  ws['!merges']=[{s:{r:0,c:0},e:{r:0,c:17}},{s:{r:3,c:0},e:{r:4,c:0}},{s:{r:3,c:1},e:{r:3,c:2}},{s:{r:3,c:3},e:{r:3,c:8}},{s:{r:3,c:9},e:{r:3,c:10}},{s:{r:3,c:11},e:{r:3,c:12}},{s:{r:3,c:13},e:{r:3,c:14}},{s:{r:3,c:15},e:{r:3,c:16}},{s:{r:3,c:17},e:{r:4,c:17}}];
-  ws['!cols']=[{wch:22},...Array(16).fill({wch:14}),{wch:12}];
-  ws['!rows']=[{hpt:32},{hpt:24},{hpt:10},{hpt:28},{hpt:24}];
-  for(let R=0;R<=aoa.length-1;R++){for(let C=0;C<=17;C++){const cell=ws[XLSX.utils.encode_cell({r:R,c:C})];
-    if(cell){
-      if(R===0)cell.s={fill:{fgColor:{rgb:'06B6D4'}},font:{bold:true,color:{rgb:'FFFFFF'},size:16},alignment:{horizontal:'center'}};
-      else if(R===3||R===4)cell.s={fill:{fgColor:{rgb:'1E293B'}},font:{bold:true,color:{rgb:'67E8F9'},size:13},alignment:{horizontal:'center'}};
-      else if(R===aoa.length-1)cell.s={fill:{fgColor:{rgb:'10B981'}},font:{bold:true,color:{rgb:'FFFFFF'},size:14},alignment:{horizontal:'center'}};
-      else if(C===0&&R>4&&R<aoa.length-1)cell.s={font:{bold:true,size:13},alignment:{horizontal:'right'}};
-    }}}
-  const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
-  XLSX.utils.book_append_sheet(wb,ws,'إحصاء '+dashDate);
-  XLSX.writeFile(wb,'إحصاء محطات المونوريل '+dashDate+'.xlsx');
-  toast('تم تنزيل ملف Excel ✓');
+
+  let row=6;
+  dayRows.forEach(r=>{
+    const vals=[r.name,r.ticketsCount,r.ticketsRevenue,r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.totalCount,r.totalRevenue,r.present?'مسجّل':'لم يُسجّل'];
+    vals.forEach((v,i)=>{
+      const c=ws.getCell(row,i+1);
+      c.value=v;c.border=thin();
+      c.alignment=i===0?{horizontal:'right',vertical:'middle'}:CTR;
+      if(i===0)c.font={bold:true,size:11};
+      if(typeof v==='number')c.numFmt='#,##0.##';
+    });
+    row++;
+  });
+
+  const last=row-1, tr=row;
+  ['B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q'].forEach(col=>{
+    const c=ws.getCell(col+tr);
+    c.value={formula:'SUM('+col+'6:'+col+last+')'};
+    c.fill=TOT_FILL;c.font=TOT_FONT;c.numFmt='#,##0.##';c.border=thin();c.alignment=CTR;
+  });
+  ['A','R'].forEach(col=>{const c=ws.getCell(col+tr);c.fill=TOT_FILL;c.font=TOT_FONT;c.border=thin();c.alignment=CTR;});
+  ws.getCell('A'+tr).value='الإجمالي العام';
+  ws.getCell('R'+tr).value=T.done+' محطة';
+
+  await wb.xlsx.writeFile('إحصاء محطات المونوريل '+dashDate+'.xlsx');
+  toast('تم تنزيل ملف Excel باللوجو ✓');
 }
 
-function exportLogExcel(records){
-  const AR={stationCode:'كود المحطة',stationName:'المحطة',date:'التاريخ',ticketsCount:'عدد التذاكر',ticketsRevenue:'إيراد التذاكر',weekCount:'اشتراك أسبوعي (عدد)',weekRevenue:'اشتراك أسبوعي (إيراد)',monthCount:'اشتراك شهري (عدد)',monthRevenue:'اشتراك شهري (إيراد)',quarterCount:'اشتراك ربع سنوي (عدد)',quarterRevenue:'اشتراك ربع سنوي (إيراد)',subCardsCount:'كروت اشتراكات (عدد)',subCardsRevenue:'كروت اشتراكات (إيراد)',walletCardsCount:'كروت محفظة (عدد)',walletCardsRevenue:'كروت محفظة (إيراد)',rechargeCount:'شحن محفظة (عدد)',rechargeRevenue:'شحن محفظة (إيراد)',totalCount:'إجمالي العدد',totalRevenue:'إجمالي الإيراد',submittedBy:'المُسجِّل',submittedAt:'وقت التسجيل'};
+async function exportLogExcel(records){
+  if(!window.ExcelJS){toast('مكتبة Excel غير جاهزة');return;}
+  const wb=new ExcelJS.Workbook();
+  wb.views=[{rightToLeft:true}];
+  const ws=wb.addWorksheet('السجل الكامل',{views:[{rightToLeft:true}]});
+  const headers=['كود المحطة','المحطة','التاريخ','عدد التذاكر','إيراد التذاكر','أسبوعي عدد','أسبوعي إيراد','شهري عدد','شهري إيراد','ربع عدد','ربع إيراد','كروت عدد','كروت إيراد','محفظة عدد','محفظة إيراد','شحن عدد','شحن إيراد','إجمالي العدد','إجمالي الإيراد','المُسجِّل','وقت التسجيل'];
+  ws.columns=headers.map((h,i)=>({width:i===1?22:14}));
+
+  const logo=await loadLogo();
+  if(logo){const img=wb.addImage({base64:logo,extension:'png'});ws.addImage(img,{tl:{col:0.15,row:0.15},ext:{width:60,height:60}});}
+  ws.addRow([]);ws.addRow([]);
+  const hrow=ws.addRow(headers);
+  hrow.eachCell(c=>{c.fill=HEAD_FILL;c.font=HEAD_FONT;c.alignment=CTR;c.border=thin();});
+
   const sorted=[...records].sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-  const aoa=[FIELDS.map(f=>AR[f]),...sorted.map(r=>FIELDS.map(f=>r[f]??''))];
-  if(!window.XLSX)return;
-  const ws=XLSX.utils.aoa_to_sheet(aoa);
-  ws['!cols']=[{wch:12},{wch:22},{wch:12},...Array(16).fill({wch:15}),{wch:14},{wch:22}];
-  ws['!autofilter']={ref:XLSX.utils.encode_range({s:{r:0,c:0},e:{r:aoa.length-1,c:FIELDS.length-1}})};
-  const wb=XLSX.utils.book_new();wb.Workbook={Views:[{RTL:true}]};
-  XLSX.utils.book_append_sheet(wb,ws,'السجل الكامل');
-  XLSX.writeFile(wb,'سجل بيانات مونوريل شرق النيل.xlsx');
+  sorted.forEach(r=>{
+    const row=ws.addRow([r.stationCode,r.stationName,r.date,r.ticketsCount,r.ticketsRevenue,r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.totalCount,r.totalRevenue,r.submittedBy,r.submittedAt]);
+    row.eachCell(c=>{c.border=thin();if(typeof c.value==='number')c.numFmt='#,##0.##';});
+  });
+  if(sorted.length)ws.autoFilter={from:{row:3,column:1},to:{row:3+sorted.length,column:headers.length}};
+
+  await wb.xlsx.writeFile('سجل بيانات مونوريل شرق النيل.xlsx');
   toast('تم تنزيل السجل الكامل ✓');
 }
 
