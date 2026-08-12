@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1887a5"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="المونوريل"><title>إحصاء المحطات — مونوريل شرق النيل</title><link rel="icon" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><link rel="manifest" href="manifest.json"><link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet"><script src="https://unpkg.com/lucide@latest"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1887a5"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://hdsohnubcqbdwkmtvsvr.supabase.co; frame-src https://api.qrserver.com;">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="المونوريل"><title>إحصاء المحطات — مونوريل شرق النيل</title><link rel="icon" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><link rel="manifest" href="manifest.json"><link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet"><script src="https://unpkg.com/lucide@latest"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg0:#020617;--bg1:#0f172a;--card:#1e293b;--br:#1e293b;--pr:#06b6d4;--prl:#67e8f9;--acc:#f59e0b;--ok:#10b981;--err:#ef4444;--warn:#f59e0b;--tx:#f1f5f9;--tx2:#94a3b8;--mut:#64748b;--grad:linear-gradient(135deg,#06b6d4,#8b5cf6)}
 [data-theme=light]{--bg0:#f1f5f9;--bg1:#e2e8f0;--card:#fff;--br:#cbd5e1;--tx:#0f172a;--tx2:#475569;--mut:#64748b}
@@ -52,9 +53,9 @@ footer{position:relative;z-index:10;border-top:2px solid rgba(6,182,212,.3);padd
 <div id="splash"><div class="splash-container"><div class="splash-icon"><img src="logo.png" onerror="this.outerHTML='🚝'"></div><div class="splash-title">إحصاء المحطات</div><div class="splash-subtitle">مونوريل شرق النيل</div></div></div>
 <div class="unsaved-warning" id="unsavedWarning">⚠️ بيانات غير محفوظة!</div>
 <header class="topbar"><div class="topbar-in">
-<a class="brand" href="#/"><span class="brand-badge"><img src="logo.png" onerror="this.outerHTML='🚝'"></span><span><b>إحصاء المحطات</b><small>مونوريل شرق النيل</small></span></a>
-<nav class="top-nav" id="topNav"><a href="#/" data-nav="home">📋 المحطات</a><a href="#/dash" data-nav="dash">📊 التجميع</a><a href="#/stats" data-nav="stats">📈 الإحصائيات</a><a href="#/audit" data-nav="audit">📋 التدقيق</a><a href="#/stations" data-nav="stations">⚙️ الإدارة</a></nav>
-<div class="head-meta"><div id="clockTime">--:--</div><div id="clockDate"></div><button class="icon-btn" id="palBtn"><i data-lucide="search"></i></button><button class="icon-btn" id="themeBtn"><i data-lucide="sun"></i></button><span class="chip warn" id="modeChip">محلي</span><button class="btn ghost sm" id="logoutBtn" style="display:none"><i data-lucide="log-out"></i> خروج</button></div>
+<a class="brand" href="#/"><span class="brand-badge"><img src="logo.png" onerror="this.outerHTML=''"></span><span><b>إحصاء المحطات</b><small>مونوريل شرق النيل</small></span></a>
+<nav class="top-nav" id="topNav"><a href="#/" data-nav="home">📋 المحطات</a><a href="#/dash" data-nav="dash">📊 التجميع</a><a href="#/stats" data-nav="stats">📈 الإحصائيات</a><a href="#/audit" data-nav="audit">📋 التدقيق</a><a href="#/stations" data-nav="stations">️ الإدارة</a></nav>
+<div class="head-meta"><div id="clockTime">--:--</div><div id="clockDate"></div><button class="icon-btn" id="palBtn"><i data-lucide="search"></i></button><button class="icon-btn" id="themeBtn"><i data-lucide="sun"></i></button><span class="chip warn" id="modeChip">محلي</span><span class="chip ok" id="sessionChip" style="display:none"> آمن</span><button class="btn ghost sm" id="logoutBtn" style="display:none"><i data-lucide="log-out"></i> خروج</button></div>
 </div></header>
 <main id="app"></main>
 <button class="fab" id="fab"><img src="logo.png" onerror="this.outerHTML='🚝'"></button>
@@ -75,11 +76,70 @@ const FIELDS=['stationCode','stationName','date',...NUM_FIELDS,'totalCount','tot
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0),money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[۰-]/g,d=>String('۰۱۳٤٥٦٧٩'.indexOf(d))).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[۰-۹]/g,d=>String('۰۱۲۳٤٥٦٧٨٩'.indexOf(d))).replace(/[,،٬\s]/g,'');
 const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const fmtDateAr=i=>{try{return new Date(i+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}catch(e){return i}};
 const startP=()=>{const p=$('#nprogress');p.classList.add('on');p.firstElementChild.style.width='70%'};
 const doneP=()=>{const p=$('#nprogress');p.firstElementChild.style.width='100%';setTimeout(()=>{p.classList.remove('on');p.firstElementChild.style.width='0'},250)};
+
+// 🔐 تشفير كلمات المرور بـ SHA-256
+const PASSWORD_SALT='monorail_salt_2026_hf';
+async function hashPassword(password){
+  try{
+    const encoder=new TextEncoder();
+    const data=encoder.encode(password+PASSWORD_SALT);
+    const hash=await crypto.subtle.digest('SHA-256',data);
+    return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  }catch(e){
+    return btoa(password+PASSWORD_SALT);
+  }
+}
+
+// 🔐 Rate Limiting
+const loginAttempts=new Map();
+function checkLoginLimit(username){
+  const key=username.toLowerCase();
+  const attempts=loginAttempts.get(key)||{count:0,lockedUntil:0};
+  if(Date.now()<attempts.lockedUntil){
+    const mins=Math.ceil((attempts.lockedUntil-Date.now())/60000);
+    return {allowed:false,message:`🔒 الحساب مقفل لمدة ${mins} دقيقة`};
+  }
+  if(attempts.count>=5){
+    attempts.lockedUntil=Date.now()+5*60*1000;
+    loginAttempts.set(key,attempts);
+    return {allowed:false,message:'🔒 تم قفل الحساب لمدة 5 دقائق بسبب محاولات فاشلة كثيرة'};
+  }
+  return {allowed:true};
+}
+function recordLoginAttempt(username,success){
+  const key=username.toLowerCase();
+  const attempts=loginAttempts.get(key)||{count:0,lockedUntil:0};
+  if(success){
+    loginAttempts.delete(key);
+  }else{
+    attempts.count++;
+    loginAttempts.set(key,attempts);
+  }
+}
+
+// 🔐 HTTPS إجباري
+if(location.protocol!=='https:'&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
+  location.replace('https:'+location.href.substring(location.protocol.length));
+}
+
+// 🔐 Session Timeout (30 دقيقة خمول)
+let sessionTimer;
+function resetSessionTimer(){
+  clearTimeout(sessionTimer);
+  if(getAuth()){
+    sessionTimer=setTimeout(()=>{
+      toast('⏰ انتهت الجلسة بسبب الخمول');
+      logout();
+    },30*60*1000);
+  }
+}
+['click','keydown','mousemove','touchstart'].forEach(ev=>document.addEventListener(ev,resetSessionTimer));
+
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('monorail_theme',t);const btn=$('#themeBtn');if(btn){const icon=btn.querySelector('[data-lucide]');if(icon){icon.setAttribute('data-lucide',t==='light'?'moon':'sun');lucide.createIcons()}}}
 $('#themeBtn').onclick=()=>applyTheme(document.documentElement.getAttribute('data-theme')==='light'?'dark':'light');
 applyTheme(localStorage.getItem('monorail_theme')||'dark');
@@ -91,7 +151,18 @@ const queuePend=sn=>{const q=getPend();q.push(sn);localStorage.setItem(PEND_KEY,
 async function syncPend(){const q=getPend();if(!q.length||!navigator.onLine)return 0;let d=0,rem=[];for(const sn of q){try{const r=await fetch(BASE+'/station_reports',{method:'POST',headers:{...HEADERS,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(sn)});if(r.ok)d++;else rem.push(sn)}catch(e){rem.push(sn)}}localStorage.setItem(PEND_KEY,JSON.stringify(rem));return d}
 const markUnsaved=()=>{hasUnsaved=true;$('#unsavedWarning').classList.add('show')},clearUnsaved=()=>{hasUnsaved=false;$('#unsavedWarning').classList.remove('show')};
 window.addEventListener('beforeunload',e=>{if(hasUnsaved){e.preventDefault();e.returnValue=''}});
-async function supaFetch(p,o={},ms=10000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(BASE+'/'+p,{...o,signal:c.signal,headers:{...HEADERS,...(o.headers||{})}});return{status:r.status,json:await r.json().catch(()=>null),ok:r.ok,net:true}}catch(e){useMock=true;return{status:0,json:null,ok:false,net:false}}finally{clearTimeout(t)}}
+
+// 🔐 CSRF Token
+const CSRF_TOKEN=Math.random().toString(36).substring(2)+Date.now().toString(36);
+async function supaFetch(p,o={},ms=10000){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+  try{
+    const headers={...HEADERS,...(o.headers||{}),'X-CSRF-Token':CSRF_TOKEN};
+    const r=await fetch(BASE+'/'+p,{...o,signal:c.signal,headers});
+    return{status:r.status,json:await r.json().catch(()=>null),ok:r.ok,net:true}
+  }catch(e){useMock=true;return{status:0,json:null,ok:false,net:false}}
+  finally{clearTimeout(t)}
+}
 async function getAllReports(){if(useMock)return MOCK_REPORTS.map(fromSnake);const r=await supaFetch('station_reports?select=*');if(r.net&&r.ok&&Array.isArray(r.json))return r.json.map(fromSnake);useMock=true;return MOCK_REPORTS.map(fromSnake)}
 async function getAllStations(){if(useMock)return MOCK_STATIONS;const r=await supaFetch('stations?select=*&order=id');if(r.net&&r.ok&&Array.isArray(r.json))return r.json;useMock=true;return MOCK_STATIONS}
 async function saveReport(rec){const sn=toSnake(rec);if(useMock){MOCK_REPORTS.push(sn);return true}if(!navigator.onLine){queuePend(sn);return 'queued'}const r=await supaFetch('station_reports',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(sn)},15000);if(r.ok)return true;if(!r.net){queuePend(sn);return 'queued'}return false}
@@ -104,8 +175,25 @@ async function getAudit(){if(useMock)return MOCK_AUDIT;const r=await supaFetch('
 const COL_MAP={stationCode:'station_code',stationName:'station_name',date:'report_date',ticketsCount:'tickets_count',ticketsRevenue:'tickets_revenue',weekCount:'week_count',weekRevenue:'week_revenue',monthCount:'month_count',monthRevenue:'month_revenue',quarterCount:'quarter_count',quarterRevenue:'quarter_revenue',subCardsCount:'sub_cards_count',subCardsRevenue:'sub_cards_revenue',walletCardsCount:'wallet_cards_count',walletCardsRevenue:'wallet_cards_revenue',rechargeCount:'recharge_count',rechargeRevenue:'recharge_revenue',totalCount:'total_count',totalRevenue:'total_revenue',submittedBy:'submitted_by',submittedAt:'submitted_at'};
 const REV_MAP={};Object.entries(COL_MAP).forEach(([k,v])=>REV_MAP[v]=k);
 const toSnake=r=>{const o={};for(const k in r)if(COL_MAP[k])o[COL_MAP[k]]=r[k];return o},fromSnake=r=>{const o={};for(const k in r)if(REV_MAP[k])o[REV_MAP[k]]=r[k];return o};
-const AUTH_KEY='monorail_auth_v1',getAuth=()=>{try{return JSON.parse(localStorage.getItem(AUTH_KEY))}catch(e){return null}},setAuth=u=>localStorage.setItem(AUTH_KEY,JSON.stringify(u)),clearAuth=()=>localStorage.removeItem(AUTH_KEY);
-async function login(u,p){if(useMock){const x=MOCK_USERS.find(x=>x.username===u&&x.password===p);if(x){setAuth({username:x.username});return x}return null}const r=await supaFetch('app_users?select=*');if(r.net&&r.ok&&Array.isArray(r.json)){const x=r.json.find(x=>x.username===u&&x.password===p);if(x){setAuth({username:x.username});return x}}return null}
+const AUTH_KEY='monorail_auth_v1',getAuth=()=>{try{return JSON.parse(localStorage.getItem(AUTH_KEY))}catch(e){return null}},setAuth=u=>{localStorage.setItem(AUTH_KEY,JSON.stringify({...u,loginAt:Date.now()}));$('#sessionChip').style.display='';resetSessionTimer()},clearAuth=()=>{localStorage.removeItem(AUTH_KEY);$('#sessionChip').style.display='none'};
+
+//  تسجيل دخول مع تشفير + Rate Limiting
+async function login(u,p){
+  const limitCheck=checkLoginLimit(u);
+  if(!limitCheck.allowed){toast(limitCheck.message);return null}
+  const hashedP=await hashPassword(p);
+  if(useMock){
+    const x=MOCK_USERS.find(x=>x.username===u&&x.password===p);
+    if(x){setAuth({username:x.username});recordLoginAttempt(u,true);return x}
+    recordLoginAttempt(u,false);return null
+  }
+  const r=await supaFetch('app_users?select=*');
+  if(r.net&&r.ok&&Array.isArray(r.json)){
+    const x=r.json.find(x=>x.username===u&&(x.password===p||x.password===hashedP));
+    if(x){setAuth({username:x.username});recordLoginAttempt(u,true);return x}
+  }
+  recordLoginAttempt(u,false);return null
+}
 const logout=()=>{clearAuth();location.hash='#/login';toast('تم تسجيل الخروج')},stationLink=s=>location.origin+location.pathname+'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name);
 function copyText(t,m){const d=()=>toast(m||'تم النسخ ✓');if(navigator.clipboard)navigator.clipboard.writeText(t).then(d);else{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();d()}}
 let toastT;function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),3000)}
@@ -115,7 +203,7 @@ window.addEventListener('online',async()=>{toast('📶 مزامنة…');updateM
 window.addEventListener('offline',()=>{updateModeChip();toast('📴 حفظ محلي')});
 const crumbs=l=>`<div class="crumbs"><a href="#/">🏠 الرئيسية</a> / <b>${l}</b></div>`;
 async function openPalette(){$('#palette').hidden=false;$('#palInput').value='';renderPalette('');setTimeout(()=>$('#palInput').focus(),50)}
-async function renderPalette(q){q=(q||'').trim().toLowerCase();let it=[['#/',' المحطات'],['#/dash','📊 التجميع'],['#/stats','📈 الإحصائيات'],['#/audit','📋 التدقيق'],['#/stations','⚙️ الإدارة']].map(p=>({h:p[0],t:p[1]}));const st=await getAllStations(),fv=getFavs();st.forEach(s=>it.push({h:'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name),t:(fv.includes(s.code)?'⭐ ':'🚉 ')+s.name+' ('+s.code+')'}));if(q)it=it.filter(i=>i.t.toLowerCase().includes(q));$('#palList').innerHTML=it.slice(0,30).map(i=>`<div class="pal-item" data-h="${i.h}">${i.t}</div>`).join('')||'<div class="pal-item">لا نتائج</div>'}
+async function renderPalette(q){q=(q||'').trim().toLowerCase();let it=[['#/','🏠 المحطات'],['#/dash','📊 التجميع'],['#/stats','📈 الإحصائيات'],['#/audit','📋 التدقيق'],['#/stations','️ الإدارة']].map(p=>({h:p[0],t:p[1]}));const st=await getAllStations(),fv=getFavs();st.forEach(s=>it.push({h:'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name),t:(fv.includes(s.code)?'⭐ ':'🚉 ')+s.name+' ('+s.code+')'}));if(q)it=it.filter(i=>i.t.toLowerCase().includes(q));$('#palList').innerHTML=it.slice(0,30).map(i=>`<div class="pal-item" data-h="${i.h}">${i.t}</div>`).join('')||'<div class="pal-item">لا نتائج</div>'}
 $('#palBtn').onclick=openPalette;$('#fab').onclick=openPalette;$('#palInput').addEventListener('input',e=>renderPalette(e.target.value));
 $('#palInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const f=$('#palList .pal-item');if(f){location.hash=f.dataset.h;$('#palette').hidden=true}}});
 $('#palList').addEventListener('click',e=>{const i=e.target.closest('.pal-item');if(i&&i.dataset.h){location.hash=i.dataset.h;$('#palette').hidden=true}});
@@ -128,7 +216,7 @@ const skList=n=>`<div class="stations sk-wrap">${Array.from({length:n},()=>'<div
 function animateCounts(root){root.querySelectorAll('[data-cu]').forEach(el=>{const t=parseFloat(el.dataset.cu)||0,k=el.dataset.kind||'num',st=performance.now();(function s(n){const p=Math.min(1,(n-st)/900),e=1-Math.pow(1-p,3),v=t*e;el.textContent=k==='money'?money(v):fmt(v);if(p<1)requestAnimationFrame(s)})(st)})}
 function route(){startP();const h=location.hash.replace(/^#\/?/,''),seg=h.split('?')[0].split('/').filter(Boolean);closeOverlay();window.scrollTo(0,0);const auth=getAuth();if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));if(!auth&&seg[0]!=='login'){location.hash='#/login';return}if(seg[0]==='login')return renderLogin();if(seg[0]==='dash')return renderDash();if(seg[0]==='stats')return renderStats();if(seg[0]==='audit')return renderAudit();if(seg[0]==='stations')return renderStations();renderHome()}
 window.addEventListener('hashchange',route);
-function renderLogin(){currentPage='login';setActive('');$('#logoutBtn').style.display='none';$('#app').innerHTML=`<div class="view"><div class="login-box"><h2>🔐 تسجيل الدخول</h2><form id="loginForm"><div class="field"><label>اسم المستخدم</label><div class="in-wrap"><input type="text" id="loginUser" required></div></div><div class="field"><label>كلمة المرور</label><div class="in-wrap"><input type="password" id="loginPass" required></div></div><button class="btn big" type="submit" style="width:100%">دخول</button><p style="color:var(--tx2);font-size:12px;margin-top:16px;text-align:center">admin / admin123</p></form></div></div>`;doneP();$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const u=$('#loginUser').value.trim(),p=$('#loginPass').value,b=e.target.querySelector('button');b.disabled=true;b.innerHTML='<i data-lucide="loader-2" class="spin"></i> جاري...';lucide.createIcons();const user=await login(u,p);if(user){toast('مرحبًا '+user.username);updateModeChip();location.hash='#/'}else{toast('بيانات خاطئة');b.disabled=false;b.textContent='دخول'}})}
+function renderLogin(){currentPage='login';setActive('');$('#logoutBtn').style.display='none';$('#sessionChip').style.display='none';$('#app').innerHTML=`<div class="view"><div class="login-box"><h2> تسجيل الدخول الآمن</h2><div style="text-align:center;margin-bottom:16px"><span class="chip ok">🔒 SHA-256 + Rate Limit</span></div><form id="loginForm"><div class="field"><label>اسم المستخدم</label><div class="in-wrap"><input type="text" id="loginUser" required autocomplete="username"></div></div><div class="field"><label>كلمة المرور</label><div class="in-wrap"><input type="password" id="loginPass" required autocomplete="current-password"></div></div><button class="btn big" type="submit" style="width:100%">دخول</button><p style="color:var(--tx2);font-size:12px;margin-top:16px;text-align:center">admin / admin123</p><p style="color:var(--warn);font-size:11px;margin-top:8px;text-align:center">⚠️ 5 محاولات فاشلة = قفل 5 دقائق</p></form></div></div>`;doneP();$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const u=$('#loginUser').value.trim(),p=$('#loginPass').value,b=e.target.querySelector('button');b.disabled=true;b.innerHTML='<i data-lucide="loader-2" class="spin"></i> جاري...';lucide.createIcons();const user=await login(u,p);if(user){toast('🔒 مرحبًا '+user.username);updateModeChip();location.hash='#/'}else{toast('بيانات خاطئة');b.disabled=false;b.textContent='دخول'}})}
 async function renderHome(){currentPage='home';setActive('home');$('#logoutBtn').style.display='';updateModeChip();$('#app').innerHTML=`<div class="view">${skStats()}${skList(6)}</div>`;const[reports,stations]=await Promise.all([getAllReports(),getAllStations()]);const today=todayISO(),rec=new Map(reports.filter(r=>String(r.date)===today).map(r=>[String(r.stationCode),r])),done=stations.filter(s=>rec.has(s.code)).length,pct=stations.length?Math.round(done/stations.length*100):0,favs=getFavs(),sorted=[...stations].sort((a,b)=>(favs.includes(b.code)?1:0)-(favs.includes(a.code)?1:0)),lateHr=new Date().getHours()>=18;$('#app').innerHTML=`<div class="view"><div class="board-head"><div><h1 class="page-title">لوحة المحطات</h1><p class="page-sub">بيان اليوم — ${fmtDateAr(today)}</p></div><div class="grow"></div><input class="search" id="stSearch" placeholder="ابحث…"><a class="btn ghost sm" href="#/dash"><i data-lucide="layout-dashboard"></i> التجميع</a></div><div class="progress-wrap"><span><b>${pct}%</b> (${done}/${stations.length})</span><div class="progress"><i id="progBar"></i></div></div><ol class="stations">${sorted.map(s=>{const r=rec.get(s.code),late=!r&&lateHr,fv=favs.includes(s.code);return `<li class="station-row"><span class="s-code">${esc(s.code)}</span><div><div class="s-name">${fv?'⭐ ':''}${esc(s.name)}</div><div class="s-status ${r?'on':late?'late':''}"><span class="dot"></span>${r?'مسجّل • '+money(num(r.totalRevenue)):late?'متأخرة!':'بانتظار التسجيل'}</div></div><span class="s-rev">${r?money(num(r.totalRevenue)):''}</span><div class="s-actions"><a class="btn sm" href="#/s/${encodeURIComponent(s.code)}/${encodeURIComponent(s.name)}"><i data-lucide="ticket"></i> تسجيل</a><button class="icon-btn ${fv?'is-fav':''}" data-fav="${esc(s.code)}"><i data-lucide="star"></i></button><button class="icon-btn" data-copy="${esc(stationLink(s))}"><i data-lucide="link"></i></button><button class="icon-btn" data-qr="${esc(s.name)}" data-qrl="${esc(stationLink(s))}"><i data-lucide="qr-code"></i></button></div></li>`}).join('')}</ol></div>`;doneP();lucide.createIcons();requestAnimationFrame(()=>{const b=$('#progBar');if(b)b.style.width=pct+'%'});$('#stSearch').addEventListener('input',e=>{const q=e.target.value.trim();$$('#app .station-row').forEach(li=>li.style.display=li.textContent.includes(q)?'':'none')})}
 document.addEventListener('click',e=>{const cp=e.target.closest('[data-copy]');if(cp){copyText(cp.dataset.copy);return}const fv=e.target.closest('[data-fav]');if(fv){toggleFav(fv.dataset.fav);renderHome();return}const qr=e.target.closest('[data-qr]');if(qr){openQR(qr.dataset.qr,qr.dataset.qrl);return}});
 function openQR(n,l){openOverlay(`<div class="qr-box"><img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(l)}"><h3>${esc(n)}</h3><p>${esc(l)}</p><div class="success-actions"><button class="btn sm" id="qc"><i data-lucide="copy"></i> نسخ</button><button class="btn ghost sm" id="qx">إغلاق</button></div></div>`);lucide.createIcons();$('#qc').onclick=()=>copyText(l);$('#qx').onclick=closeOverlay}
@@ -152,110 +240,7 @@ function csv(aoa,name){const l=aoa.map(r=>r.map(c=>{c=String(c??'');if(/[",\n]/.
 function buildAOA(rows,T){const a=[['تقرير'],['التاريخ: '+dashDate],[],['المحطة',...GROUPS.flatMap(g=>[g.t+' عدد',g.t+' إيراد']),'حالة']];rows.forEach(r=>a.push([r.name,...GROUPS.flatMap(g=>[r[g.c],r[g.r]]),r.present?'مسجّل':'—']));return a}
 function thinB(){return {top:{style:'thin',color:{argb:'FFCBD5E1'}},left:{style:'thin',color:{argb:'FFCBD5E1'}},bottom:{style:'thin',color:{argb:'FFCBD5E1'}},right:{style:'thin',color:{argb:'FFCBD5E1'}}};}
 function medB(c){return {top:{style:'medium',color:{argb:c}},bottom:{style:'medium',color:{argb:c}},left:{style:'thin',color:{argb:c}},right:{style:'thin',color:{argb:c}}};}
-async function exportDayExcel(rows){
-  toast('⏳ تجهيز Excel الاحترافي...');
-  const T=totalsOf(rows);
-  let wb;
-  try{await ensureExcelJS();wb=new ExcelJS.Workbook()}catch(e){csv(buildAOA(rows,T),'تقرير');toast('CSV بديل');return}
-  try{
-    wb.views=[{rightToLeft:true}];
-    const ws=wb.addWorksheet('إحصاء '+dashDate,{
-      views:[{rightToLeft:true,state:'frozen',ySplit:5,showGridLines:true}],
-      pageSetup:{paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:0.4,right:0.4,top:0.5,bottom:0.5,header:0.3,footer:0.3}}
-    });
-    ws.properties.tabColor={argb:'FF06B6D4'};
-    ws.columns=[{width:28},{width:11},{width:14},{width:12},{width:14},{width:12},{width:14},{width:14},{width:14},{width:12},{width:14},{width:12},{width:14},{width:12},{width:14},{width:12},{width:14},{width:12}];
-    const logo=await loadLogo();
-    if(logo){const imgId=wb.addImage({base64:logo.b64,extension:logo.ext});ws.addImage(imgId,{tl:{col:0.05,row:0.05},ext:{width:100,height:100}})}
-    ws.getRow(1).height=50;
-    ws.mergeCells('D1:R1');
-    const t=ws.getCell('D1');
-    t.value='تقرير إحصاء المحطات — مونوريل شرق النيل';
-    t.font={bold:true,size:18,color:{argb:'FFFFFFFF'},name:'Segoe UI'};
-    t.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0C4A6E'}};
-    t.alignment={horizontal:'center',vertical:'middle'};
-    t.border={top:{style:'thick',color:{argb:'FF0EA5E9'}},bottom:{style:'thick',color:{argb:'FF0EA5E9'}},left:{style:'thin',color:{argb:'FF0EA5E9'}},right:{style:'thin',color:{argb:'FF0EA5E9'}}};
-    ws.mergeCells('D2:R2');
-    const d=ws.getCell('D2');
-    d.value=`التاريخ: ${dashDate}  (${fmtDateAr(dashDate)})   —   المسجّل: ${T.done} من ${rows.length}`;
-    d.font={bold:true,size:11,color:{argb:'FF0F172A'},name:'Segoe UI'};
-    d.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEF3C7'}};
-    d.alignment={horizontal:'center',vertical:'middle'};
-    d.border={top:{style:'thin',color:{argb:'FFD97706'}},bottom:{style:'thin',color:{argb:'FFD97706'}},left:{style:'thin',color:{argb:'FFD97706'}},right:{style:'thin',color:{argb:'FFD97706'}}};
-    ws.getRow(2).height=26;
-    ws.getRow(3).height=6;
-    ws.mergeCells('A4:A5');ws.getCell('A4').value='المحطة';
-    ws.mergeCells('B4:C4');ws.getCell('B4').value='التذاكر';
-    ws.mergeCells('D4:I4');ws.getCell('D4').value='الاشتراكات';
-    ws.mergeCells('J4:K4');ws.getCell('J4').value='كروت الاشتراكات';
-    ws.mergeCells('L4:M4');ws.getCell('L4').value='كروت المحفظة';
-    ws.mergeCells('N4:O4');ws.getCell('N4').value='شحن المحفظة';
-    ws.mergeCells('P4:Q4');ws.getCell('P4').value='الإجمالي';
-    ws.mergeCells('R4:R5');ws.getCell('R4').value='الحالة';
-    ['A4','B4','D4','J4','L4','N4','P4','R4'].forEach(ref=>{
-      const c=ws.getCell(ref);
-      c.font={bold:true,size:12,color:{argb:'FFFEF3C7'},name:'Segoe UI'};
-      c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0C4A6E'}};
-      c.alignment={horizontal:'center',vertical:'middle'};
-      c.border={top:{style:'medium',color:{argb:'FF0EA5E9'}},bottom:{style:'medium',color:{argb:'FF0EA5E9'}},left:{style:'thin',color:{argb:'FF0EA5E9'}},right:{style:'thin',color:{argb:'FF0EA5E9'}}};
-    });
-    const sub=['المحطة','عدد','إيراد','أسبوعي عدد','أسبوعي إيراد','شهري عدد','شهري إيراد','ربع سنوي عدد','ربع سنوي إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','الحالة'];
-    sub.forEach((v,i)=>{
-      const c=ws.getRow(5).getCell(i+1);
-      c.value=v;
-      c.font={bold:true,size:10,color:{argb:'FFFEF3C7'},name:'Segoe UI'};
-      c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF164E63'}};
-      c.alignment={horizontal:'center',vertical:'middle',wrapText:true};
-      c.border=thinB();
-    });
-    ws.getRow(4).height=24;ws.getRow(5).height=22;
-    rows.forEach((r,idx)=>{
-      const row=ws.addRow([r.name,r.ticketsCount,r.ticketsRevenue,r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.totalCount,r.totalRevenue,r.present?'مسجّل':'لم يُسجّل']);
-      row.eachCell({includeEmpty:true},(cell,col)=>{
-        cell.border=thinB();
-        cell.alignment={horizontal:col===1?'right':'center',vertical:'middle'};
-        cell.font={size:10,name:'Segoe UI'};
-        if(idx%2===0)cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF8FAFC'}};
-        if(col>=2&&col<=17&&typeof cell.value==='number'){
-          if(col%2===1){cell.numFmt='#,##0'}
-          else{cell.numFmt='#,##0';cell.font={size:10,color:{argb:'FFB45309'},bold:true,name:'Segoe UI'}}
-        }
-        if(col===1)cell.font={bold:true,size:11,name:'Segoe UI',color:{argb:'FF0F172A'}};
-        if(col===18){
-          if(r.present){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD1FAE5'}};cell.font={bold:true,size:10,color:{argb:'FF047857'},name:'Segoe UI'}}
-          else{cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEE2E2'}};cell.font={bold:true,size:10,color:{argb:'FFB91C1C'},name:'Segoe UI'}}
-        }
-      });
-      row.height=22;
-    });
-    const tr=6+rows.length;
-    const cols=['ticketsCount','ticketsRevenue','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue','totalCount','totalRevenue'];
-    const totalVals=['الإجمالي العام'];
-    cols.forEach((f,i)=>{const L=String.fromCharCode(66+i);totalVals.push({formula:`SUM(${L}6:${L}${tr-1})`})});
-    totalVals.push(T.done+' محطة');
-    const trow=ws.addRow(totalVals);
-    trow.eachCell({includeEmpty:true},(cell,col)=>{
-      cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFECFDF5'}};
-      cell.font={bold:true,size:12,color:{argb:'FF047857'},name:'Segoe UI'};
-      cell.border=medB('FF059669');
-      cell.alignment={horizontal:'center',vertical:'middle'};
-      if(col>=2&&col<=17)cell.numFmt='#,##0';
-    });
-    trow.height=28;
-    ws.addRow([]);
-    const frow=ws.addRow([`تم إنشاء التقرير: ${new Date().toLocaleString('ar-EG')} — منظومة إحصاء المحطات • مونوريل شرق النيل | Powered by Hisham Fadloun`]);
-    ws.mergeCells(frow.number,1,frow.number,18);
-    const fc=ws.getCell(frow.number,1);
-    fc.font={italic:true,size:9,color:{argb:'FF64748B'},name:'Segoe UI'};
-    fc.alignment={horizontal:'center',vertical:'middle'};
-    fc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF1F5F9'}};
-    fc.border={top:{style:'thin',color:{argb:'FFCBD5E1'}}};
-    ws.autoFilter={from:{row:5,column:1},to:{row:tr-1,column:18}};
-    const buf=await wb.xlsx.writeBuffer();
-    dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`إحصاء محطات المونوريل ${dashDate}.xlsx`);
-    toast('✅ تم تنزيل الإحصاء الاحترافي');
-  }catch(e){console.error('Excel error:',e);csv(buildAOA(rows,T),'تقرير');toast('CSV بديل')}
-}
+async function exportDayExcel(rows){toast('⏳ تجهيز Excel الاحترافي...');const T=totalsOf(rows);let wb;try{await ensureExcelJS();wb=new ExcelJS.Workbook()}catch(e){csv(buildAOA(rows,T),'تقرير');toast('CSV بديل');return}try{wb.views=[{rightToLeft:true}];const ws=wb.addWorksheet('إحصاء '+dashDate,{views:[{rightToLeft:true,state:'frozen',ySplit:5,showGridLines:true}],pageSetup:{paperSize:9,orientation:'landscape',fitToPage:true,fitToWidth:1,fitToHeight:0,margins:{left:0.4,right:0.4,top:0.5,bottom:0.5,header:0.3,footer:0.3}}});ws.properties.tabColor={argb:'FF06B6D4'};ws.columns=[{width:28},{width:11},{width:14},{width:12},{width:14},{width:12},{width:14},{width:14},{width:14},{width:12},{width:14},{width:12},{width:14},{width:12},{width:14},{width:12},{width:14},{width:12}];const logo=await loadLogo();if(logo){const imgId=wb.addImage({base64:logo.b64,extension:logo.ext});ws.addImage(imgId,{tl:{col:0.05,row:0.05},ext:{width:100,height:100}})}ws.getRow(1).height=50;ws.mergeCells('D1:R1');const t=ws.getCell('D1');t.value='تقرير إحصاء المحطات — مونوريل شرق النيل';t.font={bold:true,size:18,color:{argb:'FFFFFFFF'},name:'Segoe UI'};t.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0C4A6E'}};t.alignment={horizontal:'center',vertical:'middle'};t.border={top:{style:'thick',color:{argb:'FF0EA5E9'}},bottom:{style:'thick',color:{argb:'FF0EA5E9'}},left:{style:'thin',color:{argb:'FF0EA5E9'}},right:{style:'thin',color:{argb:'FF0EA5E9'}}};ws.mergeCells('D2:R2');const d=ws.getCell('D2');d.value=`التاريخ: ${dashDate}  (${fmtDateAr(dashDate)})   —   المسجّل: ${T.done} من ${rows.length}`;d.font={bold:true,size:11,color:{argb:'FF0F172A'},name:'Segoe UI'};d.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEF3C7'}};d.alignment={horizontal:'center',vertical:'middle'};d.border={top:{style:'thin',color:{argb:'FFD97706'}},bottom:{style:'thin',color:{argb:'FFD97706'}},left:{style:'thin',color:{argb:'FFD97706'}},right:{style:'thin',color:{argb:'FFD97706'}}};ws.getRow(2).height=26;ws.getRow(3).height=6;ws.mergeCells('A4:A5');ws.getCell('A4').value='المحطة';ws.mergeCells('B4:C4');ws.getCell('B4').value='التذاكر';ws.mergeCells('D4:I4');ws.getCell('D4').value='الاشتراكات';ws.mergeCells('J4:K4');ws.getCell('J4').value='كروت الاشتراكات';ws.mergeCells('L4:M4');ws.getCell('L4').value='كروت المحفظة';ws.mergeCells('N4:O4');ws.getCell('N4').value='شحن المحفظة';ws.mergeCells('P4:Q4');ws.getCell('P4').value='الإجمالي';ws.mergeCells('R4:R5');ws.getCell('R4').value='الحالة';['A4','B4','D4','J4','L4','N4','P4','R4'].forEach(ref=>{const c=ws.getCell(ref);c.font={bold:true,size:12,color:{argb:'FFFEF3C7'},name:'Segoe UI'};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0C4A6E'}};c.alignment={horizontal:'center',vertical:'middle'};c.border={top:{style:'medium',color:{argb:'FF0EA5E9'}},bottom:{style:'medium',color:{argb:'FF0EA5E9'}},left:{style:'thin',color:{argb:'FF0EA5E9'}},right:{style:'thin',color:{argb:'FF0EA5E9'}}});const sub=['المحطة','عدد','إيراد','أسبوعي عدد','أسبوعي إيراد','شهري عدد','شهري إيراد','ربع سنوي عدد','ربع سنوي إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','الحالة'];sub.forEach((v,i)=>{const c=ws.getRow(5).getCell(i+1);c.value=v;c.font={bold:true,size:10,color:{argb:'FFFEF3C7'},name:'Segoe UI'};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF164E63'}};c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border=thinB()});ws.getRow(4).height=24;ws.getRow(5).height=22;rows.forEach((r,idx)=>{const row=ws.addRow([r.name,r.ticketsCount,r.ticketsRevenue,r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.totalCount,r.totalRevenue,r.present?'مسجّل':'لم يُسجّل']);row.eachCell({includeEmpty:true},(cell,col)=>{cell.border=thinB();cell.alignment={horizontal:col===1?'right':'center',vertical:'middle'};cell.font={size:10,name:'Segoe UI'};if(idx%2===0)cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF8FAFC'}};if(col>=2&&col<=17&&typeof cell.value==='number'){if(col%2===1){cell.numFmt='#,##0'}else{cell.numFmt='#,##0';cell.font={size:10,color:{argb:'FFB45309'},bold:true,name:'Segoe UI'}}}if(col===1)cell.font={bold:true,size:11,name:'Segoe UI',color:{argb:'FF0F172A'}};if(col===18){if(r.present){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD1FAE5'}};cell.font={bold:true,size:10,color:{argb:'FF047857'},name:'Segoe UI'}}else{cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEE2E2'}};cell.font={bold:true,size:10,color:{argb:'FFB91C1C'},name:'Segoe UI'}}}});row.height=22});const tr=6+rows.length;const cols=['ticketsCount','ticketsRevenue','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue','totalCount','totalRevenue'];const totalVals=['الإجمالي العام'];cols.forEach((f,i)=>{const L=String.fromCharCode(66+i);totalVals.push({formula:`SUM(${L}6:${L}${tr-1})`})});totalVals.push(T.done+' محطة');const trow=ws.addRow(totalVals);trow.eachCell({includeEmpty:true},(cell,col)=>{cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFECFDF5'}};cell.font={bold:true,size:12,color:{argb:'FF047857'},name:'Segoe UI'};cell.border=medB('FF059669');cell.alignment={horizontal:'center',vertical:'middle'};if(col>=2&&col<=17)cell.numFmt='#,##0'});trow.height=28;ws.addRow([]);const frow=ws.addRow([`تم إنشاء التقرير: ${new Date().toLocaleString('ar-EG')} — منظومة إحصاء المحطات • مونوريل شرق النيل | Powered by Hisham Fadloun`]);ws.mergeCells(frow.number,1,frow.number,18);const fc=ws.getCell(frow.number,1);fc.font={italic:true,size:9,color:{argb:'FF64748B'},name:'Segoe UI'};fc.alignment={horizontal:'center',vertical:'middle'};fc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF1F5F9'}};fc.border={top:{style:'thin',color:{argb:'FFCBD5E1'}}};ws.autoFilter={from:{row:5,column:1},to:{row:tr-1,column:18}};const buf=await wb.xlsx.writeBuffer();dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`إحصاء محطات المونوريل ${dashDate}.xlsx`);toast('✅ تم تنزيل الإحصاء الاحترافي')}catch(e){console.error('Excel error:',e);csv(buildAOA(rows,T),'تقرير');toast('CSV بديل')}}
 async function exportLogExcel(rec){toast('⏳ تجهيز السجل...');let wb;const H=['كود المحطة','المحطة','التاريخ',...NUM_FIELDS.map((f,i)=>i%2===0?f+' عدد':f+' إيراد'),'إجمالي عدد','إجمالي إيراد','المسجل','وقت التسجيل'];try{await ensureExcelJS();wb=new ExcelJS.Workbook()}catch(e){csv([H,...rec.map(r=>[r.stationCode,r.stationName,r.date,...NUM_FIELDS.map(f=>r[f]),r.totalCount,r.totalRevenue,r.submittedBy])],'سجل');return}try{wb.views=[{rightToLeft:true}];const ws=wb.addWorksheet('سجل البيانات',{views:[{rightToLeft:true}],pageSetup:{paperSize:9,orientation:'landscape'}});ws.columns=[{key:'code',width:10},{key:'name',width:25},{key:'date',width:12},...NUM_FIELDS.map((f,i)=>({key:f,width:i%2===0?12:15})),{key:'totalCount',width:12},{key:'totalRevenue',width:15},{key:'submittedBy',width:15},{key:'submittedAt',width:20}];const logo=await loadLogo();if(logo){const imgId=wb.addImage({base64:logo.b64,extension:logo.ext});ws.addImage(imgId,{tl:{col:0.02,row:0.02},ext:{width:70,height:70}})}ws.mergeCells('C1:T1');const title=ws.getCell('C1');title.value='سجل بيانات المحطات - مونوريل شرق النيل';title.font={bold:true,size:16,color:{argb:'FFFFFFFF'},name:'Arial'};title.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF06B6D4'}};title.alignment={horizontal:'center',vertical:'middle'};title.border={top:{style:'thick'},left:{style:'thick'},bottom:{style:'thick'},right:{style:'thick'}};ws.getRow(1).height=35;ws.addRow([]);ws.getRow(2).height=10;const headerRow=ws.addRow(H);headerRow.font={bold:true,size:10,color:{argb:'FF67E8F9'},name:'Arial'};headerRow.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};headerRow.alignment={horizontal:'center',vertical:'middle',wrapText:true};headerRow.border={top:{style:'thick',color:{argb:'FF06B6D4'}},bottom:{style:'thick',color:{argb:'FF06B6D4'}}};ws.getRow(3).height=30;const sorted=[...rec].sort((a,b)=>String(b.date).localeCompare(String(a.date)));sorted.forEach((r,idx)=>{const row=ws.addRow([r.stationCode,r.stationName,r.date,...NUM_FIELDS.map(f=>r[f]),r.totalCount,r.totalRevenue,r.submittedBy,r.submittedAt]);const rowNum=4+idx;const rowCells=ws.getRow(rowNum);if(idx%2===0)rowCells.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF8FAFC'}};rowCells.eachCell(cell=>{cell.border={top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}};cell.alignment={horizontal:'center',vertical:'middle'};cell.font={size:9};if(cell.column>3&&cell.column<19){if(typeof cell.value==='number'){if(cell.column%2===1){cell.numFmt='#,##0'}else{cell.numFmt='#,##0.00 "ج.م"';cell.font={color:{argb:'FFF59E0B'},bold:true}}}}if(cell.column===2){cell.font={bold:true,size:10};cell.alignment={horizontal:'right'}}});rowCells.height=22});ws.autoFilter={from:{row:3,column:1},to:{row:3,column:20}};const buf=await wb.xlsx.writeBuffer();dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),'سجل_البيانات_الكامل.xlsx');toast('✅ تم تنزيل السجل باحترافية')}catch(e){console.error('Excel error:',e);csv([H,...rec.map(r=>[r.stationCode,r.stationName,r.date,...NUM_FIELDS.map(f=>r[f]),r.totalCount,r.totalRevenue,r.submittedBy])],'سجل');toast('CSV بديل')}}
 function tick(){const n=new Date();$('#clockTime').textContent=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});$('#clockDate').textContent=n.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}
 setInterval(tick,1000);tick();$('#logoutBtn').onclick=logout;
