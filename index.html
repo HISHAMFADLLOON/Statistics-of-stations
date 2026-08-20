@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1887a5"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="المونوريل"><meta http-equiv="Content-Security-Policy" content="default-src 'self' https: data: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://hdsohnubcqbdwkmtvsvr.supabase.co https://api.qrserver.com;"><title>إحصاء المحطات — مونوريل شرق النيل</title><link rel="icon" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><link rel="manifest" href="manifest.json"><link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet"><script src="https://unpkg.com/lucide@latest"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#1887a5"><meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://fonts.googleapis.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob: https:; connect-src 'self' https://hdsohnubcqbdwkmtvsvr.supabase.co; frame-src https://api.qrserver.com;">
+<meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="المونوريل"><title>إحصاء المحطات — مونوريل شرق النيل</title><link rel="icon" href="logo.png"><link rel="apple-touch-icon" href="logo.png"><link rel="manifest" href="manifest.json"><link href="https://fonts.googleapis.com/css2?family=Changa:wght@400;700;800&family=IBM+Plex+Sans+Arabic:wght@400;500;700&display=swap" rel="stylesheet"><script src="https://unpkg.com/lucide@latest"></script><script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
 :root{--bg0:#020617;--bg1:#0f172a;--card:#1e293b;--br:#1e293b;--pr:#06b6d4;--prl:#67e8f9;--acc:#f59e0b;--ok:#10b981;--err:#ef4444;--warn:#f59e0b;--tx:#f1f5f9;--tx2:#94a3b8;--mut:#64748b;--grad:linear-gradient(135deg,#06b6d4,#8b5cf6)}
 [data-theme=light]{--bg0:#f1f5f9;--bg1:#e2e8f0;--card:#fff;--br:#cbd5e1;--tx:#0f172a;--tx2:#475569;--mut:#64748b}
@@ -41,21 +42,20 @@ footer{position:relative;z-index:10;border-top:2px solid rgba(6,182,212,.3);padd
 .st-mng{display:flex;flex-direction:column;gap:10px}.st-mng-row{display:flex;align-items:center;gap:14px;background:var(--card);border:1px solid var(--br);border-radius:14px;padding:12px 16px}
 .danger-zone{border:2px solid rgba(239,68,68,.3);border-radius:20px;padding:24px;margin-top:24px}
 .pal-box{width:min(560px,92vw);background:var(--card);border:1px solid var(--br);border-radius:16px;overflow:hidden}.pal-box input{width:100%;background:transparent;border-bottom:1px solid var(--br);color:var(--tx);padding:14px 16px;font-size:15px}.pal-list{max-height:50vh;overflow:auto}.pal-item{padding:12px 16px;cursor:pointer}.pal-item:hover{background:rgba(6,182,212,.12)}
-.unsaved-warning{position:fixed;top:20px;right:20px;background:var(--warn);color:var(--bg0);padding:12px 20px;border-radius:12px;z-index:1000;display:none;font-weight:600}.unsaved-warning.show{display:block}
+.unsaved-warning{position:fixed;top:20px;right:20px;background:var(--warn);color:var(--bg0);padding:12px 20px;border-radius:12px;z-index:1000;display:none;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3)}.unsaved-warning.show{display:block;animation:slideIn .3s ease}@keyframes slideIn{from{transform:translateX(400px);opacity:0}to{transform:translateX(0);opacity:1}}
 #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:var(--card);border:1px solid var(--br);color:var(--tx);padding:14px 26px;border-radius:14px;z-index:200;font-weight:600;max-width:90vw;text-align:center;transition:all .3s}#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 @media(max-width:760px){.station-row{grid-template-columns:52px 1fr}.s-rev{display:none}.s-actions{grid-column:1/-1}.page-title{font-size:28px}.card{padding:18px}}
 .empty{padding:50px 20px;text-align:center;color:var(--mut)}
-.heatmap{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px;margin-top:16px}.heat-cell{padding:14px 10px;border-radius:12px;text-align:center;color:#fff;font-weight:700;font-size:13px;cursor:pointer;transition:transform .2s}.heat-cell:hover{transform:scale(1.05)}.heat-cell .hname{font-size:11px;opacity:.9;margin-bottom:4px}.heat-cell .hval{font:800 18px 'Changa'}
 </style></head>
 <body>
 <div class="aurora"><i></i><i></i><i></i></div>
 <div id="nprogress"><i></i></div>
-<div id="splash"><div class="splash-container"><div class="splash-icon"><img src="logo.png" onerror="this.outerHTML='🚝'"></div><div class="splash-title">إحصاء المحطات</div><div class="splash-subtitle">مونوريل شرق النيل</div></div></div>
+<div id="splash"><div class="splash-container"><div class="splash-icon"><img src="logo.png" onerror="this.outerHTML=''"></div><div class="splash-title">إحصاء المحطات</div><div class="splash-subtitle">مونوريل شرق النيل</div></div></div>
 <div class="unsaved-warning" id="unsavedWarning">⚠️ بيانات غير محفوظة!</div>
 <header class="topbar"><div class="topbar-in">
 <a class="brand" href="#/"><span class="brand-badge"><img src="logo.png" onerror="this.outerHTML='🚝'"></span><span><b>إحصاء المحطات</b><small>مونوريل شرق النيل</small></span></a>
-<nav class="top-nav" id="topNav"><a href="#/" data-nav="home">📋 المحطات</a><a href="#/dash" data-nav="dash"> التجميع</a><a href="#/stats" data-nav="stats">📈 الإحصائيات</a><a href="#/audit" data-nav="audit">📋 التدقيق</a><a href="#/stations" data-nav="stations">️ الإدارة</a></nav>
-<div class="head-meta"><div id="clockTime">--:--</div><div id="clockDate"></div><button class="icon-btn" id="palBtn"><i data-lucide="search"></i></button><button class="icon-btn" id="themeBtn"><i data-lucide="sun"></i></button><span class="chip warn" id="modeChip">محلي</span><button class="btn ghost sm" id="logoutBtn" style="display:none"><i data-lucide="log-out"></i> خروج</button></div>
+<nav class="top-nav" id="topNav"><a href="#/" data-nav="home">📋 المحطات</a><a href="#/dash" data-nav="dash"> التجميع</a><a href="#/stats" data-nav="stats">📈 الإحصائيات</a><a href="#/audit" data-nav="audit">📋 التدقيق</a><a href="#/stations" data-nav="stations">⚙️ الإدارة</a></nav>
+<div class="head-meta"><div id="clockTime">--:--</div><div id="clockDate"></div><button class="icon-btn" id="palBtn" title="بحث"><i data-lucide="search"></i></button><button class="icon-btn" id="themeBtn" title="الثيم"><i data-lucide="sun"></i></button><button class="icon-btn" id="syncBtn" title="مزامنة يدوية" style="display:none"><i data-lucide="refresh-cw"></i></button><span class="chip warn" id="modeChip">محلي</span><span class="chip ok" id="sessionChip" style="display:none">🔒 آمن</span><button class="btn ghost sm" id="logoutBtn" style="display:none"><i data-lucide="log-out"></i> خروج</button></div>
 </div></header>
 <main id="app"></main>
 <button class="fab" id="fab"><img src="logo.png" onerror="this.outerHTML='🚝'"></button>
@@ -66,7 +66,7 @@ footer{position:relative;z-index:10;border-top:2px solid rgba(6,182,212,.3);padd
 <script>
 'use strict';
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
-const SUPA_URL='https://hdsohnubcqbdwkmtvsvr.supabase.co',SUPA_KEY='sb_publishable_TQ9SWNIZfgc7ZYt5UdCi4A_g9H-4ied',BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1',HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json'};
+const SUPA_URL='https://hdsohnubcqbdwkmtvsvr.supabase.co',SUPA_KEY='sb_publishable_TQ9SWNIZfgc7ZYt5UdCi4A_g9H-4ied',BASE=SUPA_URL.replace(/\/+$/,'')+'/rest/v1',HEADERS={apikey:SUPA_KEY,Authorization:'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'};
 const MOCK_STATIONS=[{id:1,code:'EST',name:'الاستاد'},{id:2,code:'HSH',name:'هشام بركات'},{id:3,code:'AZH',name:'جامعة الأزهر'},{id:4,code:'SB7',name:'الحي السابع'},{id:6,code:'ASH',name:'المشير أحمد إسماعيل'},{id:7,code:'JSH',name:'جيهان السادات'},{id:8,code:'TNT',name:'المشير طنطاوي'},{id:9,code:'190',name:'وان ناينتي'},{id:10,code:'AIR',name:'المستشفى الجوي'},{id:11,code:'NRJ',name:'النرجس'},{id:12,code:'MST',name:'المستثمرين'},{id:13,code:'LOT',name:'اللوتس'},{id:14,code:'GSQ',name:'جولدن سكوير'},{id:15,code:'BTN',name:'بيت الوطن'},{id:16,code:'FTH',name:'مسجد الفتاح العليم'},{id:17,code:'R01',name:'حي R1'},{id:18,code:'R02',name:'حي R2'},{id:19,code:'MLB',name:'حي المال والأعمال'},{id:20,code:'ART',name:'مدينة الفنون والثقافة'},{id:21,code:'GOV',name:'الحي الحكومي'},{id:22,code:'MSR',name:'مسجد مصر'},{id:23,code:'JST',name:'مدينة العدالة'}];
 const MOCK_USERS=[{id:1,username:'admin',password:'admin123'},{id:2,username:'hisham',password:'hisham123'}];
 const MOCK_REPORTS=[],MOCK_AUDIT=[];let useMock=false,hasUnsaved=false,currentPage='home';
@@ -76,11 +76,46 @@ const FIELDS=['stationCode','stationName','date',...NUM_FIELDS,'totalCount','tot
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0),money=n=>fmt(n)+' ج.م';
-const norm=s=>String(s).replace(/[٠-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[۰-۹]/g,d=>String('۰۱۲۳٤٥٦٧٨٩'.indexOf(d))).replace(/[,،٬\s]/g,'');
+const norm=s=>String(s).replace(/[-٩]/g,d=>String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).replace(/[۰-۹]/g,d=>String('۰۱۲۳٥٦٧٨٩'.indexOf(d))).replace(/[,،٬\s]/g,'');
 const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const fmtDateAr=i=>{try{return new Date(i+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}catch(e){return i}};
 const startP=()=>{const p=$('#nprogress');p.classList.add('on');p.firstElementChild.style.width='70%'};
 const doneP=()=>{const p=$('#nprogress');p.firstElementChild.style.width='100%';setTimeout(()=>{p.classList.remove('on');p.firstElementChild.style.width='0'},250)};
+
+// 🔐 SHA-256 Password Hashing
+const PASSWORD_SALT='monorail_salt_2026_hf';
+async function hashPassword(password){
+  try{const encoder=new TextEncoder();const data=encoder.encode(password+PASSWORD_SALT);const hash=await crypto.subtle.digest('SHA-256',data);return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('')}catch(e){return btoa(password+PASSWORD_SALT)}
+}
+
+// 🔐 Rate Limiting
+const loginAttempts=new Map();
+function checkLoginLimit(username){
+  const key=username.toLowerCase();
+  const attempts=loginAttempts.get(key)||{count:0,lockedUntil:0};
+  if(Date.now()<attempts.lockedUntil){const mins=Math.ceil((attempts.lockedUntil-Date.now())/60000);return {allowed:false,message:`🔒 الحساب مقفل لمدة ${mins} دقيقة`}}
+  if(attempts.count>=5){attempts.lockedUntil=Date.now()+5*60*1000;loginAttempts.set(key,attempts);return {allowed:false,message:'🔒 تم قفل الحساب لمدة 5 دقائق'}}
+  return {allowed:true}
+}
+function recordLoginAttempt(username,success){
+  const key=username.toLowerCase();
+  const attempts=loginAttempts.get(key)||{count:0,lockedUntil:0};
+  if(success){loginAttempts.delete(key)}else{attempts.count++;loginAttempts.set(key,attempts)}
+}
+
+//  HTTPS إجباري
+if(location.protocol!=='https:'&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
+  location.replace('https:'+location.href.substring(location.protocol.length));
+}
+
+// 🔐 Session Timeout (30 دقيقة)
+let sessionTimer;
+function resetSessionTimer(){
+  clearTimeout(sessionTimer);
+  if(getAuth()){sessionTimer=setTimeout(()=>{toast('⏰ انتهت الجلسة');logout()},30*60*1000)}
+}
+['click','keydown','mousemove','touchstart'].forEach(ev=>document.addEventListener(ev,resetSessionTimer));
+
 function applyTheme(t){document.documentElement.setAttribute('data-theme',t);localStorage.setItem('monorail_theme',t);const btn=$('#themeBtn');if(btn){const icon=btn.querySelector('[data-lucide]');if(icon){icon.setAttribute('data-lucide',t==='light'?'moon':'sun');lucide.createIcons()}}}
 $('#themeBtn').onclick=()=>applyTheme(document.documentElement.getAttribute('data-theme')==='light'?'dark':'light');
 applyTheme(localStorage.getItem('monorail_theme')||'dark');
@@ -89,13 +124,65 @@ const FAV_KEY='monorail_favs',getFavs=()=>{try{return JSON.parse(localStorage.ge
 function toggleFav(c){let f=getFavs();if(f.includes(c))f=f.filter(x=>x!==c);else f.push(c);localStorage.setItem(FAV_KEY,JSON.stringify(f))}
 const PEND_KEY='monorail_pending',getPend=()=>{try{return JSON.parse(localStorage.getItem(PEND_KEY))||[]}catch(e){return[]}};
 const queuePend=sn=>{const q=getPend();q.push(sn);localStorage.setItem(PEND_KEY,JSON.stringify(q))};
-async function syncPend(){const q=getPend();if(!q.length||!navigator.onLine)return 0;let d=0,rem=[];for(const sn of q){try{const r=await fetch(BASE+'/station_reports',{method:'POST',headers:{...HEADERS,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(sn)});if(r.ok)d++;else rem.push(sn)}catch(e){rem.push(sn)}}localStorage.setItem(PEND_KEY,JSON.stringify(rem));return d}
-const markUnsaved=()=>{hasUnsaved=true;$('#unsavedWarning').classList.add('show')},clearUnsaved=()=>{hasUnsaved=false;$('#unsavedWarning').classList.remove('show')};
+async function syncPend(){
+  const q=getPend();
+  if(!q.length||!navigator.onLine)return 0;
+  let done=0,rem=[];
+  for(const sn of q){
+    try{
+      const r=await fetch(BASE+'/station_reports',{method:'POST',headers:{...HEADERS,'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(sn)});
+      if(r.ok)done++;else rem.push(sn)
+    }catch(e){rem.push(sn)}
+  }
+  localStorage.setItem(PEND_KEY,JSON.stringify(rem));
+  return done
+}
+const markUnsaved=()=>{hasUnsaved=true;$('#unsavedWarning').classList.add('show')};
+const clearUnsaved=()=>{hasUnsaved=false;$('#unsavedWarning').classList.remove('show')};
 window.addEventListener('beforeunload',e=>{if(hasUnsaved){e.preventDefault();e.returnValue=''}});
-async function supaFetch(p,o={},ms=10000){const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);try{const r=await fetch(BASE+'/'+p,{...o,signal:c.signal,headers:{...HEADERS,...(o.headers||{})}});return{status:r.status,json:await r.json().catch(()=>null),ok:r.ok,net:true}}catch(e){useMock=true;return{status:0,json:null,ok:false,net:false}}finally{clearTimeout(t)}}
-async function getAllReports(){if(useMock)return MOCK_REPORTS.map(fromSnake);const r=await supaFetch('station_reports?select=*');if(r.net&&r.ok&&Array.isArray(r.json))return r.json.map(fromSnake);useMock=true;return MOCK_REPORTS.map(fromSnake)}
-async function getAllStations(){if(useMock)return MOCK_STATIONS;const r=await supaFetch('stations?select=*&order=id');if(r.net&&r.ok&&Array.isArray(r.json))return r.json;useMock=true;return MOCK_STATIONS}
-async function saveReport(rec){const sn=toSnake(rec);if(useMock){MOCK_REPORTS.push(sn);return true}if(!navigator.onLine){queuePend(sn);return 'queued'}const r=await supaFetch('station_reports',{method:'POST',headers:{'Prefer':'resolution=merge-duplicates'},body:JSON.stringify(sn)},15000);if(r.ok)return true;if(!r.net){queuePend(sn);return 'queued'}return false}
+
+// 🔐 CSRF Token
+const CSRF_TOKEN=Math.random().toString(36).substring(2)+Date.now().toString(36);
+
+async function supaFetch(p,o={},ms=10000){
+  const c=new AbortController(),t=setTimeout(()=>c.abort(),ms);
+  try{
+    const headers={...HEADERS,...(o.headers||{}),'X-CSRF-Token':CSRF_TOKEN};
+    const r=await fetch(BASE+'/'+p,{...o,signal:c.signal,headers});
+    return{status:r.status,json:await r.json().catch(()=>null),ok:r.ok,net:true}
+  }catch(e){useMock=true;return{status:0,json:null,ok:false,net:false}}
+  finally{clearTimeout(t)}
+}
+
+async function getAllReports(){
+  if(useMock)return MOCK_REPORTS.map(fromSnake);
+  const r=await supaFetch('station_reports?select=*');
+  if(r.net&&r.ok&&Array.isArray(r.json))return r.json.map(fromSnake);
+  useMock=true;return MOCK_REPORTS.map(fromSnake)
+}
+async function getAllStations(){
+  if(useMock)return MOCK_STATIONS;
+  const r=await supaFetch('stations?select=*&order=id');
+  if(r.net&&r.ok&&Array.isArray(r.json))return r.json;
+  useMock=true;return MOCK_STATIONS
+}
+
+async function saveReport(rec){
+  const sn=toSnake(rec);
+  if(useMock){MOCK_REPORTS.push(sn);return true}
+  if(!navigator.onLine){queuePend(sn);return 'queued'}
+  try{
+    const r=await fetch(BASE+'/station_reports',{
+      method:'POST',
+      headers:{...HEADERS,'Prefer':'resolution=merge-duplicates'},
+      body:JSON.stringify(sn)
+    });
+    if(r.ok)return true;
+    if(!navigator.onLine){queuePend(sn);return 'queued'}
+    queuePend(sn);return 'queued'
+  }catch(e){queuePend(sn);return 'queued'}
+}
+
 async function addStation(c,n){if(useMock){MOCK_STATIONS.push({id:MOCK_STATIONS.length+1,code:c,name:n});return true}return (await supaFetch('stations',{method:'POST',body:JSON.stringify({code:c,name:n})})).ok}
 async function deleteStation(id){if(useMock){const i=MOCK_STATIONS.findIndex(s=>s.id==id);if(i>-1)MOCK_STATIONS.splice(i,1);return true}return (await supaFetch('stations?id=eq.'+id,{method:'DELETE'})).ok}
 async function deleteStationReports(c){if(useMock){const i=MOCK_REPORTS.findIndex(r=>r.station_code===c);if(i>-1)MOCK_REPORTS.splice(i,1);return true}return (await supaFetch('station_reports?station_code=eq.'+encodeURIComponent(c),{method:'DELETE'})).ok}
@@ -105,58 +192,54 @@ async function getAudit(){if(useMock)return MOCK_AUDIT;const r=await supaFetch('
 const COL_MAP={stationCode:'station_code',stationName:'station_name',date:'report_date',ticketsCount:'tickets_count',ticketsRevenue:'tickets_revenue',weekCount:'week_count',weekRevenue:'week_revenue',monthCount:'month_count',monthRevenue:'month_revenue',quarterCount:'quarter_count',quarterRevenue:'quarter_revenue',subCardsCount:'sub_cards_count',subCardsRevenue:'sub_cards_revenue',walletCardsCount:'wallet_cards_count',walletCardsRevenue:'wallet_cards_revenue',rechargeCount:'recharge_count',rechargeRevenue:'recharge_revenue',totalCount:'total_count',totalRevenue:'total_revenue',submittedBy:'submitted_by',submittedAt:'submitted_at'};
 const REV_MAP={};Object.entries(COL_MAP).forEach(([k,v])=>REV_MAP[v]=k);
 const toSnake=r=>{const o={};for(const k in r)if(COL_MAP[k])o[COL_MAP[k]]=r[k];return o},fromSnake=r=>{const o={};for(const k in r)if(REV_MAP[k])o[REV_MAP[k]]=r[k];return o};
-const AUTH_KEY='monorail_auth_v1',getAuth=()=>{try{return JSON.parse(localStorage.getItem(AUTH_KEY))}catch(e){return null}},setAuth=u=>localStorage.setItem(AUTH_KEY,JSON.stringify(u)),clearAuth=()=>localStorage.removeItem(AUTH_KEY);
-
-// 🔐 تشفير كلمات المرور بـ SHA-256
-async function hashPassword(password){
-  const encoder=new TextEncoder();
-  const salt='monorail_salt_2026_secure';
-  const data=encoder.encode(password+salt);
-  const hash=await crypto.subtle.digest('SHA-256',data);
-  return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('');
-}
-
-// ⏱️ Rate Limiting
-const loginAttempts=new Map();
-function checkRateLimit(username){
-  const key=username.toLowerCase();
-  const now=Date.now();
-  const attempts=loginAttempts.get(key)||[];
-  const recent=attempts.filter(t=>now-t<5*60*1000);
-  if(recent.length>=5)return false;
-  loginAttempts.set(key,[...recent,now]);
-  return true;
-}
+const AUTH_KEY='monorail_auth_v1',getAuth=()=>{try{return JSON.parse(localStorage.getItem(AUTH_KEY))}catch(e){return null}},setAuth=u=>{localStorage.setItem(AUTH_KEY,JSON.stringify({...u,loginAt:Date.now()}));$('#sessionChip').style.display='';$('#syncBtn').style.display='';resetSessionTimer()},clearAuth=()=>{localStorage.removeItem(AUTH_KEY);$('#sessionChip').style.display='none';$('#syncBtn').style.display='none'};
 
 async function login(u,p){
-  if(!checkRateLimit(u)){toast(' تم قفل الحساب لمدة 5 دقائق (5 محاولات فاشلة)');return null}
-  const hashed=await hashPassword(p);
+  const limitCheck=checkLoginLimit(u);
+  if(!limitCheck.allowed){toast(limitCheck.message);return null}
+  const hashedP=await hashPassword(p);
   if(useMock){
     const x=MOCK_USERS.find(x=>x.username===u&&x.password===p);
-    if(x){setAuth({username:x.username});return x}
-    return null
+    if(x){setAuth({username:x.username});recordLoginAttempt(u,true);return x}
+    recordLoginAttempt(u,false);return null
   }
   const r=await supaFetch('app_users?select=*');
   if(r.net&&r.ok&&Array.isArray(r.json)){
-    const x=r.json.find(x=>x.username===u&&(x.password_hash===hashed||x.password===p));
-    if(x){setAuth({username:x.username});return x}
+    const x=r.json.find(x=>x.username===u&&(x.password===p||x.password===hashedP));
+    if(x){setAuth({username:x.username});recordLoginAttempt(u,true);return x}
   }
-  return null
+  recordLoginAttempt(u,false);return null
 }
 const logout=()=>{clearAuth();location.hash='#/login';toast('تم تسجيل الخروج')},stationLink=s=>location.origin+location.pathname+'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name);
 function copyText(t,m){const d=()=>toast(m||'تم النسخ ✓');if(navigator.clipboard)navigator.clipboard.writeText(t).then(d);else{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();d()}}
 let toastT;function toast(m){const e=$('#toast');e.textContent=m;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),3000)}
 const openOverlay=h=>{const o=$('#overlay');o.innerHTML=h;o.hidden=false},closeOverlay=()=>{$('#overlay').hidden=true},setActive=k=>$$('nav a').forEach(a=>a.classList.toggle('active',a.dataset.nav===k));
-function updateModeChip(){const c=$('#modeChip');if(!navigator.onLine){c.className='chip warn';c.textContent='بدون نت'}else if(useMock){c.className='chip warn';c.textContent='محاكاة'}else{c.className='chip ok';c.textContent='متصل'}}
+function updateModeChip(){
+  const c=$('#modeChip');
+  if(!navigator.onLine){c.className='chip warn';c.textContent='بدون نت'}
+  else if(useMock){c.className='chip warn';c.textContent='محاكاة'}
+  else{c.className='chip ok';c.textContent='متصل'}
+  const pending=getPend();
+  if(pending.length>0){c.textContent+=' | ⏳'+pending.length}
+}
 window.addEventListener('online',async()=>{toast('📶 مزامنة…');updateModeChip();const n=await syncPend();if(n)toast('✅ '+n);renderHome()});
 window.addEventListener('offline',()=>{updateModeChip();toast('📴 حفظ محلي')});
 const crumbs=l=>`<div class="crumbs"><a href="#/">🏠 الرئيسية</a> / <b>${l}</b></div>`;
 async function openPalette(){$('#palette').hidden=false;$('#palInput').value='';renderPalette('');setTimeout(()=>$('#palInput').focus(),50)}
-async function renderPalette(q){q=(q||'').trim().toLowerCase();let it=[['#/','🏠 المحطات'],['#/dash','📊 التجميع'],['#/stats','📈 الإحصائيات'],['#/audit','📋 التدقيق'],['#/stations','⚙️ الإدارة']].map(p=>({h:p[0],t:p[1]}));const st=await getAllStations(),fv=getFavs();st.forEach(s=>it.push({h:'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name),t:(fv.includes(s.code)?'⭐ ':'🚉 ')+s.name+' ('+s.code+')'}));if(q)it=it.filter(i=>i.t.toLowerCase().includes(q));$('#palList').innerHTML=it.slice(0,30).map(i=>`<div class="pal-item" data-h="${i.h}">${i.t}</div>`).join('')||'<div class="pal-item">لا نتائج</div>'}
+async function renderPalette(q){q=(q||'').trim().toLowerCase();let it=[['#/','🏠 المحطات'],['#/dash','📊 التجميع'],['#/stats',' الإحصائيات'],['#/audit',' التدقيق'],['#/stations','⚙️ الإدارة']].map(p=>({h:p[0],t:p[1]}));const st=await getAllStations(),fv=getFavs();st.forEach(s=>it.push({h:'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name),t:(fv.includes(s.code)?'⭐ ':'🚉 ')+s.name+' ('+s.code+')'}));if(q)it=it.filter(i=>i.t.toLowerCase().includes(q));$('#palList').innerHTML=it.slice(0,30).map(i=>`<div class="pal-item" data-h="${i.h}">${i.t}</div>`).join('')||'<div class="pal-item">لا نتائج</div>'}
 $('#palBtn').onclick=openPalette;$('#fab').onclick=openPalette;$('#palInput').addEventListener('input',e=>renderPalette(e.target.value));
 $('#palInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const f=$('#palList .pal-item');if(f){location.hash=f.dataset.h;$('#palette').hidden=true}}});
 $('#palList').addEventListener('click',e=>{const i=e.target.closest('.pal-item');if(i&&i.dataset.h){location.hash=i.dataset.h;$('#palette').hidden=true}});
 document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'){e.preventDefault();openPalette()}if(e.key==='Escape'){$('#palette').hidden=true;closeOverlay()}});
+
+// 🔄 زر المزامنة اليدوية
+$('#syncBtn').onclick=async()=>{
+  toast('🔄 جاري المزامنة...');
+  const n=await syncPend();
+  if(n>0){toast(`✅ تم مزامنة ${n} بيان`);renderHome()}
+  else{toast('⚠️ لا توجد بيانات معلقة')}
+};
+
 let touchStartX=0,touchStartY=0,touchStartTime=0,isSwiping=false,swipeDirection=null;
 document.addEventListener('touchstart',e=>{if(e.target.closest('.table-wrap,input,select,textarea,.pal-box,.stations'))return;touchStartX=e.changedTouches[0].screenX;touchStartY=e.changedTouches[0].screenY;touchStartTime=Date.now();isSwiping=true;swipeDirection=null},{passive:true});
 document.addEventListener('touchmove',e=>{if(!isSwiping)return;if(e.target.closest('.table-wrap,input,select,textarea,.pal-box,.stations'))return;const touchX=e.changedTouches[0].screenX,touchY=e.changedTouches[0].screenY,diffX=touchX-touchStartX,diffY=touchY-touchStartY;if(swipeDirection===null){if(Math.abs(diffX)>10&&Math.abs(diffX)>Math.abs(diffY)){swipeDirection='horizontal';e.preventDefault()}else if(Math.abs(diffY)>10){swipeDirection='vertical'}}if(swipeDirection==='horizontal')e.preventDefault()},{passive:false});
@@ -165,73 +248,53 @@ const skList=n=>`<div class="stations sk-wrap">${Array.from({length:n},()=>'<div
 function animateCounts(root){root.querySelectorAll('[data-cu]').forEach(el=>{const t=parseFloat(el.dataset.cu)||0,k=el.dataset.kind||'num',st=performance.now();(function s(n){const p=Math.min(1,(n-st)/900),e=1-Math.pow(1-p,3),v=t*e;el.textContent=k==='money'?money(v):fmt(v);if(p<1)requestAnimationFrame(s)})(st)})}
 function route(){startP();const h=location.hash.replace(/^#\/?/,''),seg=h.split('?')[0].split('/').filter(Boolean);closeOverlay();window.scrollTo(0,0);const auth=getAuth();if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));if(!auth&&seg[0]!=='login'){location.hash='#/login';return}if(seg[0]==='login')return renderLogin();if(seg[0]==='dash')return renderDash();if(seg[0]==='stats')return renderStats();if(seg[0]==='audit')return renderAudit();if(seg[0]==='stations')return renderStations();renderHome()}
 window.addEventListener('hashchange',route);
-
-function renderLogin(){
-  currentPage='login';setActive('');$('#logoutBtn').style.display='none';
-  $('#app').innerHTML=`<div class="view"><div class="login-box"><h2>🔐 تسجيل الدخول</h2>
-    <div style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.3);border-radius:12px;padding:12px;margin-bottom:20px;font-size:12px;color:var(--tx2)">
-      <b style="color:var(--prl)">🛡️ حماية متقدمة:</b> كلمات المرور مشفرة + 5 محاولات فقط
-    </div>
-    <form id="loginForm">
-      <div class="field"><label>اسم المستخدم</label><div class="in-wrap"><input type="text" id="loginUser" required autocomplete="username"></div></div>
-      <div class="field"><label>كلمة المرور</label><div class="in-wrap"><input type="password" id="loginPass" required autocomplete="current-password"></div></div>
-      <button class="btn big" type="submit" style="width:100%">دخول</button>
-      <p style="color:var(--tx2);font-size:12px;margin-top:16px;text-align:center">admin / admin123</p>
-    </form></div></div>`;
-  doneP();
-  $('#loginForm').addEventListener('submit',async e=>{
-    e.preventDefault();
-    const u=$('#loginUser').value.trim(),p=$('#loginPass').value,b=e.target.querySelector('button');
-    b.disabled=true;b.innerHTML='<i data-lucide="loader-2" class="spin"></i> جاري...';lucide.createIcons();
-    const user=await login(u,p);
-    if(user){toast('مرحبًا '+user.username);updateModeChip();location.hash='#/'}
-    else{toast(' بيانات خاطئة');b.disabled=false;b.textContent='دخول'}
-  });
-}
-
+function renderLogin(){currentPage='login';setActive('');$('#logoutBtn').style.display='none';$('#sessionChip').style.display='none';$('#syncBtn').style.display='none';$('#app').innerHTML=`<div class="view"><div class="login-box"><h2>🔐 تسجيل الدخول الآمن</h2><div style="text-align:center;margin-bottom:16px"><span class="chip ok">SHA-256 + Rate Limit</span></div><form id="loginForm"><div class="field"><label>اسم المستخدم</label><div class="in-wrap"><input type="text" id="loginUser" required autocomplete="username"></div></div><div class="field"><label>كلمة المرور</label><div class="in-wrap"><input type="password" id="loginPass" required autocomplete="current-password"></div></div><button class="btn big" type="submit" style="width:100%">دخول</button><p style="color:var(--tx2);font-size:12px;margin-top:16px;text-align:center">admin / admin123</p><p style="color:var(--warn);font-size:11px;margin-top:8px;text-align:center">⚠️ 5 محاولات فاشلة = قفل 5 دقائق</p></form></div></div>`;doneP();$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const u=$('#loginUser').value.trim(),p=$('#loginPass').value,b=e.target.querySelector('button');b.disabled=true;b.innerHTML='<i data-lucide="loader-2" class="spin"></i> جاري...';lucide.createIcons();const user=await login(u,p);if(user){toast('🔒 مرحبًا '+user.username);updateModeChip();location.hash='#/'}else{toast('بيانات خاطئة');b.disabled=false;b.textContent='دخول'}})}
 async function renderHome(){currentPage='home';setActive('home');$('#logoutBtn').style.display='';updateModeChip();$('#app').innerHTML=`<div class="view">${skStats()}${skList(6)}</div>`;const[reports,stations]=await Promise.all([getAllReports(),getAllStations()]);const today=todayISO(),rec=new Map(reports.filter(r=>String(r.date)===today).map(r=>[String(r.stationCode),r])),done=stations.filter(s=>rec.has(s.code)).length,pct=stations.length?Math.round(done/stations.length*100):0,favs=getFavs(),sorted=[...stations].sort((a,b)=>(favs.includes(b.code)?1:0)-(favs.includes(a.code)?1:0)),lateHr=new Date().getHours()>=18;$('#app').innerHTML=`<div class="view"><div class="board-head"><div><h1 class="page-title">لوحة المحطات</h1><p class="page-sub">بيان اليوم — ${fmtDateAr(today)}</p></div><div class="grow"></div><input class="search" id="stSearch" placeholder="ابحث…"><a class="btn ghost sm" href="#/dash"><i data-lucide="layout-dashboard"></i> التجميع</a></div><div class="progress-wrap"><span><b>${pct}%</b> (${done}/${stations.length})</span><div class="progress"><i id="progBar"></i></div></div><ol class="stations">${sorted.map(s=>{const r=rec.get(s.code),late=!r&&lateHr,fv=favs.includes(s.code);return `<li class="station-row"><span class="s-code">${esc(s.code)}</span><div><div class="s-name">${fv?'⭐ ':''}${esc(s.name)}</div><div class="s-status ${r?'on':late?'late':''}"><span class="dot"></span>${r?'مسجّل • '+money(num(r.totalRevenue)):late?'متأخرة!':'بانتظار التسجيل'}</div></div><span class="s-rev">${r?money(num(r.totalRevenue)):''}</span><div class="s-actions"><a class="btn sm" href="#/s/${encodeURIComponent(s.code)}/${encodeURIComponent(s.name)}"><i data-lucide="ticket"></i> تسجيل</a><button class="icon-btn ${fv?'is-fav':''}" data-fav="${esc(s.code)}"><i data-lucide="star"></i></button><button class="icon-btn" data-copy="${esc(stationLink(s))}"><i data-lucide="link"></i></button><button class="icon-btn" data-qr="${esc(s.name)}" data-qrl="${esc(stationLink(s))}"><i data-lucide="qr-code"></i></button></div></li>`}).join('')}</ol></div>`;doneP();lucide.createIcons();requestAnimationFrame(()=>{const b=$('#progBar');if(b)b.style.width=pct+'%'});$('#stSearch').addEventListener('input',e=>{const q=e.target.value.trim();$$('#app .station-row').forEach(li=>li.style.display=li.textContent.includes(q)?'':'none')})}
 document.addEventListener('click',e=>{const cp=e.target.closest('[data-copy]');if(cp){copyText(cp.dataset.copy);return}const fv=e.target.closest('[data-fav]');if(fv){toggleFav(fv.dataset.fav);renderHome();return}const qr=e.target.closest('[data-qr]');if(qr){openQR(qr.dataset.qr,qr.dataset.qrl);return}});
 function openQR(n,l){openOverlay(`<div class="qr-box"><img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(l)}"><h3>${esc(n)}</h3><p>${esc(l)}</p><div class="success-actions"><button class="btn sm" id="qc"><i data-lucide="copy"></i> نسخ</button><button class="btn ghost sm" id="qx">إغلاق</button></div></div>`);lucide.createIcons();$('#qc').onclick=()=>copyText(l);$('#qx').onclick=closeOverlay}
 const SECTIONS=[{id:'tickets',ord:'أولاً',title:'التذاكر',icon:'ticket',rows:[{label:'التذاكر',c:'ticketsCount',r:'ticketsRevenue'}]},{id:'subs',ord:'ثانيًا',title:'الاشتراكات',icon:'credit-card',rows:[{label:'أسبوعي',c:'weekCount',r:'weekRevenue'},{label:'شهري',c:'monthCount',r:'monthRevenue'},{label:'ربع سنوي',c:'quarterCount',r:'quarterRevenue'}]},{id:'subCards',ord:'ثالثًا',title:'كروت الاشتراكات',icon:'copy',rows:[{label:'كروت',c:'subCardsCount',r:'subCardsRevenue'}]},{id:'walletCards',ord:'رابعًا',title:'كروت المحفظة',icon:'wallet',rows:[{label:'محفظة',c:'walletCardsCount',r:'walletCardsRevenue'}]},{id:'recharge',ord:'خامسًا',title:'شحن المحفظة',icon:'zap',rows:[{label:'شحن',c:'rechargeCount',r:'rechargeRevenue'}]}];
 function fieldHTML(k,l,u){return `<div class="field"><label>${l}</label><div class="in-wrap"><input type="text" inputmode="numeric" placeholder="0" data-field="${k}" class="${u?'has-unit':''}">${u?`<span class="unit">${u}</span>`:''}</div></div>`}
-function renderForm(code,name){currentPage='form';setActive('');$('#logoutBtn').style.display='none';$('#app').innerHTML=`<div class="view"><a class="btn ghost sm" href="#/" style="margin-bottom:16px"><i data-lucide="arrow-right"></i> رجوع</a><div class="station-sign"><span class="sign-code">${esc(code)}</span><div><h1 style="font:800 26px 'Changa'">محطة ${esc(name)}</h1></div></div><div class="chips-bar">${SECTIONS.map(s=>`<button class="chip-btn" data-goto="sec-${s.id}">${s.title}</button>`).join('')}</div><div class="card"><div class="meta-grid"><div class="field"><label>التاريخ</label><div class="in-wrap"><input type="date" id="fDate" value="${todayISO()}"></div></div><div class="field"><label>المُسجِّل</label><div class="in-wrap"><input type="text" id="fBy"></div></div></div></div><form id="entryForm">${SECTIONS.map(s=>`<section class="card" id="sec-${s.id}"><div class="sec-head"><span class="sec-ord">${s.ord}</span><i data-lucide="${s.icon}"></i><h3 style="font:700 20px 'Changa'">${s.title}</h3><span class="sec-sum" data-sec="${s.id}">0</span></div>${s.rows.map(r=>s.rows.length>1?`<div class="sub-row"><div class="sub-name">${r.label}</div><div class="pair">${fieldHTML(r.c,'العدد')}${fieldHTML(r.r,'الإيراد','ج.م')}</div></div>`:`<div class="pair">${fieldHTML(r.c,'العدد')}${fieldHTML(r.r,'الإيراد','ج.م')}</div>`).join('')}</section>`).join('')}<div class="totals-bar"><div class="tot-item"><b id="tCount">0</b></div><div class="tot-item"><b id="tRev">0</b></div><button class="btn navy big" type="submit" id="submitBtn"><i data-lucide="send"></i> إرسال</button></div></form></div>`;doneP();lucide.createIcons();$$('.chip-btn').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.goto).scrollIntoView({behavior:'smooth'}));const form=$('#entryForm'),read=()=>{const v={};form.querySelectorAll('[data-field]').forEach(i=>v[i.dataset.field]=num(norm(i.value)));return v};function recalc(){const v=read(),tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0),tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);$('#tCount').textContent=fmt(tC);$('#tRev').textContent=money(tR);SECTIONS.forEach(s=>{const el=form.querySelector(`[data-sec="${s.id}"]`);if(el)el.textContent=money(s.rows.reduce((a,r)=>a+v[r.r],0))});markUnsaved()}form.addEventListener('input',recalc);form.addEventListener('submit',async e=>{e.preventDefault();const v=read(),btn=$('#submitBtn');btn.disabled=true;btn.innerHTML='<i data-lucide="loader-2" class="spin"></i> إرسال…';lucide.createIcons();const dv=$('#fDate').value||todayISO(),tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0),tR=REV_FIELDS.reduce((a,f)=>a+v[f],0),auth=getAuth(),rec={stationCode:code,stationName:name,date:dv,...v,totalCount:tC,totalRevenue:tR,submittedBy:$('#fBy').value.trim()||auth?.username||'unknown',submittedAt:new Date().toISOString()},ok=await saveReport(rec);btn.disabled=false;btn.innerHTML='<i data-lucide="send"></i> إرسال';lucide.createIcons();if(ok===true){await addAudit('تسجيل بيان',{station:code,date:dv,total:tR},auth?.username);clearUnsaved();showSuccess(rec,false)}else if(ok==='queued'){clearUnsaved();showSuccess(rec,true)}else toast('فشل الإرسال');recalc()})}
-function showSuccess(rec,queued){openOverlay(`<div class="success-box"><div class="okring"><i data-lucide="check-circle-2" style="width:42px;height:42px;color:var(--ok)"></i></div><h2 style="font:800 26px 'Changa'">تم التسجيل ✓</h2><p style="color:var(--tx2)">${queued?'📴 محفوظ محلياً — هيتزامن تلقائياً':'✅ تم الإرسال إلى Supabase'}</p><div class="receipt"><h4>محطة ${esc(rec.stationName)}</h4><div class="r-line"><span>تذاكر</span><b>${fmt(rec.ticketsCount)}</b></div><div class="r-line"><span>إجمالي عمليات</span><b>${fmt(rec.totalCount)}</b></div><div class="perf"></div><div class="r-line"><span>الإيراد</span><b>${money(rec.totalRevenue)}</b></div></div><div class="success-actions"><button class="btn" id="ag"><i data-lucide="plus"></i> جديد</button><a class="btn ghost" href="#/">اللوحة</a></div></div>`);lucide.createIcons();$('#ag').onclick=()=>{closeOverlay();const f=$('#entryForm');if(f){f.reset();$('#fDate').value=todayISO();f.dispatchEvent(new Event('input'))}}}
+function renderForm(code,name){
+  currentPage='form';setActive('');$('#logoutBtn').style.display='none';
+  $('#app').innerHTML=`<div class="view"><a class="btn ghost sm" href="#/" style="margin-bottom:16px"><i data-lucide="arrow-right"></i> رجوع</a><div class="station-sign"><span class="sign-code">${esc(code)}</span><div><h1 style="font:800 26px 'Changa'">محطة ${esc(name)}</h1></div></div><div class="chips-bar">${SECTIONS.map(s=>`<button class="chip-btn" data-goto="sec-${s.id}">${s.title}</button>`).join('')}</div><div class="card"><div class="meta-grid"><div class="field"><label>التاريخ</label><div class="in-wrap"><input type="date" id="fDate" value="${todayISO()}"></div></div><div class="field"><label>المُسجِّل</label><div class="in-wrap"><input type="text" id="fBy"></div></div></div></div><form id="entryForm">${SECTIONS.map(s=>`<section class="card" id="sec-${s.id}"><div class="sec-head"><span class="sec-ord">${s.ord}</span><i data-lucide="${s.icon}"></i><h3 style="font:700 20px 'Changa'">${s.title}</h3><span class="sec-sum" data-sec="${s.id}">0</span></div>${s.rows.map(r=>s.rows.length>1?`<div class="sub-row"><div class="sub-name">${r.label}</div><div class="pair">${fieldHTML(r.c,'العدد')}${fieldHTML(r.r,'الإيراد','ج.م')}</div></div>`:`<div class="pair">${fieldHTML(r.c,'العدد')}${fieldHTML(r.r,'الإيراد','ج.م')}</div>`).join('')}</section>`).join('')}<div class="totals-bar"><div class="tot-item"><b id="tCount">0</b></div><div class="tot-item"><b id="tRev">0</b></div><button class="btn navy big" type="submit" id="submitBtn"><i data-lucide="send"></i> إرسال</button></div></form></div>`;
+  doneP();lucide.createIcons();
+  $$('.chip-btn').forEach(b=>b.onclick=()=>document.getElementById(b.dataset.goto).scrollIntoView({behavior:'smooth'}));
+  const form=$('#entryForm'),read=()=>{const v={};form.querySelectorAll('[data-field]').forEach(i=>v[i.dataset.field]=num(norm(i.value)));return v};
+  function recalc(){const v=read(),tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0),tR=REV_FIELDS.reduce((a,f)=>a+v[f],0);$('#tCount').textContent=fmt(tC);$('#tRev').textContent=money(tR);SECTIONS.forEach(s=>{const el=form.querySelector(`[data-sec="${s.id}"]`);if(el)el.textContent=money(s.rows.reduce((a,r)=>a+v[r.r],0))});markUnsaved()}
+  form.addEventListener('input',recalc);
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();
+    const v=read(),btn=$('#submitBtn');
+    btn.disabled=true;btn.innerHTML='<i data-lucide="loader-2" class="spin"></i> إرسال…';lucide.createIcons();
+    const dv=$('#fDate').value||todayISO(),tC=COUNT_FIELDS.reduce((a,f)=>a+v[f],0),tR=REV_FIELDS.reduce((a,f)=>a+v[f],0),auth=getAuth();
+    const rec={stationCode:code,stationName:name,date:dv,...v,totalCount:tC,totalRevenue:tR,submittedBy:$('#fBy').value.trim()||auth?.username||'unknown',submittedAt:new Date().toISOString()};
+    const ok=await saveReport(rec);
+    btn.disabled=false;btn.innerHTML='<i data-lucide="send"></i> إرسال';lucide.createIcons();
+    if(ok===true){
+      await addAudit('تسجيل بيان',{station:code,date:dv,total:tR},auth?.username);
+      clearUnsaved();
+      form.reset();$('#fDate').value=todayISO();
+      showSuccess(rec,false)
+    }else if(ok==='queued'){
+      clearUnsaved();
+      form.reset();$('#fDate').value=todayISO();
+      showSuccess(rec,true)
+    }else{toast('فشل الإرسال')}
+  })
+}
+function showSuccess(rec,queued){
+  openOverlay(`<div class="success-box"><div class="okring"><i data-lucide="check-circle-2" style="width:42px;height:42px;color:var(--ok)"></i></div><h2 style="font:800 26px 'Changa'">تم التسجيل ✓</h2><p style="color:var(--tx2);margin-bottom:20px">${queued?'📴 محفوظ محلياً — هيتزامن تلقائياً':'✅ تم الإرسال إلى Supabase'}</p><div class="receipt"><h4>محطة ${esc(rec.stationName)}</h4><div class="r-line"><span>تذاكر</span><b>${fmt(rec.ticketsCount)}</b></div><div class="r-line"><span>إجمالي عمليات</span><b>${fmt(rec.totalCount)}</b></div><div class="perf"></div><div class="r-line"><span>الإيراد</span><b>${money(rec.totalRevenue)}</b></div></div><div class="success-actions"><button class="btn" id="ag"><i data-lucide="plus"></i> جديد</button><a class="btn ghost" href="#/">اللوحة</a></div></div>`);
+  lucide.createIcons();
+  $('#ag').onclick=()=>{closeOverlay()}
+}
 let dashDate=todayISO();const GROUPS=[{t:'تذاكر',c:'ticketsCount',r:'ticketsRevenue'},{t:'أسبوعي',c:'weekCount',r:'weekRevenue'},{t:'شهري',c:'monthCount',r:'monthRevenue'},{t:'ربع سنوي',c:'quarterCount',r:'quarterRevenue'},{t:'كروت',c:'subCardsCount',r:'subCardsRevenue'},{t:'محفظة',c:'walletCardsCount',r:'walletCardsRevenue'},{t:'شحن',c:'rechargeCount',r:'rechargeRevenue'},{t:'إجمالي',c:'totalCount',r:'totalRevenue'}];
 async function renderDash(){currentPage='dash';setActive('dash');$('#logoutBtn').style.display='';updateModeChip();$('#app').innerHTML=`<div class="view">${skStats()}${skList(4)}</div>`;const[reports,stations]=await Promise.all([getAllReports(),getAllStations()]);drawDash(reports,stations)}
 function buildDayRows(rec,date,st){const by=new Map(rec.filter(r=>String(r.date)===date).map(r=>[String(r.stationCode),r])),mk=(c,n,r)=>{const z={};NUM_FIELDS.forEach(f=>z[f]=r?num(r[f]):0);return{code:c,name:n,...z,totalCount:COUNT_FIELDS.reduce((a,f)=>a+z[f],0),totalRevenue:REV_FIELDS.reduce((a,f)=>a+z[f],0),present:!!r}},rows=st.map(s=>mk(s.code,s.name,by.get(s.code)));by.forEach((r,c)=>{if(!st.some(s=>s.code===c))rows.push(mk(c,r.stationName||c,r))});return rows}
 function totalsOf(r){return{count:r.reduce((a,x)=>a+x.totalCount,0),rev:r.reduce((a,x)=>a+x.totalRevenue,0),done:r.filter(x=>x.present).length}}
-function drawDash(reports,stations){const rows=buildDayRows(reports,dashDate,stations),T=totalsOf(rows);$('#app').innerHTML=`<div class="view">${crumbs('لوحة التجميع')}<div class="board-head"><div><h1 class="page-title">لوحة التجميع</h1></div><div class="grow"></div><button class="btn sm" id="exDay"><i data-lucide="file-spreadsheet"></i> Excel اليوم</button><button class="btn sm" id="pdfDay"><i data-lucide="file-text"></i> PDF اليوم</button><button class="btn ghost sm" id="exLog"><i data-lucide="download"></i> السجل</button></div><div style="display:flex;gap:12px;margin:20px 0;flex-wrap:wrap"><input type="date" id="dashDate" value="${dashDate}" style="background:var(--card);border:1px solid var(--br);color:var(--tx);padding:10px;border-radius:12px"><button class="btn ghost sm" id="todayBtn">اليوم</button><span class="chip ${useMock?'warn':'ok'}">${useMock?'محاكاة':'Supabase'}</span></div><div class="stats-strip"><div class="stat"><small>مسجّلة</small><b>${T.done}/${rows.length}</b></div><div class="stat gold"><small>الإيرادات</small><b data-cu="${T.rev}" data-kind="money">0</b></div><div class="stat"><small>عمليات</small><b data-cu="${T.count}">0</b></div><div class="stat"><small>أيام</small><b>${new Set(reports.map(r=>r.date)).size}</b></div></div><div class="table-wrap"><table class="gt"><thead><tr><th rowspan="2">المحطة</th>${GROUPS.map(g=>`<th colspan="2">${g.t}</th>`).join('')}<th rowspan="2">حالة</th></tr><tr>${GROUPS.map(()=>'<th>عدد</th><th>إيراد</th>').join('')}</tr></thead><tbody>${rows.map(r=>`<tr><td class="st">${esc(r.name)}</td>${GROUPS.map(g=>`<td>${fmt(r[g.c])}</td><td class="rev">${fmt(r[g.r])}</td>`).join('')}<td><span class="st-pill ${r.present?'on':'off'}">${r.present?'✓':'—'}</span></td></tr>`).join('')}</tbody><tfoot><tr><td class="st">الإجمالي</td>${GROUPS.map(g=>`<td>${fmt(rows.reduce((a,r)=>a+r[g.c],0))}</td><td>${fmt(rows.reduce((a,r)=>a+r[g.r],0))}</td>`).join('')}<td>${T.done}</td></tr></tfoot></table></div></div>`;doneP();lucide.createIcons();animateCounts($('#app'));$('#dashDate').onchange=e=>{dashDate=e.target.value||todayISO();drawDash(reports,stations)};$('#todayBtn').onclick=()=>{dashDate=todayISO();drawDash(reports,stations)};$('#exDay').onclick=()=>exportDayExcel(rows);$('#pdfDay').onclick=()=>exportDayPDF(rows);$('#exLog').onclick=()=>exportLogExcel(reports)}
-
-async function renderStats(){
-  currentPage='stats';setActive('stats');$('#app').innerHTML=`<div class="view">${skStats()}</div>`;
-  const[reports,stations]=await Promise.all([getAllReports(),getAllStations()]),
-    totR=reports.reduce((a,r)=>a+num(r.totalRevenue),0),
-    totT=reports.reduce((a,r)=>a+num(r.ticketsCount),0),
-    by={};
-  reports.forEach(r=>{if(!by[r.stationCode])by[r.stationCode]={name:r.stationName,rev:0};by[r.stationCode].rev+=num(r.totalRevenue)});
-  const last7=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const iso=d.toISOString().slice(0,10);last7.push({day:d.toLocaleDateString('ar-EG',{weekday:'short'}),rev:reports.filter(r=>r.date===iso).reduce((a,r)=>a+num(r.totalRevenue),0)})}
-  const maxRev=Math.max(...Object.values(by).map(x=>x.rev),1);
-  $('#app').innerHTML=`<div class="view">${crumbs('الإحصائيات')}<h1 class="page-title">الإحصائيات</h1>
-    <div class="stats-strip">
-      <div class="stat gold"><small>الإيرادات</small><b data-cu="${totR}" data-kind="money">0</b></div>
-      <div class="stat"><small>تذاكر</small><b data-cu="${totT}">0</b></div>
-      <div class="stat"><small>أيام</small><b>${new Set(reports.map(r=>r.date)).size}</b></div>
-      <div class="stat"><small>محطات</small><b>${stations.length}</b></div>
-    </div>
-    <div class="card"><h2><i data-lucide="flame"></i> خريطة الإيرادات الحرارية</h2>
-      <div class="heatmap">${stations.map(s=>{const r=by[s.code]?.rev||0,pct=(r/maxRev)*100,hue=120-(pct*1.2);return `<div class="heat-cell" style="background:hsl(${hue},70%,${30+pct*0.3}%)"><div class="hname">${esc(s.name)}</div><div class="hval">${fmt(r)}</div></div>`}).join('')}</div>
-    </div>
-    <div class="card"><h2><i data-lucide="bar-chart-3"></i> آخر 7 أيام</h2><div style="height:300px"><canvas id="c7"></canvas></div></div>
-    <div class="card"><h2><i data-lucide="bar-chart-horizontal"></i> حسب المحطة</h2><div style="height:300px"><canvas id="cs"></canvas></div></div>
-  </div>`;
-  doneP();lucide.createIcons();animateCounts($('#app'));
-  new Chart($('#c7'),{type:'bar',data:{labels:last7.map(d=>d.day),datasets:[{data:last7.map(d=>d.rev),backgroundColor:'rgba(6,182,212,.6)',borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false}});
-  const so=Object.entries(by).sort((a,b)=>b[1].rev-a[1].rev);
-  new Chart($('#cs'),{type:'bar',data:{labels:so.map(([k,v])=>v.name),datasets:[{data:so.map(([k,v])=>v.rev),backgroundColor:'rgba(245,158,11,.6)',borderRadius:8}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false}});
-}
-
+function drawDash(reports,stations){const rows=buildDayRows(reports,dashDate,stations),T=totalsOf(rows);$('#app').innerHTML=`<div class="view">${crumbs('لوحة التجميع')}<div class="board-head"><div><h1 class="page-title">لوحة التجميع</h1></div><div class="grow"></div><button class="btn sm" id="exDay"><i data-lucide="file-spreadsheet"></i> Excel اليوم</button><button class="btn ghost sm" id="exLog"><i data-lucide="download"></i> السجل</button></div><div style="display:flex;gap:12px;margin:20px 0;flex-wrap:wrap"><input type="date" id="dashDate" value="${dashDate}" style="background:var(--card);border:1px solid var(--br);color:var(--tx);padding:10px;border-radius:12px"><button class="btn ghost sm" id="todayBtn">اليوم</button><span class="chip ${useMock?'warn':'ok'}">${useMock?'محاكاة':'Supabase'}</span></div><div class="stats-strip"><div class="stat"><small>مسجّلة</small><b>${T.done}/${rows.length}</b></div><div class="stat gold"><small>الإيرادات</small><b data-cu="${T.rev}" data-kind="money">0</b></div><div class="stat"><small>عمليات</small><b data-cu="${T.count}">0</b></div><div class="stat"><small>أيام</small><b>${new Set(reports.map(r=>r.date)).size}</b></div></div><div class="table-wrap"><table class="gt"><thead><tr><th rowspan="2">المحطة</th>${GROUPS.map(g=>`<th colspan="2">${g.t}</th>`).join('')}<th rowspan="2">حالة</th></tr><tr>${GROUPS.map(()=>'<th>عدد</th><th>إيراد</th>').join('')}</tr></thead><tbody>${rows.map(r=>`<tr><td class="st">${esc(r.name)}</td>${GROUPS.map(g=>`<td>${fmt(r[g.c])}</td><td class="rev">${fmt(r[g.r])}</td>`).join('')}<td><span class="st-pill ${r.present?'on':'off'}">${r.present?'✓':'—'}</span></td></tr>`).join('')}</tbody><tfoot><tr><td class="st">الإجمالي</td>${GROUPS.map(g=>`<td>${fmt(rows.reduce((a,r)=>a+r[g.c],0))}</td><td>${fmt(rows.reduce((a,r)=>a+r[g.r],0))}</td>`).join('')}<td>${T.done}</td></tr></tfoot></table></div></div>`;doneP();lucide.createIcons();animateCounts($('#app'));$('#dashDate').onchange=e=>{dashDate=e.target.value||todayISO();drawDash(reports,stations)};$('#todayBtn').onclick=()=>{dashDate=todayISO();drawDash(reports,stations)};$('#exDay').onclick=()=>exportDayExcel(rows);$('#exLog').onclick=()=>exportLogExcel(reports)}
+async function renderStats(){currentPage='stats';setActive('stats');$('#app').innerHTML=`<div class="view">${skStats()}</div>`;const[reports,stations]=await Promise.all([getAllReports(),getAllStations()]),totR=reports.reduce((a,r)=>a+num(r.totalRevenue),0),totT=reports.reduce((a,r)=>a+num(r.ticketsCount),0),by={};reports.forEach(r=>{if(!by[r.stationCode])by[r.stationCode]={name:r.stationName,rev:0};by[r.stationCode].rev+=num(r.totalRevenue)});const last7=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const iso=d.toISOString().slice(0,10);last7.push({day:d.toLocaleDateString('ar-EG',{weekday:'short'}),rev:reports.filter(r=>r.date===iso).reduce((a,r)=>a+num(r.totalRevenue),0)})}$('#app').innerHTML=`<div class="view">${crumbs('الإحصائيات')}<h1 class="page-title">الإحصائيات</h1><div class="stats-strip"><div class="stat gold"><small>الإيرادات</small><b data-cu="${totR}" data-kind="money">0</b></div><div class="stat"><small>تذاكر</small><b data-cu="${totT}">0</b></div><div class="stat"><small>أيام</small><b>${new Set(reports.map(r=>r.date)).size}</b></div><div class="stat"><small>محطات</small><b>${stations.length}</b></div></div><div class="card"><h2><i data-lucide="bar-chart-3"></i> آخر 7 أيام</h2><div style="height:300px"><canvas id="c7"></canvas></div></div><div class="card"><h2><i data-lucide="bar-chart-horizontal"></i> حسب المحطة</h2><div style="height:300px"><canvas id="cs"></canvas></div></div></div>`;doneP();lucide.createIcons();animateCounts($('#app'));new Chart($('#c7'),{type:'bar',data:{labels:last7.map(d=>d.day),datasets:[{data:last7.map(d=>d.rev),backgroundColor:'rgba(6,182,212,.6)',borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false}});const so=Object.entries(by).sort((a,b)=>b[1].rev-a[1].rev);new Chart($('#cs'),{type:'bar',data:{labels:so.map(([k,v])=>v.name),datasets:[{data:so.map(([k,v])=>v.rev),backgroundColor:'rgba(245,158,11,.6)',borderRadius:8}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false}})}
 async function renderAudit(){currentPage='audit';setActive('audit');$('#app').innerHTML=`<div class="view">${skList(5)}</div>`;const logs=await getAudit();$('#app').innerHTML=`<div class="view">${crumbs('سجل التدقيق')}<h1 class="page-title">سجل التدقيق</h1><div class="card"><div class="audit-list">${logs.length?logs.map(l=>`<div class="audit-item"><div style="flex:1"><b style="color:var(--prl)">${esc(l.action)}</b><div style="color:var(--tx2);font-size:13px">${esc(l.details||'')}</div></div><div style="color:var(--mut);font-size:12px">${esc(l.username||'')}</div></div>`).join(''):emptyState('لا عمليات')}</div></div></div>`;doneP()}
-async function renderStations(){currentPage='stations';setActive('stations');$('#app').innerHTML=`<div class="view">${skList(5)}</div>`;const[stations,reports]=await Promise.all([getAllStations(),getAllReports()]);$('#app').innerHTML=`<div class="view">${crumbs('إدارة المحطات')}<h1 class="page-title">إدارة المحطات</h1><div class="card"><h2><i data-lucide="plus-circle"></i> إضافة محطة</h2><form id="addSt" style="display:flex;gap:12px;flex-wrap:wrap"><input id="nC" placeholder="الكود" required style="flex:1;background:var(--bg0);border:1.5px solid var(--br);color:var(--tx);padding:12px;border-radius:12px"><input id="nN" placeholder="الاسم" required style="flex:2;background:var(--bg0);border:1.5px solid var(--br);color:var(--tx);padding:12px;border-radius:12px"><button class="btn" type="submit"><i data-lucide="plus"></i> إضافة</button></form></div><div class="card"><h2><i data-lucide="layout-dashboard"></i> المحطات (${stations.length})</h2><div class="st-mng">${stations.map(s=>`<div class="st-mng-row"><span class="s-code">${esc(s.code)}</span><b style="flex:1">${esc(s.name)}</b><button class="icon-btn" data-del-reports="${esc(s.code)}"><i data-lucide="trash-2"></i></button><button class="icon-btn" data-del="${s.id}"><i data-lucide="trash-2"></i></button></div>`).join('')}</div></div><div class="danger-zone"><h2 style="color:var(--err)">️ منطقة الخطر</h2><button class="btn danger" id="delAll"><i data-lucide="trash-2"></i> مسح كل البيانات (${reports.length})</button></div></div>`;doneP();lucide.createIcons();$('#addSt').onsubmit=async e=>{e.preventDefault();const c=$('#nC').value.trim().toUpperCase(),n=$('#nN').value.trim();if(await addStation(c,n)){toast('أُضيفت ✓');renderStations()}else toast('فشل')};$$('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('حذف المحطة؟')){await deleteStation(b.dataset.del);renderStations()}});$$('[data-del-reports]').forEach(b=>b.onclick=async()=>{if(confirm('مسح بيانات المحطة؟')){await deleteStationReports(b.dataset.delReports);renderStations()}});$('#delAll').onclick=async()=>{if(confirm('مسح كل البيانات؟')){await deleteAllReports();renderStations()}}}
+async function renderStations(){currentPage='stations';setActive('stations');$('#app').innerHTML=`<div class="view">${skList(5)}</div>`;const[stations,reports]=await Promise.all([getAllStations(),getAllReports()]);$('#app').innerHTML=`<div class="view">${crumbs('إدارة المحطات')}<h1 class="page-title">إدارة المحطات</h1><div class="card"><h2><i data-lucide="plus-circle"></i> إضافة محطة</h2><form id="addSt" style="display:flex;gap:12px;flex-wrap:wrap"><input id="nC" placeholder="الكود" required style="flex:1;background:var(--bg0);border:1.5px solid var(--br);color:var(--tx);padding:12px;border-radius:12px"><input id="nN" placeholder="الاسم" required style="flex:2;background:var(--bg0);border:1.5px solid var(--br);color:var(--tx);padding:12px;border-radius:12px"><button class="btn" type="submit"><i data-lucide="plus"></i> إضافة</button></form></div><div class="card"><h2><i data-lucide="layout-dashboard"></i> المحطات (${stations.length})</h2><div class="st-mng">${stations.map(s=>`<div class="st-mng-row"><span class="s-code">${esc(s.code)}</span><b style="flex:1">${esc(s.name)}</b><button class="icon-btn" data-del-reports="${esc(s.code)}"><i data-lucide="trash-2"></i></button><button class="icon-btn" data-del="${s.id}"><i data-lucide="trash-2"></i></button></div>`).join('')}</div></div><div class="danger-zone"><h2 style="color:var(--err)">⚠️ منطقة الخطر</h2><button class="btn danger" id="delAll"><i data-lucide="trash-2"></i> مسح كل البيانات (${reports.length})</button></div></div>`;doneP();lucide.createIcons();$('#addSt').onsubmit=async e=>{e.preventDefault();const c=$('#nC').value.trim().toUpperCase(),n=$('#nN').value.trim();if(await addStation(c,n)){toast('أُضيفت ✓');renderStations()}else toast('فشل')};$$('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('حذف المحطة؟')){await deleteStation(b.dataset.del);renderStations()}});$$('[data-del-reports]').forEach(b=>b.onclick=async()=>{if(confirm('مسح بيانات المحطة؟')){await deleteStationReports(b.dataset.delReports);renderStations()}});$('#delAll').onclick=async()=>{if(confirm('مسح كل البيانات؟')){await deleteAllReports();renderStations()}}}
 function buf64(b){const u=new Uint8Array(b);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
 async function loadLogo(){try{const r=await fetch('logo.png');if(!r.ok)return null;const buf=await r.arrayBuffer();const u=new Uint8Array(buf);let ext='png';if(u[0]===0xFF&&u[1]===0xD8&&u[2]===0xFF)ext='jpeg';else if(u[0]===0x47&&u[1]===0x49&&u[2]===0x46)ext='gif';return {b64:buf64(buf),ext}}catch(e){return null}}
 function ensureExcelJS(){return new Promise((res,rej)=>{if(window.ExcelJS)return res();const u=['https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js','https://unpkg.com/exceljs@4.3.0/dist/exceljs.min.js'];let i=0;(function n(){if(i>=u.length)return rej();const s=document.createElement('script');s.src=u[i++];s.onload=()=>window.ExcelJS?res():n();s.onerror=n;document.head.appendChild(s)})()})}
@@ -240,7 +303,6 @@ function csv(aoa,name){const l=aoa.map(r=>r.map(c=>{c=String(c??'');if(/[",\n]/.
 function buildAOA(rows,T){const a=[['تقرير'],['التاريخ: '+dashDate],[],['المحطة',...GROUPS.flatMap(g=>[g.t+' عدد',g.t+' إيراد']),'حالة']];rows.forEach(r=>a.push([r.name,...GROUPS.flatMap(g=>[r[g.c],r[g.r]]),r.present?'مسجّل':'—']));return a}
 function thinB(){return {top:{style:'thin',color:{argb:'FFCBD5E1'}},left:{style:'thin',color:{argb:'FFCBD5E1'}},bottom:{style:'thin',color:{argb:'FFCBD5E1'}},right:{style:'thin',color:{argb:'FFCBD5E1'}}};}
 function medB(c){return {top:{style:'medium',color:{argb:c}},bottom:{style:'medium',color:{argb:c}},left:{style:'thin',color:{argb:c}},right:{style:'thin',color:{argb:c}}};}
-
 async function exportDayExcel(rows){
   toast('⏳ تجهيز Excel الاحترافي...');
   const T=totalsOf(rows);
@@ -255,10 +317,21 @@ async function exportDayExcel(rows){
     if(logo){const imgId=wb.addImage({base64:logo.b64,extension:logo.ext});ws.addImage(imgId,{tl:{col:0.05,row:0.05},ext:{width:100,height:100}})}
     ws.getRow(1).height=50;
     ws.mergeCells('D1:R1');
-    const t=ws.getCell('D1');t.value='تقرير إحصاء المحطات — مونوريل شرق النيل';t.font={bold:true,size:18,color:{argb:'FFFFFFFF'},name:'Segoe UI'};t.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0C4A6E'}};t.alignment={horizontal:'center',vertical:'middle'};t.border={top:{style:'thick',color:{argb:'FF0EA5E9'}},bottom:{style:'thick',color:{argb:'FF0EA5E9'}},left:{style:'thin',color:{argb:'FF0EA5E9'}},right:{style:'thin',color:{argb:'FF0EA5E9'}}};
+    const t=ws.getCell('D1');
+    t.value='تقرير إحصاء المحطات — مونوريل شرق النيل';
+    t.font={bold:true,size:18,color:{argb:'FFFFFFFF'},name:'Segoe UI'};
+    t.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0C4A6E'}};
+    t.alignment={horizontal:'center',vertical:'middle'};
+    t.border={top:{style:'thick',color:{argb:'FF0EA5E9'}},bottom:{style:'thick',color:{argb:'FF0EA5E9'}},left:{style:'thin',color:{argb:'FF0EA5E9'}},right:{style:'thin',color:{argb:'FF0EA5E9'}}};
     ws.mergeCells('D2:R2');
-    const d=ws.getCell('D2');d.value=`التاريخ: ${dashDate}  (${fmtDateAr(dashDate)})   —   المسجّل: ${T.done} من ${rows.length}`;d.font={bold:true,size:11,color:{argb:'FF0F172A'},name:'Segoe UI'};d.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEF3C7'}};d.alignment={horizontal:'center',vertical:'middle'};d.border={top:{style:'thin',color:{argb:'FFD97706'}},bottom:{style:'thin',color:{argb:'FFD97706'}},left:{style:'thin',color:{argb:'FFD97706'}},right:{style:'thin',color:{argb:'FFD97706'}}};
-    ws.getRow(2).height=26;ws.getRow(3).height=6;
+    const d=ws.getCell('D2');
+    d.value=`التاريخ: ${dashDate}  (${fmtDateAr(dashDate)})   —   المسجّل: ${T.done} من ${rows.length}`;
+    d.font={bold:true,size:11,color:{argb:'FF0F172A'},name:'Segoe UI'};
+    d.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEF3C7'}};
+    d.alignment={horizontal:'center',vertical:'middle'};
+    d.border={top:{style:'thin',color:{argb:'FFD97706'}},bottom:{style:'thin',color:{argb:'FFD97706'}},left:{style:'thin',color:{argb:'FFD97706'}},right:{style:'thin',color:{argb:'FFD97706'}}};
+    ws.getRow(2).height=26;
+    ws.getRow(3).height=6;
     ws.mergeCells('A4:A5');ws.getCell('A4').value='المحطة';
     ws.mergeCells('B4:C4');ws.getCell('B4').value='التذاكر';
     ws.mergeCells('D4:I4');ws.getCell('D4').value='الاشتراكات';
@@ -267,105 +340,77 @@ async function exportDayExcel(rows){
     ws.mergeCells('N4:O4');ws.getCell('N4').value='شحن المحفظة';
     ws.mergeCells('P4:Q4');ws.getCell('P4').value='الإجمالي';
     ws.mergeCells('R4:R5');ws.getCell('R4').value='الحالة';
-    ['A4','B4','D4','J4','L4','N4','P4','R4'].forEach(ref=>{const c=ws.getCell(ref);c.font={bold:true,size:12,color:{argb:'FFFEF3C7'},name:'Segoe UI'};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0C4A6E'}};c.alignment={horizontal:'center',vertical:'middle'};c.border={top:{style:'medium',color:{argb:'FF0EA5E9'}},bottom:{style:'medium',color:{argb:'FF0EA5E9'}},left:{style:'thin',color:{argb:'FF0EA5E9'}},right:{style:'thin',color:{argb:'FF0EA5E9'}}};});
+    ['A4','B4','D4','J4','L4','N4','P4','R4'].forEach(ref=>{
+      const c=ws.getCell(ref);
+      c.font={bold:true,size:12,color:{argb:'FFFEF3C7'},name:'Segoe UI'};
+      c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF0C4A6E'}};
+      c.alignment={horizontal:'center',vertical:'middle'};
+      c.border={top:{style:'medium',color:{argb:'FF0EA5E9'}},bottom:{style:'medium',color:{argb:'FF0EA5E9'}},left:{style:'thin',color:{argb:'FF0EA5E9'}},right:{style:'thin',color:{argb:'FF0EA5E9'}}};
+    });
     const sub=['المحطة','عدد','إيراد','أسبوعي عدد','أسبوعي إيراد','شهري عدد','شهري إيراد','ربع سنوي عدد','ربع سنوي إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','عدد','إيراد','الحالة'];
-    sub.forEach((v,i)=>{const c=ws.getRow(5).getCell(i+1);c.value=v;c.font={bold:true,size:10,color:{argb:'FFFEF3C7'},name:'Segoe UI'};c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF164E63'}};c.alignment={horizontal:'center',vertical:'middle',wrapText:true};c.border=thinB();});
+    sub.forEach((v,i)=>{
+      const c=ws.getRow(5).getCell(i+1);
+      c.value=v;
+      c.font={bold:true,size:10,color:{argb:'FFFEF3C7'},name:'Segoe UI'};
+      c.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF164E63'}};
+      c.alignment={horizontal:'center',vertical:'middle',wrapText:true};
+      c.border=thinB();
+    });
     ws.getRow(4).height=24;ws.getRow(5).height=22;
     rows.forEach((r,idx)=>{
       const row=ws.addRow([r.name,r.ticketsCount,r.ticketsRevenue,r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.totalCount,r.totalRevenue,r.present?'مسجّل':'لم يُسجّل']);
       row.eachCell({includeEmpty:true},(cell,col)=>{
-        cell.border=thinB();cell.alignment={horizontal:col===1?'right':'center',vertical:'middle'};cell.font={size:10,name:'Segoe UI'};
+        cell.border=thinB();
+        cell.alignment={horizontal:col===1?'right':'center',vertical:'middle'};
+        cell.font={size:10,name:'Segoe UI'};
         if(idx%2===0)cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF8FAFC'}};
-        if(col>=2&&col<=17&&typeof cell.value==='number'){if(col%2===1){cell.numFmt='#,##0'}else{cell.numFmt='#,##0';cell.font={size:10,color:{argb:'FFB45309'},bold:true,name:'Segoe UI'}}}
+        if(col>=2&&col<=17&&typeof cell.value==='number'){
+          if(col%2===1){cell.numFmt='#,##0'}
+          else{cell.numFmt='#,##0';cell.font={size:10,color:{argb:'FFB45309'},bold:true,name:'Segoe UI'}}
+        }
         if(col===1)cell.font={bold:true,size:11,name:'Segoe UI',color:{argb:'FF0F172A'}};
-        if(col===18){if(r.present){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD1FAE5'}};cell.font={bold:true,size:10,color:{argb:'FF047857'},name:'Segoe UI'}}else{cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEE2E2'}};cell.font={bold:true,size:10,color:{argb:'FFB91C1C'},name:'Segoe UI'}}}
-      });row.height=22;
+        if(col===18){
+          if(r.present){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD1FAE5'}};cell.font={bold:true,size:10,color:{argb:'FF047857'},name:'Segoe UI'}}
+          else{cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEE2E2'}};cell.font={bold:true,size:10,color:{argb:'FFB91C1C'},name:'Segoe UI'}}
+        }
+      });
+      row.height=22;
     });
     const tr=6+rows.length;
     const cols=['ticketsCount','ticketsRevenue','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue','totalCount','totalRevenue'];
-    const totalVals=['الإجمالي العام'];cols.forEach((f,i)=>{const L=String.fromCharCode(66+i);totalVals.push({formula:`SUM(${L}6:${L}${tr-1})`})});totalVals.push(T.done+' محطة');
+    const totalVals=['الإجمالي العام'];
+    cols.forEach((f,i)=>{const L=String.fromCharCode(66+i);totalVals.push({formula:`SUM(${L}6:${L}${tr-1})`})});
+    totalVals.push(T.done+' محطة');
     const trow=ws.addRow(totalVals);
-    trow.eachCell({includeEmpty:true},(cell,col)=>{cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFECFDF5'}};cell.font={bold:true,size:12,color:{argb:'FF047857'},name:'Segoe UI'};cell.border=medB('FF059669');cell.alignment={horizontal:'center',vertical:'middle'};if(col>=2&&col<=17)cell.numFmt='#,##0';});
+    trow.eachCell({includeEmpty:true},(cell,col)=>{
+      cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFECFDF5'}};
+      cell.font={bold:true,size:12,color:{argb:'FF047857'},name:'Segoe UI'};
+      cell.border=medB('FF059669');
+      cell.alignment={horizontal:'center',vertical:'middle'};
+      if(col>=2&&col<=17)cell.numFmt='#,##0';
+    });
     trow.height=28;
     ws.addRow([]);
     const frow=ws.addRow([`تم إنشاء التقرير: ${new Date().toLocaleString('ar-EG')} — منظومة إحصاء المحطات • مونوريل شرق النيل | Powered by Hisham Fadloun`]);
     ws.mergeCells(frow.number,1,frow.number,18);
-    const fc=ws.getCell(frow.number,1);fc.font={italic:true,size:9,color:{argb:'FF64748B'},name:'Segoe UI'};fc.alignment={horizontal:'center',vertical:'middle'};fc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF1F5F9'}};fc.border={top:{style:'thin',color:{argb:'FFCBD5E1'}}};
+    const fc=ws.getCell(frow.number,1);
+    fc.font={italic:true,size:9,color:{argb:'FF64748B'},name:'Segoe UI'};
+    fc.alignment={horizontal:'center',vertical:'middle'};
+    fc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF1F5F9'}};
+    fc.border={top:{style:'thin',color:{argb:'FFCBD5E1'}}};
     ws.autoFilter={from:{row:5,column:1},to:{row:tr-1,column:18}};
     const buf=await wb.xlsx.writeBuffer();
     dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`إحصاء محطات المونوريل ${dashDate}.xlsx`);
     toast('✅ تم تنزيل الإحصاء الاحترافي');
   }catch(e){console.error('Excel error:',e);csv(buildAOA(rows,T),'تقرير');toast('CSV بديل')}
 }
-
-// 📄 تصدير PDF احترافي
-async function exportDayPDF(rows){
-  toast('⏳ تجهيز PDF...');
-  const T=totalsOf(rows);
-  try{
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF({orientation:'landscape',unit:'mm',format:'a4'});
-    const pageWidth = doc.internal.pageSize.getWidth();
-    doc.setFont('helvetica');
-    doc.setFillColor(12,74,110);
-    doc.rect(0,0,pageWidth,25,'F');
-    doc.setTextColor(255,255,255);
-    doc.setFontSize(16);
-    doc.text('Monoril East Nile - Station Report',pageWidth/2,12,{align:'center'});
-    doc.setFontSize(10);
-    doc.text(`Date: ${dashDate} | Recorded: ${T.done} of ${rows.length}`,pageWidth/2,18,{align:'center'});
-    doc.setTextColor(0,0,0);
-    doc.setFontSize(9);
-    const headers=[['Station','Tickets Count','Tickets Rev','Weekly C','Weekly R','Monthly C','Monthly R','Quarterly C','Quarterly R','Cards C','Cards R','Wallet C','Wallet R','Recharge C','Recharge R','Total C','Total R','Status']];
-    const data=rows.map(r=>[r.name,r.ticketsCount,fmt(r.ticketsRevenue),r.weekCount,fmt(r.weekRevenue),r.monthCount,fmt(r.monthRevenue),r.quarterCount,fmt(r.quarterRevenue),r.subCardsCount,fmt(r.subCardsRevenue),r.walletCardsCount,fmt(r.walletCardsRevenue),r.rechargeCount,fmt(r.rechargeRevenue),r.totalCount,fmt(r.totalRevenue),r.present?'Recorded':'Pending']);
-    data.push(['TOTAL',...cols.map(f=>rows.reduce((a,r)=>a+r[f],0)),`${T.done} stations`]);
-    doc.autoTable({
-      head:headers,body:data,startY:30,
-      styles:{fontSize:7,halign:'center',font:'helvetica'},
-      headStyles:{fillColor:[12,74,110],textColor:[255,255,255],fontStyle:'bold'},
-      alternateRowStyles:{fillColor:[248,250,252]},
-      footStyles:{fillColor:[236,253,245],textColor:[4,120,87],fontStyle:'bold'},
-      margin:{left:5,right:5}
-    });
-    doc.setFontSize(8);
-    doc.setTextColor(100,116,139);
-    doc.text(`Generated: ${new Date().toLocaleString('en-GB')} | Powered by Hisham Fadloun`,pageWidth/2,doc.internal.pageSize.getHeight()-5,{align:'center'});
-    doc.save(`Monorail_Report_${dashDate}.pdf`);
-    toast('✅ تم تنزيل PDF');
-  }catch(e){console.error('PDF error:',e);toast('❌ فشل PDF')}
-}
-
 async function exportLogExcel(rec){toast('⏳ تجهيز السجل...');let wb;const H=['كود المحطة','المحطة','التاريخ',...NUM_FIELDS.map((f,i)=>i%2===0?f+' عدد':f+' إيراد'),'إجمالي عدد','إجمالي إيراد','المسجل','وقت التسجيل'];try{await ensureExcelJS();wb=new ExcelJS.Workbook()}catch(e){csv([H,...rec.map(r=>[r.stationCode,r.stationName,r.date,...NUM_FIELDS.map(f=>r[f]),r.totalCount,r.totalRevenue,r.submittedBy])],'سجل');return}try{wb.views=[{rightToLeft:true}];const ws=wb.addWorksheet('سجل البيانات',{views:[{rightToLeft:true}],pageSetup:{paperSize:9,orientation:'landscape'}});ws.columns=[{key:'code',width:10},{key:'name',width:25},{key:'date',width:12},...NUM_FIELDS.map((f,i)=>({key:f,width:i%2===0?12:15})),{key:'totalCount',width:12},{key:'totalRevenue',width:15},{key:'submittedBy',width:15},{key:'submittedAt',width:20}];const logo=await loadLogo();if(logo){const imgId=wb.addImage({base64:logo.b64,extension:logo.ext});ws.addImage(imgId,{tl:{col:0.02,row:0.02},ext:{width:70,height:70}})}ws.mergeCells('C1:T1');const title=ws.getCell('C1');title.value='سجل بيانات المحطات - مونوريل شرق النيل';title.font={bold:true,size:16,color:{argb:'FFFFFFFF'},name:'Arial'};title.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF06B6D4'}};title.alignment={horizontal:'center',vertical:'middle'};title.border={top:{style:'thick'},left:{style:'thick'},bottom:{style:'thick'},right:{style:'thick'}};ws.getRow(1).height=35;ws.addRow([]);ws.getRow(2).height=10;const headerRow=ws.addRow(H);headerRow.font={bold:true,size:10,color:{argb:'FF67E8F9'},name:'Arial'};headerRow.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};headerRow.alignment={horizontal:'center',vertical:'middle',wrapText:true};headerRow.border={top:{style:'thick',color:{argb:'FF06B6D4'}},bottom:{style:'thick',color:{argb:'FF06B6D4'}}};ws.getRow(3).height=30;const sorted=[...rec].sort((a,b)=>String(b.date).localeCompare(String(a.date)));sorted.forEach((r,idx)=>{const row=ws.addRow([r.stationCode,r.stationName,r.date,...NUM_FIELDS.map(f=>r[f]),r.totalCount,r.totalRevenue,r.submittedBy,r.submittedAt]);const rowNum=4+idx;const rowCells=ws.getRow(rowNum);if(idx%2===0)rowCells.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF8FAFC'}};rowCells.eachCell(cell=>{cell.border={top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}};cell.alignment={horizontal:'center',vertical:'middle'};cell.font={size:9};if(cell.column>3&&cell.column<19){if(typeof cell.value==='number'){if(cell.column%2===1){cell.numFmt='#,##0'}else{cell.numFmt='#,##0.00 "ج.م"';cell.font={color:{argb:'FFF59E0B'},bold:true}}}}if(cell.column===2){cell.font={bold:true,size:10};cell.alignment={horizontal:'right'}}});rowCells.height=22});ws.autoFilter={from:{row:3,column:1},to:{row:3,column:20}};const buf=await wb.xlsx.writeBuffer();dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),'سجل_البيانات_الكامل.xlsx');toast('✅ تم تنزيل السجل باحترافية')}catch(e){console.error('Excel error:',e);csv([H,...rec.map(r=>[r.stationCode,r.stationName,r.date,...NUM_FIELDS.map(f=>r[f]),r.totalCount,r.totalRevenue,r.submittedBy])],'سجل');toast('CSV بديل')}}
-
 function tick(){const n=new Date();$('#clockTime').textContent=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});$('#clockDate').textContent=n.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}
 setInterval(tick,1000);tick();$('#logoutBtn').onclick=logout;
 document.body.insertAdjacentHTML('beforeend',`<nav class="bottom-nav"><a href="#/" data-nav="home"><i data-lucide="home"></i><span>المحطات</span></a><a href="#/dash" data-nav="dash"><i data-lucide="layout-dashboard"></i><span>التجميع</span></a><a href="#/stats" data-nav="stats"><i data-lucide="bar-chart-3"></i><span>إحصاء</span></a><a href="#/stations" data-nav="stations"><i data-lucide="settings"></i><span>إدارة</span></a></nav>`);
 lucide.createIcons();
 syncPend();route();setTimeout(()=>{$('#splash').classList.add('off')},800);
 setInterval(()=>{const a=getAuth();if(a&&['#/','#/dash','#/stats'].includes(location.hash))route()},30000);
-
-// 📱 Service Worker مدمج للعمل Offline
-if('serviceWorker' in navigator){
-  const swCode=`
-    const CACHE='monorail-v2';
-    self.addEventListener('install',e=>{self.skipWaiting()});
-    self.addEventListener('activate',e=>{e.waitUntil(self.clients.claim())});
-    self.addEventListener('fetch',e=>{
-      if(e.request.method!=='GET')return;
-      e.respondWith(
-        caches.open(CACHE).then(c=>
-          c.match(e.request).then(r=>r||fetch(e.request).then(res=>{
-            if(res.status===200)c.put(e.request,res.clone());
-            return res;
-          }).catch(()=>c.match('/')))
-        )
-      );
-    });
-  `;
-  const blob=new Blob([swCode],{type:'application/javascript'});
-  const swUrl=URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl).catch(()=>{});
-}
 </script>
 </body>
 </html>
