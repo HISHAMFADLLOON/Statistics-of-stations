@@ -78,6 +78,40 @@ footer{position:relative;z-index:10;border-top:1px solid var(--br);padding:26px 
 @keyframes pulseGlow{0%,100%{text-shadow:0 0 0 rgba(34,211,238,0)}50%{text-shadow:0 0 18px rgba(34,211,238,.5)}}
 @keyframes shimmer{0%{background-position:0% 50%}100%{background-position:200% 50%}}
 @keyframes slideRight{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}}
+
+/* 🤖 المساعد الذكي */
+.ai-assistant{position:fixed;bottom:24px;right:24px;z-index:90;width:56px;height:56px;border-radius:50%;background:var(--grad);box-shadow:0 8px 32px rgba(34,211,238,.4);display:grid;place-items:center;cursor:pointer;transition:.3s var(--ease);animation:float 3s ease-in-out infinite}
+.ai-assistant:hover{transform:scale(1.1);box-shadow:0 12px 40px rgba(34,211,238,.6)}
+.ai-assistant svg{width:28px;height:28px;color:#04121f}
+.ai-assistant .badge{position:absolute;top:-4px;right:-4px;width:20px;height:20px;background:var(--err);border-radius:50%;font-size:11px;font-weight:700;color:#fff;display:grid;place-items:center;box-shadow:0 2px 8px rgba(248,113,113,.5)}
+.ai-chat{position:fixed;bottom:90px;right:24px;z-index:91;width:380px;max-width:calc(100vw - 48px);height:500px;max-height:calc(100vh - 120px);background:var(--card-solid);border:1px solid var(--br);border-radius:20px;box-shadow:0 20px 60px rgba(2,6,23,.6);display:flex;flex-direction:column;overflow:hidden;transform:translateY(20px) scale(.95);opacity:0;pointer-events:none;transition:.3s var(--ease)}
+.ai-chat.open{transform:translateY(0) scale(1);opacity:1;pointer-events:auto}
+.ai-header{padding:16px 20px;background:var(--grad);color:#04121f;display:flex;align-items:center;gap:12px}
+.ai-header-icon{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center}
+.ai-header-icon svg{width:20px;height:20px}
+.ai-header-title{font:700 16px 'Changa'}
+.ai-header-sub{font-size:11px;opacity:.8}
+.ai-header-close{margin-inline-start:auto;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.2);display:grid;place-items:center;cursor:pointer;transition:.2s}
+.ai-header-close:hover{background:rgba(255,255,255,.3)}
+.ai-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.ai-msg{max-width:85%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.6;animation:fadeUp .3s var(--ease)}
+.ai-msg.bot{background:var(--glass);border:1px solid var(--br);border-top-right-radius:4px;align-self:flex-start}
+.ai-msg.user{background:var(--grad);color:#04121f;border-top-left-radius:4px;align-self:flex-end;font-weight:600}
+.ai-msg.typing{display:flex;gap:4px;padding:16px}
+.ai-msg.typing span{width:8px;height:8px;border-radius:50%;background:var(--tx2);animation:typing 1.4s infinite}
+.ai-msg.typing span:nth-child(2){animation-delay:.2s}
+.ai-msg.typing span:nth-child(3){animation-delay:.4s}
+@keyframes typing{0%,60%,100%{transform:translateY(0);opacity:.4}30%{transform:translateY(-8px);opacity:1}}
+.ai-suggestions{padding:12px 16px;border-top:1px solid var(--br);display:flex;flex-wrap:wrap;gap:8px}
+.ai-suggestion{padding:8px 14px;background:var(--glass);border:1px solid var(--br);border-radius:99px;font-size:12px;cursor:pointer;transition:.2s}
+.ai-suggestion:hover{background:var(--grad-soft);border-color:rgba(34,211,238,.4)}
+.ai-input-wrap{padding:12px 16px;border-top:1px solid var(--br);display:flex;gap:8px}
+.ai-input{flex:1;background:var(--glass);border:1px solid var(--br);border-radius:99px;padding:10px 16px;color:var(--tx);font-size:14px;outline:none}
+.ai-input:focus{border-color:rgba(34,211,238,.5)}
+.ai-send{width:36px;height:36px;border-radius:50%;background:var(--grad);display:grid;place-items:center;cursor:pointer;transition:.2s}
+.ai-send:hover{transform:scale(1.1)}
+.ai-send svg{width:18px;height:18px;color:#04121f}
+@media(max-width:600px){.ai-chat{right:12px;left:12px;width:auto;bottom:80px;height:60vh}.ai-assistant{bottom:16px;right:16px}}
 </style></head>
 <body>
 <div class="aurora"><i></i><i></i><i></i></div>
@@ -87,7 +121,7 @@ footer{position:relative;z-index:10;border-top:1px solid var(--br);padding:26px 
 <div class="unsaved-warning" id="unsavedWarning">⚠️ بيانات غير محفوظة!</div>
 <header class="topbar"><div class="topbar-in">
 <a class="brand" href="#/"><span class="brand-badge"><img src="logo.png" onerror="this.outerHTML='🚝'"></span><span><b>إحصاء المحطات</b><small>مونوريل شرق النيل</small></span></a>
-<nav class="top-nav" id="topNav"><a href="#/" data-nav="home"> المحطات</a><a href="#/dash" data-nav="dash">📊 التجميع</a><a href="#/stats" data-nav="stats">📈 الإحصائيات</a><a href="#/audit" data-nav="audit">📋 التدقيق</a><a href="#/stations" data-nav="stations">⚙️ الإدارة</a></nav>
+<nav class="top-nav" id="topNav"><a href="#/" data-nav="home">📋 المحطات</a><a href="#/dash" data-nav="dash">📊 التجميع</a><a href="#/stats" data-nav="stats">📈 الإحصائيات</a><a href="#/audit" data-nav="audit">📋 التدقيق</a><a href="#/stations" data-nav="stations">⚙️ الإدارة</a></nav>
 <div class="head-meta"><div id="clockTime">--:--</div><div id="clockDate"></div><button class="icon-btn" id="palBtn"><i data-lucide="search"></i></button><button class="icon-btn" id="themeBtn"><i data-lucide="sun"></i></button><button class="icon-btn" id="syncBtn" style="display:none"><i data-lucide="refresh-cw"></i></button><span class="chip warn" id="modeChip">محلي</span><span class="chip ok" id="sessionChip" style="display:none">🔒 آمن</span><button class="btn ghost sm" id="logoutBtn" style="display:none"><i data-lucide="log-out"></i> خروج</button></div>
 </div></header>
 <main id="app"></main>
@@ -96,6 +130,29 @@ footer{position:relative;z-index:10;border-top:1px solid var(--br);padding:26px 
 <div id="toast"></div>
 <div id="overlay" class="overlay" hidden></div>
 <div id="palette" class="overlay" hidden><div class="pal-box"><input id="palInput" placeholder="اكتب محطة أو صفحة… (Esc)"><div class="pal-list" id="palList"></div></div></div>
+
+<!-- 🤖 المساعد الذكي -->
+<div class="ai-assistant" id="aiBtn">
+  <i data-lucide="bot"></i>
+  <span class="badge" id="aiBadge" style="display:none">0</span>
+</div>
+<div class="ai-chat" id="aiChat">
+  <div class="ai-header">
+    <div class="ai-header-icon"><i data-lucide="bot"></i></div>
+    <div>
+      <div class="ai-header-title">المساعد الذكي</div>
+      <div class="ai-header-sub">متصل • جاهز للمساعدة</div>
+    </div>
+    <div class="ai-header-close" id="aiClose"><i data-lucide="x"></i></div>
+  </div>
+  <div class="ai-messages" id="aiMessages"></div>
+  <div class="ai-suggestions" id="aiSuggestions"></div>
+  <div class="ai-input-wrap">
+    <input class="ai-input" id="aiInput" placeholder="اسألني أي حاجة...">
+    <div class="ai-send" id="aiSend"><i data-lucide="send"></i></div>
+  </div>
+</div>
+
 <script>
 'use strict';
 if(!window.lucide){window.lucide={createIcons:function(){}}}
@@ -114,7 +171,7 @@ const COUNT_FIELDS=['ticketsCount','weekCount','monthCount','quarterCount','subC
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const num=v=>{const n=parseFloat(String(v).replace(/,/g,''));return isFinite(n)&&n>0?n:0};
 const fmt=n=>new Intl.NumberFormat('en-US',{maximumFractionDigits:2}).format(n||0),money=n=>fmt(n)+' ج.م';
-const AR_D='٠١٢٣٤٥٦٧٨٩',FA_D='۰۱۲٣٤٥٦٧٨٩';
+const AR_D='١٢٣٤٥٦٧٨٩',FA_D='۰۱۲٣٤٥٦٧٨٩';
 const norm=s=>String(s).replace(/[-٩]/g,d=>String(AR_D.indexOf(d))).replace(/[۰-۹]/g,d=>String(FA_D.indexOf(d))).replace(/[,،٬\s]/g,'');
 const todayISO=()=>{const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')};
 const fmtDateAr=i=>{try{return new Date(i+'T12:00').toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}catch(e){return i}};
@@ -122,6 +179,238 @@ const timeOf=t=>{try{return new Date(t).toLocaleTimeString('ar-EG',{hour:'2-digi
 const startP=()=>{const p=$('#nprogress');if(p){p.classList.add('on');p.firstElementChild.style.width='70%'}};
 const doneP=()=>{const p=$('#nprogress');if(p){p.firstElementChild.style.width='100%';setTimeout(()=>{p.classList.remove('on');p.firstElementChild.style.width='0'},250)}};
 function applyMotion(root){if(!root)return;root.querySelectorAll('.card,.stats-strip').forEach((el,i)=>{el.style.animation='fadeUp .55s var(--ease) both';el.style.animationDelay=(i*0.08)+'s'});root.querySelectorAll('.station-row').forEach((el,i)=>{el.style.animation='slideRight .5s var(--ease) both';el.style.animationDelay=(i*0.05)+'s'});}
+
+/* 🤖 المساعد الذكي - Rule-based AI */
+const AI={
+  messages:[],
+  suggestions:[],
+  alerts:0,
+  
+  addMsg(text,type='bot'){
+    this.messages.push({text,type,time:Date.now()});
+    this.render();
+  },
+  
+  showTyping(){
+    const div=document.createElement('div');
+    div.className='ai-msg bot typing';
+    div.innerHTML='<span></span><span></span><span></span>';
+    $('#aiMessages').appendChild(div);
+    $('#aiMessages').scrollTop=$('#aiMessages').scrollHeight;
+    return div;
+  },
+  
+  async respond(input){
+    const typing=this.showTyping();
+    await new Promise(r=>setTimeout(r,800+Math.random()*600));
+    typing.remove();
+    
+    const q=input.toLowerCase();
+    let response='';
+    
+    // تحليل السؤال
+    if(q.includes('ملخص')||q.includes('summary')){
+      response=this.getSummary();
+    }else if(q.includes('متأخر')||q.includes('late')){
+      response=this.getLateStations();
+    }else if(q.includes('أفضل')||q.includes('best')||q.includes('top')){
+      response=this.getTopStations();
+    }else if(q.includes('تحذير')||q.includes('alert')||q.includes('warning')){
+      response=this.getAlerts();
+    }else if(q.includes('متوسط')||q.includes('average')){
+      response=this.getAverage();
+    }else if(q.includes('مقارنة')||q.includes('compare')){
+      response=this.getComparison();
+    }else if(q.includes('توقع')||q.includes('predict')){
+      response=this.getPrediction();
+    }else if(q.includes('مساعدة')||q.includes('help')){
+      response='🤖 أقدر أساعدك في:\n\n• "ملخص اليوم" - ملخص سريع\n• "المحطات المتأخرة" - من لم يسجل\n• "أفضل المحطات" - الأعلى إيراداً\n• "التحذيرات" - تنبيهات مهمة\n• "المتوسط" - متوسط الإيرادات\n• "مقارنة" - مقارنة الفترات\n• "توقع" - توقعات الغد';
+    }else{
+      response=' مش فاهم السؤال بالظبط. جرب تسأل:\n\n• "ملخص اليوم"\n• "المحطات المتأخرة"\n• "أفضل المحطات"\n• "التحذيرات"';
+    }
+    
+    this.addMsg(response);
+  },
+  
+  getSummary(){
+    const today=todayISO();
+    const reports=window._cachedReports||[];
+    const stations=window._cachedStations||[];
+    const todayReports=reports.filter(r=>String(r.date)===today);
+    const totalRev=todayReports.reduce((a,r)=>a+num(r.totalRevenue),0);
+    const done=stations.filter(s=>todayReports.some(r=>String(r.stationCode)===s.code)).length;
+    return `📊 **ملخص اليوم**\n\n✅ ${done} من ${stations.length} محطة سجلت\n💰 إجمالي الإيراد: ${money(totalRev)}\n متوسط المحطة: ${money(stations.length?totalRev/stations.length:0)}\n\n${done===stations.length?'🎉 ممتاز! كل المحطات سجلت':'⚠️ لسه في محطات لم تسجل'}`;
+  },
+  
+  getLateStations(){
+    const today=todayISO();
+    const reports=window._cachedReports||[];
+    const stations=window._cachedStations||[];
+    const todayReports=reports.filter(r=>String(r.date)===today);
+    const late=stations.filter(s=>!todayReports.some(r=>String(r.stationCode)===s.code));
+    if(late.length===0)return '✅ مفيش محطات متأخرة! كل المحطات سجلت اليوم.';
+    return `️ **${late.length} محطة لم تسجل بعد:**\n\n${late.slice(0,5).map(s=>`• ${s.name} (${s.code})`).join('\n')}${late.length>5?`\n\n...و ${late.length-5} محطة أخرى`:''}`;
+  },
+  
+  getTopStations(){
+    const today=todayISO();
+    const reports=window._cachedReports||[];
+    const todayReports=reports.filter(r=>String(r.date)===today);
+    const sorted=[...todayReports].sort((a,b)=>num(b.totalRevenue)-num(a.totalRevenue));
+    if(sorted.length===0)return '📊 مفيش بيانات اليوم بعد.';
+    const top3=sorted.slice(0,3);
+    return ` **أفضل 3 محطات اليوم:**\n\n${top3.map((r,i)=>`${['🥇','🥈',''][i]} ${r.stationName}: ${money(num(r.totalRevenue))}`).join('\n')}`;
+  },
+  
+  getAlerts(){
+    const alerts=[];
+    const today=todayISO();
+    const reports=window._cachedReports||[];
+    const stations=window._cachedStations||[];
+    const todayReports=reports.filter(r=>String(r.date)===today);
+    
+    // محطات لم تسجل
+    const late=stations.filter(s=>!todayReports.some(r=>String(r.stationCode)===s.code));
+    if(late.length>0)alerts.push(`⚠️ ${late.length} محطة لم تسجل`);
+    
+    // إيرادات شاذة
+    todayReports.forEach(r=>{
+      const rev=num(r.totalRevenue);
+      if(rev>50000)alerts.push(`🔴 ${r.stationName}: إيراد مرتفع جداً (${money(rev)})`);
+      if(rev===0&&num(r.totalCount)>0)alerts.push(`🟡 ${r.stationName}: عدد تذاكر لكن إيراد صفر`);
+    });
+    
+    if(alerts.length===0)return '✅ مفيش تحذيرات حالياً!';
+    return `🚨 **${alerts.length} تحذير:**\n\n${alerts.join('\n')}`;
+  },
+  
+  getAverage(){
+    const reports=window._cachedReports||[];
+    const last7=[];
+    for(let i=6;i>=0;i--){
+      const d=new Date();d.setDate(d.getDate()-i);
+      const iso=d.toISOString().slice(0,10);
+      const dayRev=reports.filter(r=>String(r.date)===iso).reduce((a,r)=>a+num(r.totalRevenue),0);
+      last7.push(dayRev);
+    }
+    const avg=last7.reduce((a,b)=>a+b,0)/7;
+    return `📊 **متوسط آخر 7 أيام:**\n\n💰 ${money(avg)} في اليوم\n\n📈 الأعلى: ${money(Math.max(...last7))}\n📉 الأدنى: ${money(Math.min(...last7))}`;
+  },
+  
+  getComparison(){
+    const reports=window._cachedReports||[];
+    const today=new Date();
+    const thisWeek=[];
+    const lastWeek=[];
+    for(let i=0;i<7;i++){
+      const d=new Date(today);d.setDate(d.getDate()-i);
+      const iso=d.toISOString().slice(0,10);
+      const rev=reports.filter(r=>String(r.date)===iso).reduce((a,r)=>a+num(r.totalRevenue),0);
+      thisWeek.push(rev);
+      const ld=new Date(today);ld.setDate(ld.getDate()-i-7);
+      const liso=ld.toISOString().slice(0,10);
+      const lrev=reports.filter(r=>String(r.date)===liso).reduce((a,r)=>a+num(r.totalRevenue),0);
+      lastWeek.push(lrev);
+    }
+    const thisTotal=thisWeek.reduce((a,b)=>a+b,0);
+    const lastTotal=lastWeek.reduce((a,b)=>a+b,0);
+    const change=lastTotal>0?((thisTotal-lastTotal)/lastTotal*100):0;
+    const arrow=change>=0?'':'📉';
+    return `${arrow} **مقارنة الأسبوع:**\n\nهذا الأسبوع: ${money(thisTotal)}\nالأسبوع الماضي: ${money(lastTotal)}\n\nالتغيير: ${change>=0?'+':''}${change.toFixed(1)}%`;
+  },
+  
+  getPrediction(){
+    const reports=window._cachedReports||[];
+    const last7=[];
+    for(let i=6;i>=0;i--){
+      const d=new Date();d.setDate(d.getDate()-i);
+      const iso=d.toISOString().slice(0,10);
+      const rev=reports.filter(r=>String(r.date)===iso).reduce((a,r)=>a+num(r.totalRevenue),0);
+      last7.push(rev);
+    }
+    const avg=last7.reduce((a,b)=>a+b,0)/7;
+    const trend=last7[6]-last7[0];
+    const predicted=avg+trend/7;
+    return `🔮 **توقع الغد:**\n\n💰 المتوقع: ${money(predicted)}\n\n📊 بناءً على:\n• متوسط 7 أيام: ${money(avg)}\n• الاتجاه: ${trend>=0?'صاعد 📈':'هابط 📉'}`;
+  },
+  
+  render(){
+    const container=$('#aiMessages');
+    container.innerHTML='';
+    this.messages.slice(-20).forEach(msg=>{
+      const div=document.createElement('div');
+      div.className=`ai-msg ${msg.type}`;
+      div.innerHTML=msg.text.replace(/\n/g,'<br>').replace(/\*\*(.*?)\*\*/g,'<b>$1</b>');
+      container.appendChild(div);
+    });
+    container.scrollTop=container.scrollHeight;
+  },
+  
+  updateSuggestions(){
+    const suggestions=[
+      {text:'ملخص اليوم',query:'ملخص'},
+      {text:'المحطات المتأخرة',query:'متأخر'},
+      {text:'أفضل المحطات',query:'أفضل'},
+      {text:'التحذيرات',query:'تحذير'},
+      {text:'المتوسط',query:'متوسط'},
+      {text:'مقارنة',query:'مقارنة'},
+      {text:'توقع الغد',query:'توقع'}
+    ];
+    const container=$('#aiSuggestions');
+    container.innerHTML='';
+    suggestions.slice(0,4).forEach(s=>{
+      const btn=document.createElement('div');
+      btn.className='ai-suggestion';
+      btn.textContent=s.text;
+      btn.onclick=()=>{
+        $('#aiInput').value=s.query;
+        this.send();
+      };
+      container.appendChild(btn);
+    });
+  },
+  
+  checkAlerts(){
+    const today=todayISO();
+    const reports=window._cachedReports||[];
+    const stations=window._cachedStations||[];
+    const todayReports=reports.filter(r=>String(r.date)===today);
+    const late=stations.filter(s=>!todayReports.some(r=>String(r.stationCode)===s.code));
+    this.alerts=late.length;
+    const badge=$('#aiBadge');
+    if(this.alerts>0){
+      badge.textContent=this.alerts;
+      badge.style.display='grid';
+    }else{
+      badge.style.display='none';
+    }
+  },
+  
+  send(){
+    const input=$('#aiInput');
+    const text=input.value.trim();
+    if(!text)return;
+    this.addMsg(text,'user');
+    input.value='';
+    this.respond(text);
+  },
+  
+  init(){
+    $('#aiBtn').onclick=()=>{
+      $('#aiChat').classList.toggle('open');
+      if($('#aiChat').classList.contains('open')&&this.messages.length===0){
+        this.addMsg('👋 أهلاً! أنا المساعد الذكي.\n\nاسألني أي حاجة عن المحطات والإيرادات، أو اختار من الاقتراحات تحت.');
+        this.updateSuggestions();
+      }
+    };
+    $('#aiClose').onclick=()=>$('#aiChat').classList.remove('open');
+    $('#aiSend').onclick=()=>this.send();
+    $('#aiInput').addEventListener('keypress',e=>{
+      if(e.key==='Enter')this.send();
+    });
+  }
+};
+
 const PASSWORD_SALT='monorail_salt_2026_hf';
 async function hashPassword(password){try{if(window.crypto&&crypto.subtle){const data=new TextEncoder().encode(password+PASSWORD_SALT);const hash=await crypto.subtle.digest('SHA-256',data);return Array.from(new Uint8Array(hash)).map(b=>b.toString(16).padStart(2,'0')).join('')}return btoa(unescape(encodeURIComponent(password+PASSWORD_SALT)))}catch(e){try{return btoa(unescape(encodeURIComponent(password+PASSWORD_SALT)))}catch(e2){return 'x'}}}
 const loginAttempts=new Map();
@@ -165,12 +454,12 @@ const logout=()=>{clearAuth();location.hash='#/login';toast('تم تسجيل ا�
 function copyText(t,m){const d=()=>toast(m||'تم النسخ ✓');if(navigator.clipboard)navigator.clipboard.writeText(t).then(d);else{const ta=document.createElement('textarea');ta.value=t;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();d()}}
 let toastT;function toast(m){const e=$('#toast');if(!e)return;e.textContent=m;e.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>e.classList.remove('show'),3000)}
 const openOverlay=h=>{const o=$('#overlay');o.innerHTML=h;o.hidden=false},closeOverlay=()=>{$('#overlay').hidden=true},setActive=k=>$$('nav a').forEach(a=>a.classList.toggle('active',a.dataset.nav===k));
-function updateModeChip(){const c=$('#modeChip');if(!c)return;if(!navigator.onLine){c.className='chip warn';c.textContent='بدون نت'}else if(useMock){c.className='chip warn';c.textContent='محاكاة'}else{c.className='chip ok';c.textContent='متصل'}const pending=getPend();if(pending.length>0){c.textContent+=' | ⏳'+pending.length}}
+function updateModeChip(){const c=$('#modeChip');if(!c)return;if(!navigator.onLine){c.className='chip warn';c.textContent='بدون نت'}else if(useMock){c.className='chip warn';c.textContent='محاكاة'}else{c.className='chip ok';c.textContent='متصل'}const pending=getPend();if(pending.length>0){c.textContent+=' | '+pending.length}}
 window.addEventListener('online',async()=>{toast('📶 مزامنة…');updateModeChip();const n=await syncPend();if(n)toast('✅ '+n);updateModeChip();if(currentPage==='home')renderHome()});
 window.addEventListener('offline',()=>{updateModeChip();toast('📴 حفظ محلي')});
 const crumbs=l=>`<div class="crumbs"><a href="#/">🏠 الرئيسية</a> / <b>${l}</b></div>`;
 async function openPalette(){$('#palette').hidden=false;$('#palInput').value='';renderPalette('');setTimeout(()=>$('#palInput').focus(),50)}
-async function renderPalette(q){q=(q||'').trim().toLowerCase();let it=[['#/','🏠 المحطات'],['#/dash','📊 التجميع'],['#/stats','📈 الإحصائيات'],['#/audit','📋 التدقيق'],['#/stations','️ الإدارة']].map(p=>({h:p[0],t:p[1]}));const st=await getAllStations(),fv=getFavs();st.forEach(s=>it.push({h:'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name),t:(fv.includes(s.code)?'⭐ ':'🚉 ')+s.name+' ('+s.code+')'}));if(q)it=it.filter(i=>i.t.toLowerCase().includes(q));$('#palList').innerHTML=it.slice(0,30).map(i=>`<div class="pal-item" data-h="${i.h}">${i.t}</div>`).join('')||'<div class="pal-item">لا نتائج</div>'}
+async function renderPalette(q){q=(q||'').trim().toLowerCase();let it=[['#/','🏠 المحطات'],['#/dash','📊 التجميع'],['#/stats','📈 الإحصائيات'],['#/audit','📋 التدقيق'],['#/stations','⚙️ الإدارة']].map(p=>({h:p[0],t:p[1]}));const st=await getAllStations(),fv=getFavs();st.forEach(s=>it.push({h:'#/s/'+encodeURIComponent(s.code)+'/'+encodeURIComponent(s.name),t:(fv.includes(s.code)?'⭐ ':'🚉 ')+s.name+' ('+s.code+')'}));if(q)it=it.filter(i=>i.t.toLowerCase().includes(q));$('#palList').innerHTML=it.slice(0,30).map(i=>`<div class="pal-item" data-h="${i.h}">${i.t}</div>`).join('')||'<div class="pal-item">لا نتائج</div>'}
 $('#palBtn').onclick=openPalette;$('#fab').onclick=openPalette;$('#palInput').addEventListener('input',e=>renderPalette(e.target.value));
 $('#palInput').addEventListener('keydown',e=>{if(e.key==='Enter'){const f=$('#palList .pal-item');if(f){location.hash=f.dataset.h;$('#palette').hidden=true}}});
 $('#palList').addEventListener('click',e=>{const i=e.target.closest('.pal-item');if(i&&i.dataset.h){location.hash=i.dataset.h;$('#palette').hidden=true}});
@@ -185,15 +474,16 @@ document.addEventListener('touchend',e=>{if(!isSwiping||swipeDirection!=='horizo
 const skList=n=>`<div class="stations sk-wrap">${Array.from({length:n},()=>'<div class="skeleton sk-row"></div>').join('')}</div>`,skStats=()=>`<div class="stats-strip">${Array.from({length:4},()=>'<div class="stat"><div class="skeleton" style="height:14px;width:70%;margin-bottom:12px"></div><div class="skeleton" style="height:32px;width:50%"></div></div>').join('')}</div>`,emptyState=m=>`<div class="empty"><p>${m}</p></div>`;
 function animateCounts(root){root.querySelectorAll('[data-cu]').forEach(el=>{const t=parseFloat(el.dataset.cu)||0,k=el.dataset.kind||'num',st=performance.now();(function s(n){const p=Math.min(1,(n-st)/900),e=1-Math.pow(1-p,3),v=t*e;el.textContent=k==='money'?money(v):fmt(v);if(p<1)requestAnimationFrame(s)})(st)})}
 function calcRow(r){const g=f=>num(r?r[f]:0);const tBefore=g('ticketsRevenue')+g('diverseRevenue');const tDisc=g('bankAhlyDiscount')+g('bankMisrDiscount');const tAfter=tBefore-tDisc;const sBefore=g('weekRevenue')+g('monthRevenue')+g('quarterRevenue')+g('subCardsRevenue')+g('walletCardsRevenue')+g('rechargeRevenue')+g('formsRevenue')+g('subDiverseRevenue');const sDisc=g('subBankAhlyDiscount')+g('subBankMisrDiscount');const sAfter=sBefore-sDisc;const grand=tAfter+sAfter;const count=COUNT_FIELDS.reduce((a,f)=>a+g(f),0);return{tBefore,tDisc,tAfter,sBefore,sDisc,sAfter,grand,count}}
-function validateForm(v){const w=[];const pair=(cf,rf,label)=>{const cn=num(v[cf]||0),rn=num(v[rf]||0);if(cn>0&&rn===0)w.push(`⚠️ ${label}: فيه عدد (${fmt(cn)}) بس مفيش إيراد`);if(rn>0&&cn===0)w.push(`⚠️ ${label}: فيه إيراد (${fmt(rn)}) بس مفيش عدد`)};pair('ticketsCount','ticketsRevenue','التذاكر');pair('weekCount','weekRevenue','أسبوعي');pair('monthCount','monthRevenue','شهري');pair('quarterCount','quarterRevenue','ربع سنوي');if(num(v.diverseRevenue||0)>0&&num(v.ticketsCount||0)===0&&num(v.ticketsRevenue||0)===0)w.push('⚠️ متنوع التذاكر فيه إيراد بس مفيش تذاكر');return w}
+function validateForm(v){const w=[];const pair=(cf,rf,label)=>{const cn=num(v[cf]||0),rn=num(v[rf]||0);if(cn>0&&rn===0)w.push(`⚠️ ${label}: فيه عدد (${fmt(cn)}) بس مفيش إيراد`);if(rn>0&&cn===0)w.push(`⚠️ ${label}: فيه إيراد (${fmt(rn)}) بس مفيش عدد`)};pair('ticketsCount','ticketsRevenue','التذاكر');pair('weekCount','weekRevenue','أسبوعي');pair('monthCount','monthRevenue','شهري');pair('quarterCount','quarterRevenue','ربع سنوي');if(num(v.diverseRevenue||0)>0&&num(v.ticketsCount||0)===0&&num(v.ticketsRevenue||0)===0)w.push('️ متنوع التذاكر فيه إيراد بس مفيش تذاكر');return w}
 function askProceed(warnings,onYes){openOverlay(`<div class="success-box" style="max-width:540px"><div class="okring">⚠️</div><h2 style="font:800 26px 'Changa'">راجع البيانات قبل الإرسال</h2><div style="text-align:right;background:rgba(251,191,36,.1);border:1px solid rgba(251,191,36,.4);border-radius:16px;padding:14px;margin-bottom:16px;max-height:40vh;overflow:auto">${warnings.map(x=>`<div style="color:var(--warn);font-size:13px;margin:5px 0">${x}</div>`).join('')}</div><div class="success-actions"><button class="btn" id="wy">إرسال على أي حال</button><button class="btn ghost" id="wn">مراجعة</button></div></div>`);$('#wy').onclick=()=>{closeOverlay();onYes()};$('#wn').onclick=closeOverlay}
 function route(){startP();const h=location.hash.replace(/^#\/?/,''),seg=h.split('?')[0].split('/').filter(Boolean);closeOverlay();window.scrollTo(0,0);const auth=getAuth();const isRec=seg[0]==='s'&&!auth;document.body.classList.toggle('recorder',isRec);if(seg[0]==='s')return renderForm(seg[1]||'',decodeURIComponent(seg[2]||''));if(!auth&&seg[0]!=='login'){location.hash='#/login';return}if(seg[0]==='login')return renderLogin();if(seg[0]==='dash')return renderDash();if(seg[0]==='stats')return renderStats();if(seg[0]==='audit')return renderAudit();if(seg[0]==='stations')return renderStations();if(seg[0]==='acc')return renderAccount(seg[1]||'');renderHome()}
 window.addEventListener('hashchange',route);
 function renderLogin(){currentPage='login';setActive('');document.body.classList.remove('recorder');$('#logoutBtn').style.display='none';$('#sessionChip').style.display='none';$('#syncBtn').style.display='none';$('#app').innerHTML=`<div class="view"><div class="login-box"><h2>🔐 تسجيل الدخول الآمن</h2><div style="text-align:center;margin-bottom:16px"><span class="chip ok">SHA-256 + Rate Limit</span></div><form id="loginForm"><div class="field"><label>اسم المستخدم</label><div class="in-wrap"><input type="text" id="loginUser" required autocomplete="username"></div></div><div class="field"><label>كلمة المرور</label><div class="in-wrap"><input type="password" id="loginPass" required autocomplete="current-password"></div></div><button class="btn big" type="submit" style="width:100%">دخول</button><p style="color:var(--tx2);font-size:12px;margin-top:16px;text-align:center">admin / admin123</p><p style="color:var(--warn);font-size:11px;margin-top:8px;text-align:center">⚠️ 5 محاولات فاشلة = قفل 5 دقائق</p></form></div></div>`;doneP();applyMotion($('#app'));$('#loginForm').addEventListener('submit',async e=>{e.preventDefault();const u=$('#loginUser').value.trim(),p=$('#loginPass').value,b=e.target.querySelector('button');b.disabled=true;b.innerHTML='جاري...';const user=await login(u,p);if(user){toast('🔒 مرحبًا '+user.username);updateModeChip();location.hash='#/'}else{toast('بيانات خاطئة');b.disabled=false;b.textContent='دخول'}})}
-async function renderHome(){currentPage='home';setActive('home');$('#logoutBtn').style.display='';updateModeChip();$('#app').innerHTML=`<div class="view">${skStats()}${skList(6)}</div>`;const today=todayISO();const[reports,stations]=await Promise.all([getAllReports(today),getAllStations()]);const rec=new Map(reports.map(r=>[String(r.stationCode),r])),done=stations.filter(s=>rec.has(s.code)).length,pct=stations.length?Math.round(done/stations.length*100):0,favs=getFavs(),sorted=[...stations].sort((a,b)=>(favs.includes(b.code)?1:0)-(favs.includes(a.code)?1:0)),lateHr=new Date().getHours()>=18;
+async function renderHome(){currentPage='home';setActive('home');$('#logoutBtn').style.display='';updateModeChip();$('#app').innerHTML=`<div class="view">${skStats()}${skList(6)}</div>`;const today=todayISO();const[reports,stations]=await Promise.all([getAllReports(today),getAllStations()]);window._cachedReports=reports;window._cachedStations=stations;const rec=new Map(reports.map(r=>[String(r.stationCode),r])),done=stations.filter(s=>rec.has(s.code)).length,pct=stations.length?Math.round(done/stations.length*100):0,favs=getFavs(),sorted=[...stations].sort((a,b)=>(favs.includes(b.code)?1:0)-(favs.includes(a.code)?1:0)),lateHr=new Date().getHours()>=18;
 const feed=[...reports].sort((a,b)=>String(b.submittedAt||'').localeCompare(String(a.submittedAt||''))).slice(0,5);
 $('#app').innerHTML=`<div class="view"><div class="board-head"><div><h1 class="page-title">لوحة المحطات</h1><p class="page-sub">بيان اليوم — ${fmtDateAr(today)}</p></div><div class="grow"></div><input class="search" id="stSearch" placeholder="ابحث…"><a class="btn ghost sm" href="#/dash"><i data-lucide="layout-dashboard"></i> التجميع</a></div><div class="progress-wrap"><span><b>${pct}%</b> (${done}/${stations.length})</span><div class="progress"><i id="progBar"></i></div></div><div class="card"><h2><span class="live-dot"></span> آخر التسجيلات</h2>${feed.length?feed.map(r=>`<div class="feed-item"><span class="s-code" style="padding:6px 0">${esc(r.stationCode)}</span><div style="flex:1"><b>${esc(r.stationName)}</b><div style="font-size:12px;color:var(--tx2)">🕐 ${timeOf(r.submittedAt)}</div></div><span class="s-rev">${money(num(r.totalRevenue))}</span></div>`).join(''):emptyState('لا تسجيلات اليوم بعد')}</div><ol class="stations">${sorted.map(s=>{const r=rec.get(s.code),late=!r&&lateHr,fv=favs.includes(s.code);return `<li class="station-row"><span class="s-code">${esc(s.code)}</span><div><div class="s-name">${fv?'⭐ ':''}${esc(s.name)}</div><div class="s-status ${r?'on':late?'late':''}"><span class="dot"></span>${r?'مسجّل • '+money(num(r.totalRevenue)):late?'متأخرة!':'بانتظار التسجيل'}</div></div><span class="s-rev">${r?money(num(r.totalRevenue)):''}</span><div class="s-actions"><a class="btn sm" href="#/s/${encodeURIComponent(s.code)}/${encodeURIComponent(s.name)}"><i data-lucide="ticket"></i> تسجيل</a><button class="icon-btn" data-acc="${esc(s.code)}" title="حساب المحطة"><i data-lucide="bar-chart-3"></i></button><button class="icon-btn ${fv?'is-fav':''}" data-fav="${esc(s.code)}"><i data-lucide="star"></i></button><button class="icon-btn" data-copy="${esc(stationLink(s))}"><i data-lucide="link"></i></button><button class="icon-btn" data-qr="${esc(s.name)}" data-qrl="${esc(stationLink(s))}"><i data-lucide="qr-code"></i></button></div></li>`}).join('')}</ol></div>`;doneP();lucide.createIcons();applyMotion($('#app'));requestAnimationFrame(()=>{const b=$('#progBar');if(b)b.style.width=pct+'%'});
-$('#stSearch').addEventListener('input',e=>{const q=e.target.value.trim();$$('#app .station-row').forEach(li=>li.style.display=li.textContent.includes(q)?'':'none')})}
+$('#stSearch').addEventListener('input',e=>{const q=e.target.value.trim();$$('#app .station-row').forEach(li=>li.style.display=li.textContent.includes(q)?'':'none')});
+AI.checkAlerts();}
 document.addEventListener('click',e=>{const ac=e.target.closest('[data-acc]');if(ac){location.hash='#/acc/'+encodeURIComponent(ac.dataset.acc);return}const cp=e.target.closest('[data-copy]');if(cp){copyText(cp.dataset.copy);return}const fv=e.target.closest('[data-fav]');if(fv){toggleFav(fv.dataset.fav);renderHome();return}const qr=e.target.closest('[data-qr]');if(qr){openQR(qr.dataset.qr,qr.dataset.qrl);return}});
 function openQR(n,l){openOverlay(`<div class="qr-box"><img src="https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(l)}"><h3>${esc(n)}</h3><p>${esc(l)}</p><div class="success-actions"><button class="btn sm" id="qc"><i data-lucide="copy"></i> نسخ</button><button class="btn ghost sm" id="qx">إغلاق</button></div></div>`);lucide.createIcons();$('#qc').onclick=()=>copyText(l);$('#qx').onclick=closeOverlay}
 async function renderAccount(code){currentPage='acc';setActive('');$('#app').innerHTML=`<div class="view">${skStats()}${skList(3)}</div>`;
@@ -242,11 +532,12 @@ async function drawDash(){
 try{
 $('#app').innerHTML=`<div class="view">${skStats()}${skList(4)}</div>`;
 const[reports,stations,all]=await Promise.all([getAllReports(dashDate),getAllStations(),getAllReports()]);
+window._cachedReports=all;window._cachedStations=stations;
 const rows=buildDayRows(reports,dashDate,stations),T=totalsOf(rows);
 const hist={};all.forEach(r=>{if(String(r.date)!==dashDate){const k=r.stationCode;(hist[k]=hist[k]||{sum:0,n:0});hist[k].sum+=num(r.totalRevenue);hist[k].n++}});
 const anomalies=rows.filter(r=>r.present&&hist[r.code]&&hist[r.code].n>=3).map(r=>{const avg=hist[r.code].sum/hist[r.code].n;const dev=avg>0?((r.grand-avg)/avg)*100:0;return{code:r.code,name:r.name,grand:r.grand,avg,dev}}).filter(a=>Math.abs(a.dev)>=50);
 const anomalySet=new Set(anomalies.map(a=>a.code));
-$('#app').innerHTML=`<div class="view">${crumbs('لوحة التجميع')}<div class="board-head"><div><h1 class="page-title">لوحة التجميع</h1></div><div class="grow"></div><button class="btn sm" id="exDay">📊 اليوم</button><button class="btn ghost sm" id="exWeek">📅 اسبوعي</button><button class="btn ghost sm" id="exMonth">🗓️ شهري</button><button class="btn ghost sm" id="exWa">📤 واتساب</button><button class="btn ghost sm" id="exLog">⬇️ السجل</button></div><div style="display:flex;gap:12px;margin:20px 0;flex-wrap:wrap"><input type="date" id="dashDate" value="${dashDate}" style="background:var(--glass);box-shadow:inset 0 0 0 1px var(--br-strong);color:var(--tx);padding:10px;border-radius:14px"><button class="btn ghost sm" id="todayBtn">اليوم</button><span class="chip ok"><span class="live-dot" style="display:inline-block;margin-left:6px"></span> مباشر</span><span class="chip ${useMock?'warn':'ok'}">${useMock?'محاكاة':'Supabase'}</span></div><div class="stats-strip"><div class="stat"><small>مسجّلة</small><b>${T.done}/${rows.length}</b></div><div class="stat gold"><small>الإيرادات</small><b data-cu="${T.rev}" data-kind="money">0</b></div><div class="stat"><small>عمليات</small><b data-cu="${T.count}">0</b></div><div class="stat"><small>أيام</small><b>${new Set(all.map(r=>r.date)).size}</b></div></div>${anomalies.length?`<div class="card" style="border-color:rgba(251,191,36,.5)"><h2 style="color:var(--warn)">🔎 كشف الشذوذ (انحراف ≥ ٥٠٪ عن المتوسط)</h2>${anomalies.map(a=>`<div style="font-size:13px;margin:6px 0;color:var(--tx2)">⚠️ <b style="color:var(--tx)">${esc(a.name)}</b>: الإيراد <b>${fmt(a.grand)}</b> والمتوسط <b>${fmt(a.avg)}</b> (<span style="color:${a.dev>0?'var(--ok)':'var(--err)'}">${a.dev>0?'+':''}${Math.round(a.dev)}%</span>)</div>`).join('')}</div>`:''}<div class="table-wrap"><table class="gt"><thead><tr><th>المحطة</th><th>تذاكر عدد</th><th>تذاكر إيراد</th><th>متنوع</th><th>إيراد التذاكر</th><th>أهلي</th><th>مصر</th><th>الخصومات</th><th>إجمالي الايراد</th><th>أسبوعي عدد</th><th>أسبوعي إيراد</th><th>شهري عدد</th><th>شهري إيراد</th><th>ربع عدد</th><th>ربع إيراد</th><th>كروت اشتراكات عدد</th><th>كروت اشتراكات إيراد</th><th>كروت محفظة عدد</th><th>كروت محفظة إيراد</th><th>شحن محفظة عدد</th><th>شحن محفظة إيراد</th><th>استمارات عدد</th><th>استمارات إيراد</th><th>متنوع</th><th>إيراد الاشتراكات</th><th>أهلي</th><th>مصر</th><th>الخصومات</th><th>إجمالي الايراد</th><th>الإجمالي</th><th>الحالة</th><th>تذاكر استاد</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="st"><a href="#/acc/${encodeURIComponent(r.code)}" style="color:inherit">${esc(r.name)}</a>${anomalySet.has(r.code)?' ⚠️':''}</td><td>${fmt(r.ticketsCount)}</td><td class="rev">${fmt(r.ticketsRevenue)}</td><td class="rev">${fmt(r.diverseRevenue)}</td><td class="rev">${fmt(r.tBefore)}</td><td>${fmt(r.bankAhlyDiscount)}</td><td>${fmt(r.bankMisrDiscount)}</td><td>${fmt(r.tDisc)}</td><td class="rev">${fmt(r.tAfter)}</td><td>${fmt(r.weekCount)}</td><td class="rev">${fmt(r.weekRevenue)}</td><td>${fmt(r.monthCount)}</td><td class="rev">${fmt(r.monthRevenue)}</td><td>${fmt(r.quarterCount)}</td><td class="rev">${fmt(r.quarterRevenue)}</td><td>${fmt(r.subCardsCount)}</td><td class="rev">${fmt(r.subCardsRevenue)}</td><td>${fmt(r.walletCardsCount)}</td><td class="rev">${fmt(r.walletCardsRevenue)}</td><td>${fmt(r.rechargeCount)}</td><td class="rev">${fmt(r.rechargeRevenue)}</td><td>${fmt(r.formsCount)}</td><td class="rev">${fmt(r.formsRevenue)}</td><td class="rev">${fmt(r.subDiverseRevenue)}</td><td class="rev">${fmt(r.sBefore)}</td><td>${fmt(r.subBankAhlyDiscount)}</td><td>${fmt(r.subBankMisrDiscount)}</td><td>${fmt(r.sDisc)}</td><td class="rev">${fmt(r.sAfter)}</td><td class="rev">${fmt(r.grand)}</td><td><span class="st-pill ${r.present?'on':'off'}">${r.present?'✓':'—'}</span></td><td>${fmt(r.stadiumTicketsCount)}</td></tr>`).join('')}</tbody><tfoot><tr><td class="st">الإجمالي</td>${['ticketsCount','ticketsRevenue','diverseRevenue','tBefore','bankAhlyDiscount','bankMisrDiscount','tDisc','tAfter','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue','formsCount','formsRevenue','subDiverseRevenue','sBefore','subBankAhlyDiscount','subBankMisrDiscount','sDisc','sAfter','grand','stadiumTicketsCount'].map(f=>`<td>${fmt(rows.reduce((a,r)=>a+(r[f]||0),0))}</td>`).join('')}<td>${T.done}</td></tr></tfoot></table></div></div>`;
+$('#app').innerHTML=`<div class="view">${crumbs('لوحة التجميع')}<div class="board-head"><div><h1 class="page-title">لوحة التجميع</h1></div><div class="grow"></div><button class="btn sm" id="exDay">📊 اليوم</button><button class="btn ghost sm" id="exWeek"> اسبوعي</button><button class="btn ghost sm" id="exMonth">🗓️ شهري</button><button class="btn ghost sm" id="exWa">📤 واتساب</button><button class="btn ghost sm" id="exLog">⬇️ السجل</button></div><div style="display:flex;gap:12px;margin:20px 0;flex-wrap:wrap"><input type="date" id="dashDate" value="${dashDate}" style="background:var(--glass);box-shadow:inset 0 0 0 1px var(--br-strong);color:var(--tx);padding:10px;border-radius:14px"><button class="btn ghost sm" id="todayBtn">اليوم</button><span class="chip ok"><span class="live-dot" style="display:inline-block;margin-left:6px"></span> مباشر</span><span class="chip ${useMock?'warn':'ok'}">${useMock?'محاكاة':'Supabase'}</span></div><div class="stats-strip"><div class="stat"><small>مسجّلة</small><b>${T.done}/${rows.length}</b></div><div class="stat gold"><small>الإيرادات</small><b data-cu="${T.rev}" data-kind="money">0</b></div><div class="stat"><small>عمليات</small><b data-cu="${T.count}">0</b></div><div class="stat"><small>أيام</small><b>${new Set(all.map(r=>r.date)).size}</b></div></div>${anomalies.length?`<div class="card" style="border-color:rgba(251,191,36,.5)"><h2 style="color:var(--warn)">🔎 كشف الشذوذ (انحراف ≥ ٥٠٪ عن المتوسط)</h2>${anomalies.map(a=>`<div style="font-size:13px;margin:6px 0;color:var(--tx2)">⚠️ <b style="color:var(--tx)">${esc(a.name)}</b>: الإيراد <b>${fmt(a.grand)}</b> والمتوسط <b>${fmt(a.avg)}</b> (<span style="color:${a.dev>0?'var(--ok)':'var(--err)'}">${a.dev>0?'+':''}${Math.round(a.dev)}%</span>)</div>`).join('')}</div>`:''}<div class="table-wrap"><table class="gt"><thead><tr><th>المحطة</th><th>تذاكر عدد</th><th>تذاكر إيراد</th><th>متنوع</th><th>إيراد التذاكر</th><th>أهلي</th><th>مصر</th><th>الخصومات</th><th>إجمالي الايراد</th><th>أسبوعي عدد</th><th>أسبوعي إيراد</th><th>شهري عدد</th><th>شهري إيراد</th><th>ربع عدد</th><th>ربع إيراد</th><th>كروت اشتراكات عدد</th><th>كروت اشتراكات إيراد</th><th>كروت محفظة عدد</th><th>كروت محفظة إيراد</th><th>شحن محفظة عدد</th><th>شحن محفظة إيراد</th><th>استمارات عدد</th><th>استمارات إيراد</th><th>متنوع</th><th>إيراد الاشتراكات</th><th>أهلي</th><th>مصر</th><th>الخصومات</th><th>إجمالي الايراد</th><th>الإجمالي</th><th>الحالة</th><th>تذاكر استاد</th></tr></thead><tbody>${rows.map(r=>`<tr><td class="st"><a href="#/acc/${encodeURIComponent(r.code)}" style="color:inherit">${esc(r.name)}</a>${anomalySet.has(r.code)?' ⚠️':''}</td><td>${fmt(r.ticketsCount)}</td><td class="rev">${fmt(r.ticketsRevenue)}</td><td class="rev">${fmt(r.diverseRevenue)}</td><td class="rev">${fmt(r.tBefore)}</td><td>${fmt(r.bankAhlyDiscount)}</td><td>${fmt(r.bankMisrDiscount)}</td><td>${fmt(r.tDisc)}</td><td class="rev">${fmt(r.tAfter)}</td><td>${fmt(r.weekCount)}</td><td class="rev">${fmt(r.weekRevenue)}</td><td>${fmt(r.monthCount)}</td><td class="rev">${fmt(r.monthRevenue)}</td><td>${fmt(r.quarterCount)}</td><td class="rev">${fmt(r.quarterRevenue)}</td><td>${fmt(r.subCardsCount)}</td><td class="rev">${fmt(r.subCardsRevenue)}</td><td>${fmt(r.walletCardsCount)}</td><td class="rev">${fmt(r.walletCardsRevenue)}</td><td>${fmt(r.rechargeCount)}</td><td class="rev">${fmt(r.rechargeRevenue)}</td><td>${fmt(r.formsCount)}</td><td class="rev">${fmt(r.formsRevenue)}</td><td class="rev">${fmt(r.subDiverseRevenue)}</td><td class="rev">${fmt(r.sBefore)}</td><td>${fmt(r.subBankAhlyDiscount)}</td><td>${fmt(r.subBankMisrDiscount)}</td><td>${fmt(r.sDisc)}</td><td class="rev">${fmt(r.sAfter)}</td><td class="rev">${fmt(r.grand)}</td><td><span class="st-pill ${r.present?'on':'off'}">${r.present?'✓':'—'}</span></td><td>${fmt(r.stadiumTicketsCount)}</td></tr>`).join('')}</tbody><tfoot><tr><td class="st">الإجمالي</td>${['ticketsCount','ticketsRevenue','diverseRevenue','tBefore','bankAhlyDiscount','bankMisrDiscount','tDisc','tAfter','weekCount','weekRevenue','monthCount','monthRevenue','quarterCount','quarterRevenue','subCardsCount','subCardsRevenue','walletCardsCount','walletCardsRevenue','rechargeCount','rechargeRevenue','formsCount','formsRevenue','subDiverseRevenue','sBefore','subBankAhlyDiscount','subBankMisrDiscount','sDisc','sAfter','grand','stadiumTicketsCount'].map(f=>`<td>${fmt(rows.reduce((a,r)=>a+(r[f]||0),0))}</td>`).join('')}<td>${T.done}</td></tr></tfoot></table></div></div>`;
 doneP();lucide.createIcons();applyMotion($('#app'));animateCounts($('#app'));
 $('#dashDate').onchange=e=>{dashDate=e.target.value||todayISO();drawDash()};
 $('#todayBtn').onclick=()=>{dashDate=todayISO();drawDash()};
@@ -255,28 +546,29 @@ $('#exWeek').onclick=()=>exportWeekExcel();
 $('#exMonth').onclick=()=>exportMonthExcel();
 $('#exWa').onclick=()=>shareWhatsApp(rows,T,dashDate);
 $('#exLog').onclick=()=>exportLogExcel(reports);
+AI.checkAlerts();
 }catch(e){console.error('Dash error:',e);doneP();$('#app').innerHTML=`<div class="empty">⚠️ حصل خطأ في تحميل لوحة التجميع — حدّث الصفحة وجرب تاني</div>`}
 }
 function buildDayRows(rec,date,st){const sortedRecs=rec.slice().sort((a,b)=>String(a.submittedAt||'').localeCompare(String(b.submittedAt||'')));const by=new Map(sortedRecs.filter(r=>String(r.date)===date).map(r=>[String(r.stationCode),r])),mk=(c,n,r)=>{const z={};NUM_FIELDS.forEach(f=>z[f]=r?num(r[f]):0);const calc=calcRow(z);return{code:c,name:n,...z,tBefore:calc.tBefore,tDisc:calc.tDisc,tAfter:calc.tAfter,sBefore:calc.sBefore,sDisc:calc.sDisc,sAfter:calc.sAfter,grand:calc.grand,totalCount:calc.count,totalRevenue:calc.grand,present:!!r}},rows=st.map(s=>mk(s.code,s.name,by.get(s.code)));by.forEach((r,c)=>{if(!st.some(s=>s.code===c))rows.push(mk(c,r.stationName||c,r))});return rows}
 function totalsOf(r){return{count:r.reduce((a,x)=>a+x.totalCount,0),rev:r.reduce((a,x)=>a+x.totalRevenue,0),done:r.filter(x=>x.present).length}}
 function sumRange(all,from,to){const m={};all.forEach(r=>{const d=String(r.date);if(d>=from&&d<=to){const k=r.stationCode;m[k]=(m[k]||0)+num(r.totalRevenue)}});return m}
-function shareWhatsApp(rows,T,date){const rec=rows.filter(r=>r.present),notRec=rows.filter(r=>!r.present);const top=[...rec].sort((a,b)=>b.grand-a.grand).slice(0,3);let msg=` *ملخص إحصاء المونوريل*\n🗓️ ${date}\n\n💰 إجمالي الإيراد: ${fmt(T.rev)} ج.م\n🎫 إجمالي العمليات: ${fmt(T.count)}\n✅ مسجّل: ${T.done} من ${rows.length}\n\n🏆 الأعلى إيراداً:\n`+top.map((r,i)=>`${i+1}. ${r.name} — ${fmt(r.grand)} ج.م`).join('\n');if(notRec.length)msg+=`\n\n⏳ لم يسجلوا:\n`+notRec.map(r=>'• '+r.name).join('\n');msg+='\n\n_منظومة إحصاء المحطات_';window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank')}
-async function renderStats(){currentPage='stats';setActive('stats');$('#app').innerHTML=`<div class="view">${skStats()}</div>`;try{const[reports,stations]=await Promise.all([getAllReports(),getAllStations()]),totR=reports.reduce((a,r)=>a+num(r.totalRevenue),0),totT=reports.reduce((a,r)=>a+num(r.ticketsCount),0);
+function shareWhatsApp(rows,T,date){const rec=rows.filter(r=>r.present),notRec=rows.filter(r=>!r.present);const top=[...rec].sort((a,b)=>b.grand-a.grand).slice(0,3);let msg=`📊 *ملخص إحصاء المونوريل*\n🗓️ ${date}\n\n💰 إجمالي الإيراد: ${fmt(T.rev)} ج.م\n🎫 إجمالي العمليات: ${fmt(T.count)}\n✅ مسجّل: ${T.done} من ${rows.length}\n\n🏆 الأعلى إيراداً:\n`+top.map((r,i)=>`${i+1}. ${r.name} — ${fmt(r.grand)} ج.م`).join('\n');if(notRec.length)msg+=`\n\n⏳ لم يسجلوا:\n`+notRec.map(r=>'• '+r.name).join('\n');msg+='\n\n_منظومة إحصاء المحطات_';window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank')}
+async function renderStats(){currentPage='stats';setActive('stats');$('#app').innerHTML=`<div class="view">${skStats()}</div>`;try{const[reports,stations]=await Promise.all([getAllReports(),getAllStations()]);window._cachedReports=reports;window._cachedStations=stations;const totR=reports.reduce((a,r)=>a+num(r.totalRevenue),0),totT=reports.reduce((a,r)=>a+num(r.ticketsCount),0);
 const P30=(()=>{const t=new Date();t.setDate(t.getDate()-29);return t.toISOString().slice(0,10)})();const in30=r=>String(r.date)>=P30&&String(r.date)<=todayISO();const rep30=reports.filter(in30);const netTot=rep30.reduce((a,r)=>a+num(r.totalRevenue),0);
 const perSt=stations.map(s=>{const m=rep30.filter(r=>String(r.stationCode)===s.code);const rev=m.reduce((a,r)=>a+num(r.totalRevenue),0);const cnt=m.reduce((a,r)=>a+num(r.totalCount),0);const ds=new Set(m.map(r=>String(r.date)));return{code:s.code,name:s.name,rev,cnt,days:ds.size,avg:ds.size?rev/ds.size:0,share:netTot>0?rev/netTot*100:0}}).sort((a,b)=>b.rev-a.rev);
 const last7=[];for(let i=6;i>=0;i--){const d=new Date();d.setDate(d.getDate()-i);const iso=d.toISOString().slice(0,10);last7.push({day:d.toLocaleDateString('ar-EG',{weekday:'short'}),rev:reports.filter(r=>r.date===iso).reduce((a,r)=>a+num(r.totalRevenue),0)})}
-$('#app').innerHTML=`<div class="view">${crumbs('الإحصائيات')}<h1 class="page-title">الإحصائيات</h1><div class="stats-strip"><div class="stat gold"><small>الإيرادات</small><b data-cu="${totR}" data-kind="money">0</b></div><div class="stat"><small>تذاكر</small><b data-cu="${totT}">0</b></div><div class="stat"><small>أيام</small><b>${new Set(reports.map(r=>r.date)).size}</b></div><div class="stat"><small>محطات</small><b>${stations.length}</b></div></div><div class="card"><h2>📊 آخر 7 أيام</h2><div style="height:300px"><canvas id="c7"></canvas></div></div><div class="card"><h2>🏦 حسابات المحطات (آخر ٣٠ يوم)</h2><div class="table-wrap" style="box-shadow:none"><table class="gt" style="min-width:700px"><thead><tr><th>المحطة</th><th>إجمالي الإيراد</th><th>عمليات</th><th>أيام</th><th>المتوسط اليومي</th><th>النسبة</th></tr></thead><tbody>${perSt.map(p=>`<tr><td class="st"><a href="#/acc/${encodeURIComponent(p.code)}" style="color:inherit">${esc(p.name)}</a></td><td class="rev">${fmt(p.rev)}</td><td>${fmt(p.cnt)}</td><td>${p.days}</td><td>${fmt(p.avg)}</td><td>${fmt(p.share)}%</td></tr>`).join('')}</tbody></table></div></div><div class="card"><h2>🍩 حصص المحطات من الإيراد</h2><div style="height:320px"><canvas id="donut"></canvas></div></div><div class="card"><h2>⚖️ مقارنة الفترات</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px"><div class="field"><label>فترة أ — من</label><input type="date" id="cmpA1"></div><div class="field"><label>إلى</label><input type="date" id="cmpA2"></div><div class="field"><label>فترة ب — من</label><input type="date" id="cmpB1"></div><div class="field"><label>إلى</label><input type="date" id="cmpB2"></div></div><button class="btn sm" id="cmpBtn">قارن</button><div id="cmpSum" style="margin:12px 0;display:flex;gap:8px;flex-wrap:wrap"></div><div style="height:320px"><canvas id="cmpChart"></canvas></div></div><div class="card"><h2>📊 حسب المحطة</h2><div style="height:300px"><canvas id="cs"></canvas></div></div></div>`;
+$('#app').innerHTML=`<div class="view">${crumbs('الإحصائيات')}<h1 class="page-title">الإحصائيات</h1><div class="stats-strip"><div class="stat gold"><small>الإيرادات</small><b data-cu="${totR}" data-kind="money">0</b></div><div class="stat"><small>تذاكر</small><b data-cu="${totT}">0</b></div><div class="stat"><small>أيام</small><b>${new Set(reports.map(r=>r.date)).size}</b></div><div class="stat"><small>محطات</small><b>${stations.length}</b></div></div><div class="card"><h2>📊 آخر 7 أيام</h2><div style="height:300px"><canvas id="c7"></canvas></div></div><div class="card"><h2>🏦 حسابات المحطات (آخر ٠ يوم)</h2><div class="table-wrap" style="box-shadow:none"><table class="gt" style="min-width:700px"><thead><tr><th>المحطة</th><th>إجمالي الإيراد</th><th>عمليات</th><th>أيام</th><th>المتوسط اليومي</th><th>النسبة</th></tr></thead><tbody>${perSt.map(p=>`<tr><td class="st"><a href="#/acc/${encodeURIComponent(p.code)}" style="color:inherit">${esc(p.name)}</a></td><td class="rev">${fmt(p.rev)}</td><td>${fmt(p.cnt)}</td><td>${p.days}</td><td>${fmt(p.avg)}</td><td>${fmt(p.share)}%</td></tr>`).join('')}</tbody></table></div></div><div class="card"><h2>🍩 حصص المحطات من الإيراد</h2><div style="height:320px"><canvas id="donut"></canvas></div></div><div class="card"><h2>⚖️ مقارنة الفترات</h2><div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px"><div class="field"><label>فترة أ — من</label><input type="date" id="cmpA1"></div><div class="field"><label>إلى</label><input type="date" id="cmpA2"></div><div class="field"><label>فترة ب — من</label><input type="date" id="cmpB1"></div><div class="field"><label>إلى</label><input type="date" id="cmpB2"></div></div><button class="btn sm" id="cmpBtn">قارن</button><div id="cmpSum" style="margin:12px 0;display:flex;gap:8px;flex-wrap:wrap"></div><div style="height:320px"><canvas id="cmpChart"></canvas></div></div><div class="card"><h2>📊 حسب المحطة</h2><div style="height:300px"><canvas id="cs"></canvas></div></div></div>`;
 doneP();applyMotion($('#app'));animateCounts($('#app'));
 try{new Chart($('#c7'),{type:'bar',data:{labels:last7.map(d=>d.day),datasets:[{data:last7.map(d=>d.rev),backgroundColor:'rgba(34,211,238,.6)',borderRadius:8}]},options:{responsive:true,maintainAspectRatio:false}});
 new Chart($('#donut'),{type:'doughnut',data:{labels:perSt.map(p=>p.name),datasets:[{data:perSt.map(p=>p.rev),backgroundColor:['#22d3ee','#8b5cf6','#fbbf24','#34d399','#f472b6','#60a5fa','#f97316','#a3e635','#e879f9','#38bdf8']}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom'}}}});
 const so=perSt;new Chart($('#cs'),{type:'bar',data:{labels:so.map(p=>p.name),datasets:[{data:so.map(p=>p.rev),backgroundColor:'rgba(245,158,11,.6)',borderRadius:8}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false}})}catch(e){console.error('Chart error:',e)}
-setupCompare(reports,stations)}catch(e){console.error('Stats error:',e);doneP();$('#app').innerHTML=`<div class="empty">️ خطأ في تحميل الإحصائيات</div>`}}
+setupCompare(reports,stations);AI.checkAlerts();}catch(e){console.error('Stats error:',e);doneP();$('#app').innerHTML=`<div class="empty">️ خطأ في تحميل الإحصائيات</div>`}}
 function setupCompare(all,stations){const nameOf=c=>{const s=stations.find(x=>x.code===c);return s?s.name:c};const d=todayISO();const a1=new Date();a1.setDate(a1.getDate()-6);const a1i=a1.toISOString().slice(0,10);const b2=new Date(a1);b2.setDate(b2.getDate()-1);const b2i=b2.toISOString().slice(0,10);const b1=new Date(a1);b1.setDate(b1.getDate()-7);const b1i=b1.toISOString().slice(0,10);
 $('#cmpA1').value=a1i;$('#cmpA2').value=d;$('#cmpB1').value=b1i;$('#cmpB2').value=b2i;let chart=null;
 const run=()=>{const A=sumRange(all,$('#cmpA1').value,$('#cmpA2').value);const B=sumRange(all,$('#cmpB1').value,$('#cmpB2').value);const codes=[...new Set([...Object.keys(A),...Object.keys(B)])];codes.sort((x,y)=>((A[y]||0)+(B[y]||0))-((A[x]||0)+(B[x]||0)));const top=codes.slice(0,8);const tA=top.reduce((s,c)=>s+(A[c]||0),0),tB=top.reduce((s,c)=>s+(B[c]||0),0);const delta=tB>0?Math.round(((tA-tB)/tB)*100):0;$('#cmpSum').innerHTML=`<span class="chip ok">فترة أ: ${fmt(tA)}</span><span class="chip warn">فترة ب: ${fmt(tB)}</span><span class="chip" style="${delta>=0?'color:var(--ok);background:rgba(52,211,153,.14)':'color:var(--err);background:rgba(248,113,113,.14)'}">${delta>=0?'▲':'▼'} ${Math.abs(delta)}%</span>`;if(chart)chart.destroy();chart=new Chart($('#cmpChart'),{type:'bar',data:{labels:top.map(nameOf),datasets:[{label:'فترة أ',data:top.map(c=>A[c]||0),backgroundColor:'rgba(34,211,238,.7)'},{label:'فترة ب',data:top.map(c=>B[c]||0),backgroundColor:'rgba(139,92,246,.5)'}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false}})};
 $('#cmpBtn').onclick=run;run()}
 async function renderAudit(){currentPage='audit';setActive('audit');$('#app').innerHTML=`<div class="view">${skList(5)}</div>`;const logs=await getAudit();$('#app').innerHTML=`<div class="view">${crumbs('سجل التدقيق')}<h1 class="page-title">سجل التدقيق</h1><div class="card"><div class="audit-list">${logs.length?logs.map(l=>`<div class="audit-item"><div style="flex:1"><b style="color:var(--prl)">${esc(l.action)}</b><div style="color:var(--tx2);font-size:13px">${esc(l.details||'')}</div></div><div style="color:var(--mut);font-size:12px">${esc(l.username||'')}</div></div>`).join(''):emptyState('لا عمليات')}</div></div></div>`;doneP();applyMotion($('#app'))}
-async function renderStations(){currentPage='stations';setActive('stations');$('#app').innerHTML=`<div class="view">${skList(5)}</div>`;const[stations,reports]=await Promise.all([getAllStations(),getAllReports()]);$('#app').innerHTML=`<div class="view">${crumbs('إدارة المحطات')}<h1 class="page-title">إدارة المحطات</h1><div class="card"><h2>➕ إضافة محطة</h2><form id="addSt" style="display:flex;gap:12px;flex-wrap:wrap"><input id="nC" placeholder="الكود" required style="flex:1;background:var(--bg1);box-shadow:inset 0 0 0 1px var(--br-strong);color:var(--tx);padding:12px;border-radius:14px"><input id="nN" placeholder="الاسم" required style="flex:2;background:var(--bg1);box-shadow:inset 0 0 0 1px var(--br-strong);color:var(--tx);padding:12px;border-radius:14px"><button class="btn" type="submit">➕ إضافة</button></form></div><div class="card"><h2>🗂️ المحطات (${stations.length})</h2><div class="st-mng">${stations.map(s=>`<div class="st-mng-row"><span class="s-code">${esc(s.code)}</span><b style="flex:1">${esc(s.name)}</b><button class="icon-btn" data-del-reports="${esc(s.code)}">️</button><button class="icon-btn" data-del="${s.id}">🗑️</button></div>`).join('')}</div></div><div class="danger-zone"><h2 style="color:var(--err)">⚠️ منطقة الخطر</h2><button class="btn danger" id="delAll">🗑️ مسح كل البيانات (${reports.length})</button></div></div>`;doneP();applyMotion($('#app'));$('#addSt').onsubmit=async e=>{e.preventDefault();const c=$('#nC').value.trim().toUpperCase(),n=$('#nN').value.trim();if(await addStation(c,n)){toast('أُضيفت ✓');renderStations()}else toast('فشل')};$$('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('حذف المحطة؟')){await deleteStation(b.dataset.del);renderStations()}});$$('[data-del-reports]').forEach(b=>b.onclick=async()=>{if(confirm('مسح بيانات المحطة؟')){await deleteStationReports(b.dataset.delReports);renderStations()}});$('#delAll').onclick=async()=>{if(confirm('⚠️ هتتمسح كل البيانات من السيرفر ومن الجهاز. متأكد؟')){const ok=await deleteAllReports();if(ok){toast('✅ تم مسح كل البيانات')}renderStations()}}}
+async function renderStations(){currentPage='stations';setActive('stations');$('#app').innerHTML=`<div class="view">${skList(5)}</div>`;const[stations,reports]=await Promise.all([getAllStations(),getAllReports()]);$('#app').innerHTML=`<div class="view">${crumbs('إدارة المحطات')}<h1 class="page-title">إدارة المحطات</h1><div class="card"><h2>➕ إضافة محطة</h2><form id="addSt" style="display:flex;gap:12px;flex-wrap:wrap"><input id="nC" placeholder="الكود" required style="flex:1;background:var(--bg1);box-shadow:inset 0 0 0 1px var(--br-strong);color:var(--tx);padding:12px;border-radius:14px"><input id="nN" placeholder="الاسم" required style="flex:2;background:var(--bg1);box-shadow:inset 0 0 0 1px var(--br-strong);color:var(--tx);padding:12px;border-radius:14px"><button class="btn" type="submit">➕ إضافة</button></form></div><div class="card"><h2>️ المحطات (${stations.length})</h2><div class="st-mng">${stations.map(s=>`<div class="st-mng-row"><span class="s-code">${esc(s.code)}</span><b style="flex:1">${esc(s.name)}</b><button class="icon-btn" data-del-reports="${esc(s.code)}">🗑️</button><button class="icon-btn" data-del="${s.id}">🗑️</button></div>`).join('')}</div></div><div class="danger-zone"><h2 style="color:var(--err)">⚠️ منطقة الخطر</h2><button class="btn danger" id="delAll">🗑️ مسح كل البيانات (${reports.length})</button></div></div>`;doneP();applyMotion($('#app'));$('#addSt').onsubmit=async e=>{e.preventDefault();const c=$('#nC').value.trim().toUpperCase(),n=$('#nN').value.trim();if(await addStation(c,n)){toast('أُضيفت ✓');renderStations()}else toast('فشل')};$$('[data-del]').forEach(b=>b.onclick=async()=>{if(confirm('حذف المحطة؟')){await deleteStation(b.dataset.del);renderStations()}});$$('[data-del-reports]').forEach(b=>b.onclick=async()=>{if(confirm('مسح بيانات المحطة؟')){await deleteStationReports(b.dataset.delReports);renderStations()}});$('#delAll').onclick=async()=>{if(confirm('⚠️ هتتمسح كل البيانات من السيرفر ومن الجهاز. متأكد؟')){const ok=await deleteAllReports();if(ok){toast('✅ تم مسح كل البيانات')}renderStations()}}}
 function buf64(b){const u=new Uint8Array(b);let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)}
 async function loadLogo(){try{const r=await fetch('logo.png');if(!r.ok)return null;const buf=await r.arrayBuffer();const u=new Uint8Array(buf);let ext='png';if(u[0]===0xFF&&u[1]===0xD8&&u[2]===0xFF)ext='jpeg';else if(u[0]===0x47&&u[1]===0x49&&u[2]===0x46)ext='gif';return{b64:buf64(buf),ext}}catch(e){return null}}
 function ensureExcelJS(){return new Promise((res,rej)=>{if(window.ExcelJS)return res();const u=['https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js','https://unpkg.com/exceljs@4.3.0/dist/exceljs.min.js'];let i=0;(function n(){if(i>=u.length)return rej();const s=document.createElement('script');s.src=u[i++];s.onload=()=>window.ExcelJS?res():n();s.onerror=n;document.head.appendChild(s)})()})}
@@ -299,15 +591,16 @@ const countCols=[2,10,12,14,16,18,20,22],discCols=[6,7,8,26,27,28],greenCols=[5,
 rows.forEach((r,idx)=>{const rn=7+idx;const row=ws.addRow([r.name,r.ticketsCount,r.ticketsRevenue,r.diverseRevenue,{formula:`C${rn}+D${rn}`},r.bankAhlyDiscount,r.bankMisrDiscount,{formula:`F${rn}+G${rn}`},{formula:`E${rn}-H${rn}`},r.weekCount,r.weekRevenue,r.monthCount,r.monthRevenue,r.quarterCount,r.quarterRevenue,r.subCardsCount,r.subCardsRevenue,r.walletCardsCount,r.walletCardsRevenue,r.rechargeCount,r.rechargeRevenue,r.formsCount,r.formsRevenue,r.subDiverseRevenue,{formula:`K${rn}+M${rn}+O${rn}+Q${rn}+S${rn}+U${rn}+W${rn}+X${rn}`},r.subBankAhlyDiscount,r.subBankMisrDiscount,{formula:`Z${rn}+AA${rn}`},{formula:`Y${rn}-AB${rn}`},{formula:`I${rn}+AC${rn}`},r.present?'مسجّل':'لم يُسجّل',r.stadiumTicketsCount]);row.eachCell({includeEmpty:true},(cell,col)=>{cell.border=thinB();cell.alignment={horizontal:col===1?'right':'center',vertical:'middle'};cell.font={size:10,name:'Segoe UI'};if(idx%2===0)cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF8FAFC'}};if(col>=2&&col<=30){if(countCols.includes(col)){cell.numFmt='#,##0'}else if(discCols.includes(col)){cell.numFmt='#,##0';cell.font={size:10,color:{argb:'FFB91C1C'},bold:true,name:'Segoe UI'}}else if(greenCols.includes(col)){cell.numFmt='#,##0';cell.font={size:10,color:{argb:'FF047857'},bold:true,name:'Segoe UI'}}else if(revCols.includes(col)){cell.numFmt='#,##0';cell.font={size:10,color:{argb:'FFB45309'},bold:true,name:'Segoe UI'}}}if(col===32){cell.numFmt='#,##0';cell.font={size:11,color:{argb:'FF0EA5E9'},bold:true,name:'Segoe UI'}}if(col===1)cell.font={bold:true,size:11,name:'Segoe UI',color:{argb:'FF0F172A'}};if(col===31){if(r.present){cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFD1FAE5'}};cell.font={bold:true,size:10,color:{argb:'FF047857'},name:'Segoe UI'}}else{cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFFEE2E2'}};cell.font={bold:true,size:10,color:{argb:'FFB91C1C'},name:'Segoe UI'}}}});row.height=22});
 const tr=7+rows.length;const totalVals=['الإجمالي العام'];for(let col=2;col<=30;col++){totalVals.push({formula:`SUM(${CL(col)}7:${CL(col)}${tr-1})`})}totalVals.push(T.done+' محطة');totalVals.push({formula:`SUM(AF7:AF${tr-1})`});const trow=ws.addRow(totalVals);trow.eachCell({includeEmpty:true},(cell,col)=>{cell.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFECFDF5'}};cell.font={bold:true,size:12,color:{argb:'FF047857'},name:'Segoe UI'};cell.border=medB('FF059669');cell.alignment={horizontal:'center',vertical:'middle'};if(col>=2&&col<=30)cell.numFmt='#,##0';if(col===32)cell.numFmt='#,##0'});trow.height=28;ws.addRow([]);const frow=ws.addRow([`تم إنشاء التقرير: ${new Date().toLocaleString('ar-EG')} — منظومة إحصاء المحطات • مونوريل شرق النيل | Powered by Hisham Fadloun`]);ws.mergeCells(frow.number,1,frow.number,32);const fc=ws.getCell(frow.number,1);fc.font={italic:true,size:9,color:{argb:'FF64748B'},name:'Segoe UI'};fc.alignment={horizontal:'center',vertical:'middle'};fc.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF1F5F9'}};fc.border={top:{style:'thin',color:{argb:'FFCBD5E1'}}};ws.autoFilter={from:{row:6,column:1},to:{row:tr-1,column:32}};return ws}
 async function exportDayExcel(rows){toast('⏳ تجهيز Excel الاحترافي...');const T=totalsOf(rows);let wb;try{await ensureExcelJS();wb=new ExcelJS.Workbook()}catch(e){csv(buildAOA(rows,T),'تقرير');toast('CSV بديل');return}try{wb.views=[{rightToLeft:true}];const logo=await loadLogo();buildPremiumSheet(wb,rows,T,'إحصاء '+dashDate,`التاريخ: ${dashDate}  (${fmtDateAr(dashDate)})   —   المسجّل: ${T.done} من ${rows.length}`,logo);const buf=await wb.xlsx.writeBuffer();dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`إحصاء محطات المونوريل ${dashDate}.xlsx`);toast('✅ تم تنزيل الإحصاء الاحترافي')}catch(e){console.error('Excel error:',e);csv(buildAOA(rows,T),'تقرير');toast('CSV بديل')}}
-async function exportWeekExcel(){toast(' تجهيز Excel اسبوعي...');try{const[all,stations]=await Promise.all([getAllReports(),getAllStations()]);const end=dashDate;const sd=new Date(end+'T12:00');sd.setDate(sd.getDate()-6);const startISO=sd.toISOString().slice(0,10);const inR=all.filter(r=>String(r.date)>=startISO&&String(r.date)<=end);const rows=stations.map(st=>{const rs=inR.filter(r=>String(r.stationCode)===st.code);const z={};NUM_FIELDS.forEach(f=>z[f]=rs.reduce((a,r)=>a+num(r[f]),0));const calc=calcRow(z);return{code:st.code,name:st.name,...z,tBefore:calc.tBefore,tDisc:calc.tDisc,tAfter:calc.tAfter,sBefore:calc.sBefore,sDisc:calc.sDisc,sAfter:calc.sAfter,grand:calc.grand,totalCount:calc.count,totalRevenue:calc.grand,present:rs.length>0}});const T=totalsOf(rows);let wb;try{await ensureExcelJS();wb=new ExcelJS.Workbook()}catch(e){csv(buildAOA(rows,T),'اسبوعي');toast('CSV بديل');return}wb.views=[{rightToLeft:true}];const logo=await loadLogo();buildPremiumSheet(wb,rows,T,'اسبوعي '+end,`تقرير اسبوعي — الفترة: ${startISO}  →  ${end}   —   المسجّل: ${T.done} من ${rows.length}`,logo);const buf=await wb.xlsx.writeBuffer();dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`إحصاء اسبوعي ${end}.xlsx`);toast('✅ تم تنزيل الإحصاء الاسبوعي')}catch(e){console.error('Week error:',e);toast('❌ خطأ في التقرير الاسبوعي')}}
+async function exportWeekExcel(){toast('⏳ تجهيز Excel اسبوعي...');try{const[all,stations]=await Promise.all([getAllReports(),getAllStations()]);const end=dashDate;const sd=new Date(end+'T12:00');sd.setDate(sd.getDate()-6);const startISO=sd.toISOString().slice(0,10);const inR=all.filter(r=>String(r.date)>=startISO&&String(r.date)<=end);const rows=stations.map(st=>{const rs=inR.filter(r=>String(r.stationCode)===st.code);const z={};NUM_FIELDS.forEach(f=>z[f]=rs.reduce((a,r)=>a+num(r[f]),0));const calc=calcRow(z);return{code:st.code,name:st.name,...z,tBefore:calc.tBefore,tDisc:calc.tDisc,tAfter:calc.tAfter,sBefore:calc.sBefore,sDisc:calc.sDisc,sAfter:calc.sAfter,grand:calc.grand,totalCount:calc.count,totalRevenue:calc.grand,present:rs.length>0}});const T=totalsOf(rows);let wb;try{await ensureExcelJS();wb=new ExcelJS.Workbook()}catch(e){csv(buildAOA(rows,T),'اسبوعي');toast('CSV بديل');return}wb.views=[{rightToLeft:true}];const logo=await loadLogo();buildPremiumSheet(wb,rows,T,'اسبوعي '+end,`تقرير اسبوعي — الفترة: ${startISO}  →  ${end}   —   المسجّل: ${T.done} من ${rows.length}`,logo);const buf=await wb.xlsx.writeBuffer();dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`إحصاء اسبوعي ${end}.xlsx`);toast('✅ تم تنزيل الإحصاء الاسبوعي')}catch(e){console.error('Week error:',e);toast('❌ خطأ في التقرير الاسبوعي')}}
 async function exportMonthExcel(){toast('⏳ تجهيز Excel شهري...');try{const[all,stations]=await Promise.all([getAllReports(),getAllStations()]);const ym=dashDate.slice(0,7);const inR=all.filter(r=>String(r.date).slice(0,7)===ym);const rows=stations.map(st=>{const rs=inR.filter(r=>String(r.stationCode)===st.code);const z={};NUM_FIELDS.forEach(f=>z[f]=rs.reduce((a,r)=>a+num(r[f]),0));const calc=calcRow(z);return{code:st.code,name:st.name,...z,tBefore:calc.tBefore,tDisc:calc.tDisc,tAfter:calc.tAfter,sBefore:calc.sBefore,sDisc:calc.sDisc,sAfter:calc.sAfter,grand:calc.grand,totalCount:calc.count,totalRevenue:calc.grand,present:rs.length>0}});const T=totalsOf(rows);const mName=new Date(dashDate+'T12:00').toLocaleDateString('ar-EG',{month:'long',year:'numeric'});let wb;try{await ensureExcelJS();wb=new ExcelJS.Workbook()}catch(e){csv(buildAOA(rows,T),'شهري');toast('CSV بديل');return}wb.views=[{rightToLeft:true}];const logo=await loadLogo();buildPremiumSheet(wb,rows,T,'شهري '+ym,`تقرير شهري — ${mName}   —   المسجّل: ${T.done} من ${rows.length}`,logo);const buf=await wb.xlsx.writeBuffer();dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),`إحصاء شهري ${ym}.xlsx`);toast('✅ تم تنزيل الإحصاء الشهري')}catch(e){console.error('Month error:',e);toast('❌ خطأ في التقرير الشهري')}}
 async function exportLogExcel(rec){toast('⏳ تجهيز السجل...');let wb;const H=['كود المحطة','المحطة','التاريخ',...NUM_FIELDS,'إجمالي عدد','إجمالي إيراد','المسجل'];try{await ensureExcelJS();wb=new ExcelJS.Workbook()}catch(e){csv([H,...rec.map(r=>[r.stationCode,r.stationName,r.date,...NUM_FIELDS.map(f=>r[f]),r.totalCount,r.totalRevenue,r.submittedBy])],'سجل');return}try{wb.views=[{rightToLeft:true}];const ws=wb.addWorksheet('سجل البيانات',{views:[{rightToLeft:true}],pageSetup:{paperSize:9,orientation:'landscape'}});const logo=await loadLogo();if(logo){const imgId=wb.addImage({base64:logo.b64,extension:logo.ext});ws.addImage(imgId,{tl:{col:0.02,row:0.02},ext:{width:70,height:70}})}ws.mergeCells('C1:F1');const title=ws.getCell('C1');title.value='سجل بيانات المحطات - مونوريل شرق النيل';title.font={bold:true,size:16,color:{argb:'FFFFFFFF'},name:'Arial'};title.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF06B6D4'}};title.alignment={horizontal:'center',vertical:'middle'};ws.getRow(1).height=35;ws.addRow([]);const headerRow=ws.addRow(H);headerRow.font={bold:true,size:10,color:{argb:'FF67E8F9'},name:'Arial'};headerRow.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FF1E293B'}};headerRow.alignment={horizontal:'center',vertical:'middle',wrapText:true};headerRow.border={top:{style:'thick',color:{argb:'FF06B6D4'}},bottom:{style:'thick',color:{argb:'FF06B6D4'}}};ws.getRow(3).height=30;const sorted=[...rec].sort((a,b)=>String(b.submittedAt||b.date||'').localeCompare(String(a.submittedAt||a.date||'')));sorted.forEach((r,idx)=>{const row=ws.addRow([r.stationCode,r.stationName,r.date,...NUM_FIELDS.map(f=>r[f]),r.totalCount,r.totalRevenue,r.submittedBy]);const rowCells=ws.getRow(4+idx);if(idx%2===0)rowCells.fill={type:'pattern',pattern:'solid',fgColor:{argb:'FFF8FAFC'}};rowCells.eachCell(cell=>{cell.border={top:{style:'thin'},left:{style:'thin'},bottom:{style:'thin'},right:{style:'thin'}};cell.alignment={horizontal:'center',vertical:'middle'};cell.font={size:9};if(typeof cell.value==='number')cell.numFmt='#,##0'});rowCells.height=22});ws.autoFilter={from:{row:3,column:1},to:{row:3,column:H.length}};const buf=await wb.xlsx.writeBuffer();dl(new Blob([buf],{type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}),'سجل_البيانات_الكامل.xlsx');toast('✅ تم تنزيل السجل باحترافية')}catch(e){console.error('Excel error:',e);csv([H,...rec.map(r=>[r.stationCode,r.stationName,r.date,...NUM_FIELDS.map(f=>r[f]),r.totalCount,r.totalRevenue,r.submittedBy])],'سجل');toast('CSV بديل')}}
 function tick(){const n=new Date();const ct=$('#clockTime');if(ct)ct.textContent=n.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'});const cd=$('#clockDate');if(cd)cd.textContent=n.toLocaleDateString('ar-EG',{weekday:'long',day:'numeric',month:'long'})}
 setInterval(tick,1000);tick();$('#logoutBtn').onclick=logout;
-document.body.insertAdjacentHTML('beforeend',`<nav class="bottom-nav"><a href="#/" data-nav="home">🏠<span>المحطات</span></a><a href="#/dash" data-nav="dash">📊<span>التجميع</span></a><a href="#/stats" data-nav="stats">📈<span>إحصاء</span></a><a href="#/stations" data-nav="stations">⚙️<span>إدارة</span></a></nav>`);
+document.body.insertAdjacentHTML('beforeend',`<nav class="bottom-nav"><a href="#/" data-nav="home"><span>المحطات</span></a><a href="#/dash" data-nav="dash">📊<span>التجميع</span></a><a href="#/stats" data-nav="stats">📈<span>إحصاء</span></a><a href="#/stations" data-nav="stations">⚙️<span>إدارة</span></a></nav>`);
 lucide.createIcons();
 syncPend();
 route();
+AI.init();
 console.log('✅ App initialized successfully');
 }catch(e){
 console.error('❌ Critical error:',e);
